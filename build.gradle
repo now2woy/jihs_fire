@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'ji.hs'
-version = '0.0.1-SNAPSHOT'
+version = '${VERSION}'
 sourceCompatibility = '17'
 
 configurations {
