@@ -18,7 +18,7 @@ CD_COL varchar(100) not null COMMENT '코드컬럼'
 CREATE INDEX BC_CD_MT_IDX_PK BC_CD_MT(CD_COL);
 
 ALTER TABLE BC_CD_MT ADD PRIMARY KEY (CD_COL);
-see
+
 /* 코드 상세 테이블 생성 */
 CREATE TABLE BC_CD_DT(
  CD_COL varchar(100) not null COMMENT '코드컬럼'
