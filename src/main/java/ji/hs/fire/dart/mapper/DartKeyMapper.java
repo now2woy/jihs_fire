@@ -10,12 +10,12 @@ public interface DartKeyMapper {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<DartKeyVO> selectAllDartKey() throws Exception;
+	public List<DartKeyVO> selectAll() throws Exception;
 	
 	/**
 	 * Dart Key 단건 조회
 	 * @return
 	 * @throws Exception
 	 */
-	public DartKeyVO selectOneDartKey(int ordNum) throws Exception;
+	public DartKeyVO selectOne(int ordNum) throws Exception;
 }

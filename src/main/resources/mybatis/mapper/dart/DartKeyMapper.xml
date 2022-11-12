@@ -2,14 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ji.hs.fire.dart.dao.DartKeyMapper">
 <!-- Dart Key 전체 조회 -->
-	<select id="selectAllDartKey" resultType="ji.hs.fire.dart.dao.DartKeyVO">
+	<select id="selectAll" resultType="ji.hs.fire.dart.dao.DartKeyVO">
 		SELECT API_KEY
 		     , ORD_NUM
 		  FROM DT_KEY_MT
 	</select>
 
 <!-- Dart Key 단건 조회 -->
-	<select id="selectOneDartKey" resultType="ji.hs.fire.dart.dao.DartKeyVO" parameterType="Integer">
+	<select id="selectOne" resultType="ji.hs.fire.dart.dao.DartKeyVO" parameterType="Integer">
 		SELECT API_KEY
 		     , ORD_NUM
 		  FROM DT_KEY_MT

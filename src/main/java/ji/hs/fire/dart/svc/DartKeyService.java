@@ -19,7 +19,7 @@ public class DartKeyService {
 	 * @throws Exception
 	 */
 	public List<DartKeyVO> selectAll() throws Exception {
-		return dartKeyMapper.selectAllDartKey();
+		return dartKeyMapper.selectAll();
 	}
 	
 	/**
@@ -29,6 +29,6 @@ public class DartKeyService {
 	 * @throws Exception
 	 */
 	public DartKeyVO selectOne(int ordNum) throws Exception {
-		return dartKeyMapper.selectOneDartKey(ordNum);
+		return dartKeyMapper.selectOne(ordNum);
 	}
 }

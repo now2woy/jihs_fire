@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ji.hs.fire.basic.dao.BasicCdMapper">
+<!-- CD 전체 조회 -->
+	<select id="selectAll" resultType="ji.hs.fire.basic.dao.BasicCdVO">
+		SELECT CD_COL
+		     , CD
+		     , CD_NM
+		     , ORD
+		     , USE_YN
+		  FROM BC_CD_DT
+		 ORDER BY ORD ASC
+	</select>
+	
+<!-- CD_COL 조건 CD 전체 조회 -->
+	<select id="selectAllByCdCol" resultType="ji.hs.fire.basic.dao.BasicCdVO">
+		SELECT CD_COL
+		     , CD
+		     , CD_NM
+		     , ORD
+		     , USE_YN
+		  FROM BC_CD_DT
+		 WHERE CD_COL = #{cdCol}
+		 ORDER BY ORD ASC
+	</select>
+	
+<!-- CD_COL, CD 조건 단건 조회 -->
+	<select id="selectOneByCdColAndCd" resultType="ji.hs.fire.basic.dao.BasicCdVO" parameterType="ji.hs.fire.basic.dao.BasicCdVO">
+		SELECT CD_COL
+		     , CD
+		     , CD_NM
+		     , ORD
+		     , USE_YN
+		  FROM BC_CD_DT
+		 WHERE CD_COL = #{cdCol}
+		   AND CD = #{cd}
+	</select>
+</mapper>

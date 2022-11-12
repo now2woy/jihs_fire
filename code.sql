@@ -1,0 +1,9 @@
+/* 코드 마스터 입력 쿼리 */
+INSERT INTO BC_CD_MT(CD_COL, CD_COL_NM, USE_YN) VALUES ('MKT_CD', '시장코드', 'Y');
+INSERT INTO BC_CD_MT(CD_COL, CD_COL_NM, USE_YN) VALUES ('REPRT_CD', '분기코드', 'Y');
+INSERT INTO BC_CD_MT(CD_COL, CD_COL_NM, USE_YN) VALUES ('SJ_CD', '구분코드', 'Y');
+
+
+/* 코드 상세 입력 쿼리 */
+INSERT INTO BC_CD_DT(CD_COL, CD, CD_NM, ORD, USE_YN) VALUES ('MKT_CD', 'STK', '코스피', 1, 'Y');
+INSERT INTO BC_CD_DT(CD_COL, CD, CD_NM, ORD, USE_YN) VALUES ('MKT_CD', 'KSQ', '코스닥', 2, 'Y');
