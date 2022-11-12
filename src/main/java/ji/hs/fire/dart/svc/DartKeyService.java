@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ji.hs.fire.dart.dao.DartKeyMapper;
-import ji.hs.fire.dart.dao.DartKeyVO;
+import ji.hs.fire.dart.mapper.DartKeyMapper;
+import ji.hs.fire.dart.vo.DartKeyVO;
 
 @Service
 public class DartKeyService {

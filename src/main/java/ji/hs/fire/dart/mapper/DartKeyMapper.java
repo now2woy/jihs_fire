@@ -1,6 +1,8 @@
-package ji.hs.fire.dart.dao;
+package ji.hs.fire.dart.mapper;
 
 import java.util.List;
+
+import ji.hs.fire.dart.vo.DartKeyVO;
 
 public interface DartKeyMapper {
 	/**
