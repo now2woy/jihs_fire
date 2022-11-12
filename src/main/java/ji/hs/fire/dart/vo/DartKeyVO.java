@@ -17,5 +17,5 @@ public class DartKeyVO {
 	/**
 	 * 순번
 	 */
-	private int ordNum;
+	private int ord;
 }
