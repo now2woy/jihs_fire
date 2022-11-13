@@ -1,4 +1,4 @@
-package ji.hs.fire.basic.vo;
+package ji.hs.fire.bsc.vo;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import lombok.Data;
  *
  */
 @Data
-public class BasicCdVO {
+public class BscCdVO {
 	/**
 	 * 코드컬럼
 	 */

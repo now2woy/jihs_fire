@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ji.hs.fire.krx.mapper.KrxItmMapper">
+<!-- ITM_CD 조건 한국거래소 종목 마스터 Count 조회 -->
+	<select id="selectCount" resultType="Integer" parameterType="ji.hs.fire.krx.vo.KrxItmVO">
+		SELECT COUNT(*) AS CNT
+		  FROM KX_ITM_MT
+		 WHERE ITM_CD = #{itmCd}
+	</select>
+	
+<!-- ITM_CD 조건 한국거래소 종목 마스터 단건 조회 -->
+	<select id="selectOne" resultType="ji.hs.fire.krx.vo.KrxItmVO" parameterType="ji.hs.fire.krx.vo.KrxItmVO">
+		SELECT ITM_CD
+			 , ITM_NM
+			 , MKT_CD
+			 , STD_ITM_CD
+			 , DATE_FORMAT(PUB_DT,'%Y/%m/%d') AS PUB_DT
+			 , SPAC_YN
+		  FROM KX_ITM_MT
+		 WHERE ITM_CD = #{itmCd}
+	</select>
+	
+<!-- 한국거래소 종목 입력 -->
+	<insert id="insert" parameterType="ji.hs.fire.krx.vo.KrxItmVO" flushCache="true">
+		INSERT INTO KX_ITM_MT (
+			   ITM_CD
+			 , ITM_NM
+			 , MKT_CD
+			 , STD_ITM_CD
+			 , PUB_DT
+			 , SPAC_YN
+			 ) VALUES (
+			   #{itmCd}
+			 , #{itmNm}
+			 , #{mktCd}
+			 , #{stdItmCd}
+			 , STR_TO_DATE(#{pubDt}, '%Y/%m/%d')
+			 , #{spacYn}
+			 )
+	</insert>
+</mapper>

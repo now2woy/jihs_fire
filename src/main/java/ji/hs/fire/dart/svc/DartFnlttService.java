@@ -15,7 +15,7 @@ public class DartFnlttService {
 	 * DART 종목 / 년도 / 분기 재무제표 URL
 	 */
 	@Value("${constant.dart.url.fnltt}")
-	private String dateFnlttUrl;
+	private String dartFnlttUrl;
 	
 	@Autowired
 	private DartKeyMapper dartKeyMapper;

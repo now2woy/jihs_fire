@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 @Configuration
 @MapperScan(basePackages = {"ji.hs.fire"})
@@ -22,6 +23,20 @@ public class MyBatisConfig {
 	@Autowired
 	private ApplicationContext applicationContext;
 	
+	/**
+	 * 데이터 소스에 트렌젝션 적용
+	 * @return
+	 */
+	@Bean
+	public DataSourceTransactionManager transactionManager() {
+		return new DataSourceTransactionManager(dataSource);
+	}
+	
+	/**
+	 * 세션 팩토리 생성
+	 * @return
+	 * @throws IOException
+	 */
 	@Bean
 	public SqlSessionFactoryBean sqlSessionFactory() throws IOException {
 		SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
@@ -32,7 +47,12 @@ public class MyBatisConfig {
 		
 		return factoryBean;
 	}
-
+	
+	/**
+	 * 세션 팩토리를 이용하여 세션 템플릿 생성
+	 * @param sqlSessionFactory
+	 * @return
+	 */
 	@Bean
 	public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) {
 		return new SqlSessionTemplate(sqlSessionFactory);

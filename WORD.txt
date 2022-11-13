@@ -1,0 +1,22 @@
+/* 단어 */		/* 약어명 */			/* 테이블약어명 */			/* 한글명 */
+DART			DART				DT						전자공시시스템
+CODE			CD					CD						코드
+NAME			NM					NM						명
+COLUMN			COL					COL						열
+API				API					API						API
+KEY				KEY					KEY						KEY
+ORDER			ORD					ORD						순서, 정렬
+SEQEUNCE		SEQ					SEQ						일련번호
+MASTER			MST					MT						주
+DETAIL			DTL					DT						상세
+HISTORY			HIST				HT						이력
+MAPPING			MPG					MP						매핑
+USE				USE					USE						사용
+YN				YN					YN						여부
+BASIC			BSC					BC						기본
+MARKET			MKT					MKT						시장
+YEAR			YR					YR						연도(년도)
+QUARTER			QT					QT						분기
+ITEM			ITM					ITM						주식 종목
+STANDARD		STD					STD						표준
+SPAC			SPAC				SPAC					스팩
