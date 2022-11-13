@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class JihsFireApplication {
 
 	public static void main(String[] args) {
-		System.setProperty("logging.file.name", ":/media/sdc/log/jihs_fire_" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".log");
+		System.setProperty("logging.file.name", "/media/sdc/log/jihs_fire_" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".log");
 		SpringApplication.run(JihsFireApplication.class, args);
 	}
 
