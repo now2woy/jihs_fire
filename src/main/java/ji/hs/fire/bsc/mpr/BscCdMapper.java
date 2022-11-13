@@ -1,6 +1,8 @@
-package ji.hs.fire.bsc.mapper;
+package ji.hs.fire.bsc.mpr;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Flush;
 
 import ji.hs.fire.bsc.vo.BscCdVO;
 
@@ -32,5 +34,21 @@ public interface BscCdMapper {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<BscCdVO> selectOneByCdColAndCd(String cdCol, String cd) throws Exception;
+	public List<BscCdVO> selectOne(BscCdVO bscCdVO) throws Exception;
+	
+	/**
+	 * CD_COL, CD 조건 코드 상세 Count 조회
+	 * @param bscCdVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int selectCountByCdColAndCdNm(BscCdVO bscCdVO) throws Exception;
+	
+	/**
+	 * 코드 상세 입력
+	 * @param bscCdVO
+	 * @throws Exception
+	 */
+	@Flush
+	public int insert(BscCdVO bscCdVO) throws Exception;
 }

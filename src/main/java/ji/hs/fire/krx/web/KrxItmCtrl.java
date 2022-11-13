@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ji.hs.fire.krx.service.KrxItmService;
+import ji.hs.fire.krx.svc.KrxItmService;
 import ji.hs.fire.krx.vo.KrxItmVO;
 
 /**
@@ -28,7 +28,11 @@ public class KrxItmCtrl {
 	 */
 	@GetMapping("")
 	public ResponseEntity<KrxItmVO> insert() throws Exception {
+		// 한국거래소 종목 기본 정보 수집
 		krxItmService.krxItmCollection();
+		
+		// 한국거래소 종목 스팩여부 정보 수집
+		krxItmService.krxItmSpacYnCollection();
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(null);
 	}

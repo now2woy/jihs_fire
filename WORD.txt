@@ -20,3 +20,5 @@ QUARTER			QT					QT						분기
 ITEM			ITM					ITM						주식 종목
 STANDARD		STD					STD						표준
 SPAC			SPAC				SPAC					스팩
+KIND			KND					KND						종류
+CLASSIFICATION	CL					CL						구분

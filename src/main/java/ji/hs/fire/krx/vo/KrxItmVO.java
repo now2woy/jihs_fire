@@ -38,4 +38,14 @@ public class KrxItmVO {
 	 * 스팩여부
 	 */
 	private String spacYn;
+	
+	/**
+	 * 주식종류코드
+	 */
+	private String itmKndCd;
+	
+	/**
+	 * 주식구분코드
+	 */
+	private String itmClCd;
 }

@@ -1,7 +1,9 @@
 /* 코드 마스터 입력 쿼리 */
-INSERT INTO BC_CD_MT(CD_COL, CD_COL_NM, USE_YN) VALUES ('MKT_CD', '시장코드', 'Y');
+INSERT INTO BC_CD_MT(CD_COL, CD_COL_NM, USE_YN) VALUES ('MKT_CD', '시장코드', 'Y');			/*  */
 INSERT INTO BC_CD_MT(CD_COL, CD_COL_NM, USE_YN) VALUES ('REPRT_CD', '분기코드', 'Y');
-INSERT INTO BC_CD_MT(CD_COL, CD_COL_NM, USE_YN) VALUES ('SJ_CD', '구분코드', 'Y');
+INSERT INTO BC_CD_MT(CD_COL, CD_COL_NM, USE_YN) VALUES ('SJ_CD', '구분코드', 'Y');	
+INSERT INTO BC_CD_MT(CD_COL, CD_COL_NM, USE_YN) VALUES ('ITM_KND_CD', '주식종류코드', 'Y');		/* KRX */
+INSERT INTO BC_CD_MT(CD_COL, CD_COL_NM, USE_YN) VALUES ('ITM_CL_CD', '주식구분코드', 'Y');		/* KRX */
 
 
 /* 코드 상세 입력 쿼리 */

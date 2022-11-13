@@ -1,4 +1,4 @@
-package ji.hs.fire.krx.mapper;
+package ji.hs.fire.krx.mpr;
 
 import org.apache.ibatis.annotations.Flush;
 
@@ -32,5 +32,13 @@ public interface KrxItmMapper {
 	 * @throws Exception
 	 */
 	@Flush
-	public void insert(KrxItmVO krxItmVO) throws Exception;
+	public int insert(KrxItmVO krxItmVO) throws Exception;
+	
+	/**
+	 * 한국거래소 종목 수정
+	 * @param krxItmVO
+	 * @throws Exception
+	 */
+	@Flush
+	public int update(KrxItmVO krxItmVO) throws Exception;
 }
