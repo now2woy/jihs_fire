@@ -34,6 +34,8 @@
 			 , STD_ITM_CD
 			 , PUB_DT
 			 , SPAC_YN
+			 , ITM_KND_CD
+			 , ITM_CL_CD
 			 ) VALUES (
 			   #{itmCd}
 			 , #{itmNm}
@@ -41,6 +43,8 @@
 			 , #{stdItmCd}
 			 , STR_TO_DATE(#{pubDt}, '%Y/%m/%d')
 			 , #{spacYn}
+			 , #{itmKndCd}
+			 , #{itmClCd}
 			 )
 	]]>
 	</insert>
@@ -50,8 +54,14 @@
 		UPDATE KX_ITM_MT
 		   SET ITM_CD = #{itmCd}
 	]]>
-	<if test="spacYn != null and spacYn != ''">
+	<if test='spacYn != null'>
 		     , SPAC_YN = #{spacYn}
+	</if>
+	<if test='itmKndCd != null'>
+		     , ITM_KND_CD = #{itmKndCd}
+	</if>
+	<if test='itmClCd != null'>
+		     , ITM_CL_CD = #{itmClCd}
 	</if>
 	<![CDATA[
 		 WHERE ITM_CD = #{itmCd}

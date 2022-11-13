@@ -67,10 +67,16 @@ public class KrxItmService {
 				krxItmVO.setMktCd(bscCdVO.getCd());
 				krxItmVO.setPubDt(json.get("LIST_DD"));
 				krxItmVO.setStdItmCd(json.get("ISU_CD"));
-				krxItmVO.setItmKndCd(itmKndCd.get("KIND_STKCERT_TP_NM"));
-				krxItmVO.setItmClCd(itmClCd.get("SECUGRP_NM"));
+				krxItmVO.setItmKndCd(itmKndCd.get(json.get("KIND_STKCERT_TP_NM")));
+				krxItmVO.setItmClCd(itmClCd.get(json.get("SECUGRP_NM")));
+				krxItmVO.setSpacYn("N");
 				
-				if(krxItmMapper.selectCount(krxItmVO) != 1) {
+				// 데이터가 있을 경우 수정
+				if(krxItmMapper.selectCount(krxItmVO) == 1) {
+					krxItmMapper.update(krxItmVO);
+					
+				// 데이터가 없을 경우 입력
+				} else {
 					krxItmMapper.insert(krxItmVO);
 				}
 			}
@@ -87,11 +93,13 @@ public class KrxItmService {
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public void krxItmSpacYnCollection() throws Exception {
+		log.info("SPAC 여부 수집 시작");
+		
 		Document doc = Jsoup.connect(krxJsonUrl)
-			.data("bld", "dbms/MDC/STAT/standard/MDCSTAT03402")
-			.data("mktTpCd", "0")
-			.data("isuSrtCd2", "ALL")
-			.get();
+				.data("bld", "dbms/MDC/STAT/standard/MDCSTAT03402")
+				.data("mktTpCd", "0")
+				.data("isuSrtCd2", "ALL")
+				.get();
 		
 		for(Map<String, String> block : (List<Map<String, String>>)BscUtils.jsonParse(doc.text()).get("block1")) {
 			if("SPAC(소속부없음)".equals(block.get("SECT_TP_NM"))) {
@@ -102,6 +110,8 @@ public class KrxItmService {
 				krxItmMapper.update(krxItmVO);
 			}
 		}
+		
+		log.info("SPAC 여부 수집 종료");
 	}
 	
 	/**

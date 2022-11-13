@@ -13,14 +13,14 @@
 	</select>
 	
 <!-- CD_COL 조건 코드 상세 전체 조회 -->
-	<select id="selectAllByCdCol" resultType="ji.hs.fire.bsc.vo.BscCdVO">
+	<select id="selectAllByCdCol" resultType="ji.hs.fire.bsc.vo.BscCdVO" parameterType="String">
 		SELECT CD_COL
 		     , CD
 		     , CD_NM
 		     , ORD
 		     , USE_YN
 		  FROM BC_CD_DT
-		 WHERE CD_COL = #{cdCol}
+		 WHERE CD_COL = #{value}
 		 ORDER BY ORD ASC
 	</select>
 	
