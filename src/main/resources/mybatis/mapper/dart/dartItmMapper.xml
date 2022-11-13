@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ji.hs.fire.dart.mpr.DartItmMapper">
+
+<!-- DART_ITM_CD 조건 전자공시시스템 종목 마스터 Count 조회 -->
+	<select id="selectCount" resultType="Integer" parameterType="ji.hs.fire.dart.vo.DartItmVO">
+	<![CDATA[
+		SELECT COUNT(*) AS CNT
+		  FROM DT_ITM_MT
+		 WHERE DART_ITM_CD = #{dartItmCd}
+	]]>
+	</select>
+	
+<!-- 전자공시시스템 종목 입력 -->
+	<insert id="insert" parameterType="ji.hs.fire.dart.vo.DartItmVO" flushCache="true">
+	<![CDATA[
+		INSERT INTO DT_ITM_MT (
+			   DART_ITM_CD
+			 , DART_ITM_CD_NM
+			 , ITM_CD
+			 , MOD_DT
+			 ) VALUES (
+			   #{dartItmCd}
+			 , #{dartItmCdNm}
+			 , #{itmCd}
+			 , STR_TO_DATE(#{modDt}, '%Y%m%d')
+			 )
+	]]>
+	</insert>
+	
+<!-- 전자공시시스템 종목 수정 -->
+	<update id="update" parameterType="ji.hs.fire.dart.vo.DartItmVO" flushCache="true">
+	<![CDATA[
+		UPDATE DT_ITM_MT
+		   SET DART_ITM_CD = #{dartItmCd}
+	]]>
+	<if test='dartItmCdNm != null'>
+		     , DART_ITM_CD_NM = #{dartItmCdNm}
+	</if>
+	<if test='itmCd != null'>
+		     , ITM_CD = #{itmCd}
+	</if>
+	<if test='modDt != null'>
+		     , MOD_DT = STR_TO_DATE(#{modDt}, '%Y%m%d')
+	</if>
+	<![CDATA[
+		 WHERE DART_ITM_CD = #{dartItmCd}
+	]]>
+	</update>
+</mapper>

@@ -49,6 +49,7 @@
 	]]>
 	</insert>
 	
+<!-- 한국거래소 종목 수정 -->
 	<update id="update" parameterType="ji.hs.fire.krx.vo.KrxItmVO" flushCache="true">
 	<![CDATA[
 		UPDATE KX_ITM_MT

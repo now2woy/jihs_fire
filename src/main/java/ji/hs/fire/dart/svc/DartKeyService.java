@@ -28,7 +28,7 @@ public class DartKeyService {
 	 * @return
 	 * @throws Exception
 	 */
-	public DartKeyVO selectOne(int ordNum) throws Exception {
-		return dartKeyMapper.selectOne(ordNum);
+	public DartKeyVO selectOne(int ord) throws Exception {
+		return dartKeyMapper.selectOne(ord);
 	}
 }

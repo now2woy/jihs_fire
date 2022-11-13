@@ -14,8 +14,9 @@ public interface DartKeyMapper {
 	
 	/**
 	 * Dart Key 단건 조회
+	 * @param ord
 	 * @return
 	 * @throws Exception
 	 */
-	public DartKeyVO selectOne(int ordNum) throws Exception;
+	public DartKeyVO selectOne(int ord) throws Exception;
 }

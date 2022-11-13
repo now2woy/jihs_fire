@@ -11,8 +11,8 @@
 <!-- Dart Key 단건 조회 -->
 	<select id="selectOne" resultType="ji.hs.fire.dart.vo.DartKeyVO" parameterType="Integer">
 		SELECT API_KEY
-		     , ORD_NUM
+		     , ORD
 		  FROM DT_KEY_MT
-		 WHERE ORD_NUM = #{ordNum}
+		 WHERE ORD = #{value}
 	</select>
 </mapper>

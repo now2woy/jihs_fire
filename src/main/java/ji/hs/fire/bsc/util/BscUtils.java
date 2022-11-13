@@ -1,6 +1,14 @@
 package ji.hs.fire.bsc.util;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
+
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,5 +31,55 @@ public class BscUtils {
 		}
 		
 		return map;
+	}
+	
+	/**
+	 * 압축을 푼다.
+	 * @param is
+	 * @param destDir
+	 * @param charsetName
+	 * @throws IOException
+	 */
+	public static boolean unzip(InputStream is, File destDir, String charsetName) throws IOException {
+		ZipArchiveInputStream zis = null;
+		ZipArchiveEntry entry = null;
+		String name = null;
+		File target = null;
+		FileOutputStream fos = null;
+		boolean isUnzip = true;
+		
+		try {
+			zis = new ZipArchiveInputStream(is, charsetName, false);
+			
+			while ((entry = zis.getNextZipEntry()) != null){
+				name = entry.getName();
+				
+				target = new File (destDir, name);
+				
+				if(entry.isDirectory()){
+					target.mkdirs();
+				} else {
+					target.createNewFile();
+					
+					try {
+						fos = new FileOutputStream(target);
+						IOUtils.copy(zis, fos);
+					}catch(Exception e) {
+						isUnzip = false;
+						log.error("", e);
+					}finally {
+						IOUtils.closeQuietly(fos);
+					}
+				}
+			}
+		}catch(Exception e) {
+			log.error("", e);
+			isUnzip = false;
+		}finally {
+			IOUtils.closeQuietly(zis);
+			IOUtils.closeQuietly(fos);
+		}
+		
+		return isUnzip;
 	}
 }

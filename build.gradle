@@ -23,6 +23,9 @@ dependencies {
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
 	implementation 'org.jsoup:jsoup:1.15.3'
 	implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.8'
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+	implementation 'org.apache.commons:commons-compress:1.21'
+	implementation 'commons-io:commons-io:2.11.0'
 	
 	compileOnly 'org.projectlombok:lombok'
 	
