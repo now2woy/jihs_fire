@@ -2,16 +2,16 @@ package ji.hs.fire.dart.svc;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ji.hs.fire.dart.mpr.DartKeyMapper;
 import ji.hs.fire.dart.vo.DartKeyVO;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class DartKeyService {
-	@Autowired
-	private DartKeyMapper dartKeyMapper;
+	private final DartKeyMapper dartKeyMapper;
 	
 	/**
 	 * Dart Key 전체 조회

@@ -1,6 +1,5 @@
 package ji.hs.fire.krx.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ji.hs.fire.krx.svc.KrxItmService;
 import ji.hs.fire.krx.vo.KrxItmVO;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 한국거래소 종목 마스터 CTRL
@@ -16,10 +16,10 @@ import ji.hs.fire.krx.vo.KrxItmVO;
  *
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/krxItm")
 public class KrxItmCtrl {
-	@Autowired
-	private KrxItmService krxItmService;
+	private final KrxItmService krxItmService;
 	
 	/**
 	 * 한국거래소 종목 기본 정보 수집

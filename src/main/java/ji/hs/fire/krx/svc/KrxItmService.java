@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +15,7 @@ import ji.hs.fire.bsc.util.BscUtils;
 import ji.hs.fire.bsc.vo.BscCdVO;
 import ji.hs.fire.krx.mpr.KrxItmMapper;
 import ji.hs.fire.krx.vo.KrxItmVO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -25,12 +25,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class KrxItmService {
-	@Autowired
-	private BscCdMapper bscCdMapper;
-	
-	@Autowired
-	private KrxItmMapper krxItmMapper;
+	private final BscCdMapper bscCdMapper;
+	private final KrxItmMapper krxItmMapper;
 	
 	/**
 	 * 한국거래소 JSON URL
@@ -50,7 +48,7 @@ public class KrxItmService {
 		Map<String, String> itmClCd = createCdMap("ITM_CL_CD");
 		
 		// 시장코드별로 URL 호출
-		for(BscCdVO bscCdVO : bscCdMapper.selectAllByCdCol("MKT_CD")) {
+		for(BscCdVO bscCdVO : bscCdMapper.selectAll(BscCdVO.builder().cdCol("MKT_CD").build())) {
 			log.info("{} 수집 시작", bscCdVO.getCd());
 			
 			// KRX URL 호출
@@ -123,7 +121,7 @@ public class KrxItmService {
 	private Map<String, String> createCdMap(String cdCol) throws Exception {
 		Map<String, String> result = new HashMap<>();
 		
-		for(BscCdVO bscCdVO : bscCdMapper.selectAllByCdCol(cdCol)) {
+		for(BscCdVO bscCdVO : bscCdMapper.selectAll(BscCdVO.builder().cdCol(cdCol).build())) {
 			result.put(bscCdVO.getCdNm(), bscCdVO.getCd());
 		}
 		

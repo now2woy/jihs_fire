@@ -2,7 +2,6 @@ package ji.hs.fire.dart.web;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,12 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ji.hs.fire.dart.svc.DartKeyService;
 import ji.hs.fire.dart.vo.DartKeyVO;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/dartKey")
 public class DartKeyCtrl {
-	@Autowired
-	private DartKeyService dartKeyService;
+	private final DartKeyService dartKeyService;
 	
 	/**
 	 * Dart Key 전체 조회

@@ -1,5 +1,6 @@
 package ji.hs.fire.bsc.vo;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -8,6 +9,7 @@ import lombok.Data;
  *
  */
 @Data
+@Builder
 public class BscCdVO {
 	/**
 	 * 코드컬럼

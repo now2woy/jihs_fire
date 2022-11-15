@@ -12,7 +12,6 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +21,7 @@ import ji.hs.fire.dart.mpr.DartItmMapper;
 import ji.hs.fire.dart.mpr.DartKeyMapper;
 import ji.hs.fire.dart.vo.DartItmVO;
 import ji.hs.fire.dart.vo.DartKeyVO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,12 +31,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DartItmService {
-	@Autowired
-	private DartKeyMapper dartKeyMapper;
-	
-	@Autowired
-	private DartItmMapper dartItmMapper;
+	private final DartKeyMapper dartKeyMapper;
+	private final DartItmMapper dartItmMapper;
 	
 	/**
 	 * DART COPR CD URL
