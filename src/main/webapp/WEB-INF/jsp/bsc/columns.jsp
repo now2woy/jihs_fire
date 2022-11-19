@@ -5,26 +5,22 @@
 <%@ include file="/WEB-INF/jsp/common/inc.jsp" %>
 <script type="text/javascript">
 $(document).ready(function () {
-	var params = new URL(location.href).searchParams;
-	var url = "/api/codes/" + params.get("cdCol");
-	
 	$.ajax({
-		url: url
+		url: "/api/code/columns"
 		, data : null
 		, method: "GET"
 		, dataType: "json"
 		, async : true
 	})
 	.done(function(json) {
+		
 		if(json.length != 0){
 			$.each(json, function(key, value){
 				$("#data tbody").append(
 						"<tr>"
-						+ "	<td>" + value.cdCol + "</td>"
-						+"	<td>" + value.cd + "</td>"
-						+"	<td>" + value.cdNm + "</td>"
-						+"	<td style=\"text-align: right;\">" + value.ord + "</td>"
-						+"	<td style=\"text-align: center;\">" + value.useYn + "</td>"
+						+ "	<td><a href=\"javascript:goCd('" + value.cdCol + "');\">" + value.cdCol + "</a></td>"
+						+"	<td><a href=\"javascript:goCd('" + value.cdCol + "');\">" + value.cdColNm + "</a></td>"
+						+"	<td style=\"text-align: center;\"><a href=\"javascript:goCd('" + value.cdCol + "');\">" + value.useYn + "</a></td>"
 						+"	<td style=\"text-align: center;\"><a href=\"javascript:modify();\"><i class=\"fa fa-gears\"></i> 수정</a></td>"
 						+"</tr>");
 			});
@@ -33,10 +29,27 @@ $(document).ready(function () {
 });
 
 /**
- * 코드 컬럼 목록 이동
+ * 코드 목록
  */
-function goCdCol() {
-	location.href="/bsc/columns.do";
+function goCd(cdCol){
+	location.href="/bsc/codes.do?cdCol=" + cdCol;
+}
+
+/**
+ * 수정
+ */
+function modify(){
+	
+}
+
+function add(){
+	$("#data tbody").append(
+			"<tr>"
+			+ "	<td></td>"
+			+"	<td></td>"
+			+"	<td></td>"
+			+"	<td style=\"text-align: center;\"><a href=\"javascript:modify();\"><i class=\"fa fa-gears\"></i> 저장</a></td>"
+			+"</tr>");
 }
 </script>
 </head>
@@ -62,7 +75,7 @@ function goCdCol() {
 						<div class="col-md-12 col-sm-12  ">
 							<div class="x_panel">
 								<div class="x_title">
-									<h2>코드 목록</h2>
+									<h2>코드 컬럼 목록</h2>
 									<ul class="nav navbar-right panel_toolbox" style="min-width: 40px;">
 										<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
 										<li><a class="close-link"><i class="fa fa-close"></i></a>
@@ -76,9 +89,7 @@ function goCdCol() {
 											<thead>
 												<tr class="headings">
 													<th class="column-title" style="text-align: center;">컬럼</th>
-													<th class="column-title" style="text-align: center;">코드</th>
-													<th class="column-title" style="text-align: center;">코드명</th>
-													<th class="column-title" style="text-align: center;">순번</th>
+													<th class="column-title" style="text-align: center;">컬럼명</th>
 													<th class="column-title" style="text-align: center;">사용여부</th>
 													<th class="column-title" style="text-align: center;">-</th>
 												</tr>
@@ -91,8 +102,7 @@ function goCdCol() {
 								
 							<!-- 버튼 영역 시작 -->
 								<div style="float: right;">
-									<button type="button" class="btn btn-secondary" onclick="goCdCol();">목록</button>
-									<button type="button" class="btn btn-success">등록</button>
+									<button type="button" class="btn btn-success" onclick="add();">등록</button>
 								</div>
 							<!-- 버튼 영역 종료 -->
 								

@@ -13,6 +13,13 @@ import ji.hs.fire.bsc.vo.BscCdVO;
  */
 public interface BscCdMapper {
 	/**
+	 * 코드 컬럼 전체 조회
+	 * @return
+	 * @throws Exception
+	 */
+	public List<BscCdVO> selectAllCdColumn() throws Exception;
+	
+	/**
 	 * 코드 상세 전체 조회
 	 * @return
 	 * @throws Exception

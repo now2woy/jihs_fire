@@ -26,6 +26,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/codes")
 public class BscCdApiCtrl {
+	/**
+	 * 
+	 */
 	private final BscCdService bscCdService;
 	
 	/**
@@ -34,7 +37,7 @@ public class BscCdApiCtrl {
 	 */
 	@GetMapping("")
 	public ResponseEntity<List<BscCdVO>> list() throws Exception {
-		return ResponseEntity.status(HttpStatus.OK).body(bscCdService.list(BscCdVO.builder().build()));
+		return ResponseEntity.status(HttpStatus.OK).body(bscCdService.list(new BscCdVO()));
 	}
 		
 	/**
@@ -45,7 +48,10 @@ public class BscCdApiCtrl {
 	 */
 	@GetMapping("/{cdCol}")
 	public ResponseEntity<List<BscCdVO>> list(@PathVariable("cdCol") String cdCol) throws Exception {
-		return ResponseEntity.status(HttpStatus.OK).body(bscCdService.list(BscCdVO.builder().cdCol(cdCol).build()));
+		BscCdVO bscCdVO = new BscCdVO();
+		bscCdVO.setCdCol(cdCol);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(bscCdService.list(bscCdVO));
 	}
 	
 	/**
@@ -57,7 +63,11 @@ public class BscCdApiCtrl {
 	 */
 	@GetMapping("/{cdCol}/{cd}")
 	public ResponseEntity<List<BscCdVO>> list(@PathVariable("cdCol") String cdCol, @PathVariable("cd") String cd) throws Exception {
-		return ResponseEntity.status(HttpStatus.OK).body(bscCdService.list(BscCdVO.builder().cdCol(cdCol).cd(cd).build()));
+		BscCdVO bscCdVO = new BscCdVO();
+		bscCdVO.setCdCol(cdCol);
+		bscCdVO.setCd(cd);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(bscCdService.list(bscCdVO));
 	}
 	
 	/**

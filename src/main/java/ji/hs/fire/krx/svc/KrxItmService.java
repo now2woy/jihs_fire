@@ -82,16 +82,19 @@ public class KrxItmService {
 		Map<String, String> itmKndCd = createCdMap("ITM_KND_CD");
 		Map<String, String> itmClCd = createCdMap("ITM_CL_CD");
 		
+		BscCdVO bscCdVO = new BscCdVO();
+		bscCdVO.setCdCol("MKT_CD");
+		
 		// 시장코드별로 URL 호출
-		for(BscCdVO bscCdVO : bscCdMapper.selectAll(BscCdVO.builder().cdCol("MKT_CD").build())) {
-			log.info("{} 종목 정보 수집 시작", bscCdVO.getCd());
+		for(BscCdVO resultVO : bscCdMapper.selectAll(bscCdVO)) {
+			log.info("{} 종목 정보 수집 시작", resultVO.getCd());
 			
 			int cnt = 0;
 			
 			// KRX URL 호출
 			Document doc = Jsoup.connect(krxJsonUrl)
 				.data("bld", "dbms/MDC/STAT/standard/MDCSTAT01901")
-				.data("mktId", bscCdVO.getCd())
+				.data("mktId", resultVO.getCd())
 				.get();
 			
 			for(Map<String, String> json : (List<Map<String, String>>)BscUtils.jsonParse(doc.text()).get("OutBlock_1")) {
@@ -99,7 +102,7 @@ public class KrxItmService {
 				
 				krxItmVO.setItmCd(json.get("ISU_SRT_CD"));
 				krxItmVO.setItmNm(json.get("ISU_NM"));
-				krxItmVO.setMktCd(bscCdVO.getCd());
+				krxItmVO.setMktCd(resultVO.getCd());
 				krxItmVO.setPubDt(json.get("LIST_DD"));
 				krxItmVO.setStdItmCd(json.get("ISU_CD"));
 				krxItmVO.setItmKndCd(itmKndCd.get(json.get("KIND_STKCERT_TP_NM")));
@@ -118,9 +121,9 @@ public class KrxItmService {
 				cnt++;
 			}
 			
-			result.put(bscCdVO.getCdNm() + " CNT", Integer.toString(cnt));
+			result.put(resultVO.getCdNm() + " CNT", Integer.toString(cnt));
 			
-			log.info("{} 종목 정보 수집 종료", bscCdVO.getCd());
+			log.info("{} 종목 정보 수집 종료", resultVO.getCd());
 		}
 	}
 	
@@ -169,8 +172,11 @@ public class KrxItmService {
 	private Map<String, String> createCdMap(String cdCol) throws Exception {
 		Map<String, String> result = new HashMap<>();
 		
-		for(BscCdVO bscCdVO : bscCdMapper.selectAll(BscCdVO.builder().cdCol(cdCol).build())) {
-			result.put(bscCdVO.getCdNm(), bscCdVO.getCd());
+		BscCdVO bscCdVO = new BscCdVO();
+		bscCdVO.setCdCol(cdCol);
+		
+		for(BscCdVO resultVO : bscCdMapper.selectAll(bscCdVO)) {
+			result.put(resultVO.getCdNm(), resultVO.getCd());
 		}
 		
 		return result;

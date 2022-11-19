@@ -32,6 +32,15 @@ public class BscCdService {
 	private String krxJsonUrl;
 	
 	/**
+	 * 코드 컬럼 목록 조회
+	 * @return
+	 * @throws Exception
+	 */
+	public List<BscCdVO> listCdColumn() throws Exception {
+		return bscCdMapper.selectAllCdColumn();
+	}
+	
+	/**
 	 * 코드 상세 목록 조회
 	 * @param bscCdVO
 	 * @return
@@ -83,12 +92,15 @@ public class BscCdService {
 	 */
 	@SuppressWarnings("unchecked")
 	public void krxCdCollection() throws Exception {
+		BscCdVO bscCdVO = new BscCdVO();
+		bscCdVO.setCdCol("MKT_CD");
+		
 		// 시장코드별로 URL 호출
-		for(BscCdVO bscCdVO : bscCdMapper.selectAll(BscCdVO.builder().cdCol("MKT_CD").build())) {
+		for(BscCdVO resultVO : bscCdMapper.selectAll(bscCdVO)) {
 			// KRX URL 호출
 			Document doc = Jsoup.connect(krxJsonUrl)
 				.data("bld", "dbms/MDC/STAT/standard/MDCSTAT01901")
-				.data("mktId", bscCdVO.getCd())
+				.data("mktId", resultVO.getCd())
 				.get();
 			
 			List<Map<String, String>> outBlockList = (List<Map<String, String>>)BscUtils.jsonParse(doc.text()).get("OutBlock_1");
@@ -110,10 +122,9 @@ public class BscCdService {
 		log.info("ITM_KND_CD 수집 시작");
 		
 		for(Map<String, String> json : outBlockList) {
-			BscCdVO bscCdVO = BscCdVO.builder()
-					.cdCol("ITM_KND_CD")
-					.cdNm(json.get("KIND_STKCERT_TP_NM"))
-					.build();
+			BscCdVO bscCdVO = new BscCdVO();
+			bscCdVO.setCdCol("ITM_KND_CD");
+			bscCdVO.setCdNm(json.get("KIND_STKCERT_TP_NM"));
 			
 			// 입력된 코드가 없을 경우 입력
 			if(bscCdMapper.selectCount(bscCdVO) != 1) {
@@ -133,10 +144,9 @@ public class BscCdService {
 		log.info("ITM_CL_CD 수집 시작");
 		
 		for(Map<String, String> json : outBlockList) {
-			BscCdVO bscCdVO = BscCdVO.builder()
-					.cdCol("ITM_CL_CD")
-					.cdNm(json.get("SECUGRP_NM"))
-					.build();
+			BscCdVO bscCdVO = new BscCdVO();
+			bscCdVO.setCdCol("ITM_CL_CD");
+			bscCdVO.setCdNm(json.get("SECUGRP_NM"));
 			
 			// 입력된 코드가 없을 경우 입력
 			if(bscCdMapper.selectCount(bscCdVO) != 1) {
