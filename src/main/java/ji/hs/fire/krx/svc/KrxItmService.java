@@ -7,6 +7,7 @@ import java.util.Map;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +28,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class KrxItmService {
+	/**
+	 * BC_CD_DT 쿼리
+	 */
 	private final BscCdMapper bscCdMapper;
+	/**
+	 * KX_ITM_MT 쿼리
+	 */
 	private final KrxItmMapper krxItmMapper;
 	
 	/**
@@ -37,19 +44,49 @@ public class KrxItmService {
 	private String krxJsonUrl;
 	
 	/**
-	 * 한국거래소 종목 수집
+	 * 한국거래소 종목 기본 정보 수집
+	 * - 종목정보
+	 * - 스팩여부
+	 * 
 	 * @return
+	 */
+	@Async
+	@Transactional
+	public Map<String, String> krxBscCollection() throws Exception {
+		String thisDateTime = BscUtils.thisDateTime();
+		
+		log.info("{} 한국거래소 종목 기본 정보 수집 시작", thisDateTime);
+		
+		Map<String, String> result = new HashMap<>();
+		
+		
+		// 한국거래소 종목 수집
+		krxItmCollection(result);
+		
+		// 한국거래소 종목의 스팩여부 수집
+		krxItmSpacYnCollection(result);
+		
+		log.info("{} 한국거래소 종목 기본 정보 수집 종료", thisDateTime);
+		
+		return result;
+	}
+	
+	/**
+	 * 한국거래소 종목 수집
+	 * @param result
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public void krxItmCollection() throws Exception {
+	private void krxItmCollection(Map<String, String> result) throws Exception {
 		Map<String, String> itmKndCd = createCdMap("ITM_KND_CD");
 		Map<String, String> itmClCd = createCdMap("ITM_CL_CD");
 		
 		// 시장코드별로 URL 호출
 		for(BscCdVO bscCdVO : bscCdMapper.selectAll(BscCdVO.builder().cdCol("MKT_CD").build())) {
-			log.info("{} 수집 시작", bscCdVO.getCd());
+			log.info("{} 종목 정보 수집 시작", bscCdVO.getCd());
+			
+			int cnt = 0;
 			
 			// KRX URL 호출
 			Document doc = Jsoup.connect(krxJsonUrl)
@@ -77,21 +114,27 @@ public class KrxItmService {
 				} else {
 					krxItmMapper.insert(krxItmVO);
 				}
+				
+				cnt++;
 			}
 			
-			log.info("{} 수집 종료", bscCdVO.getCd());
+			result.put(bscCdVO.getCdNm() + " CNT", Integer.toString(cnt));
+			
+			log.info("{} 종목 정보 수집 종료", bscCdVO.getCd());
 		}
 	}
 	
 	/**
 	 * 한국거래소 종목의 스팩여부 수집
-	 * @return
+	 * @param result
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public void krxItmSpacYnCollection() throws Exception {
+	private void krxItmSpacYnCollection(Map<String, String> result) throws Exception {
 		log.info("SPAC 여부 수집 시작");
+		
+		int cnt = 0;
 		
 		Document doc = Jsoup.connect(krxJsonUrl)
 				.data("bld", "dbms/MDC/STAT/standard/MDCSTAT03402")
@@ -106,8 +149,13 @@ public class KrxItmService {
 				krxItmVO.setSpacYn("Y");
 				
 				krxItmMapper.update(krxItmVO);
+				
+				cnt++;
 			}
 		}
+		
+		// 결과를 맵에 담는다.
+		result.put("SPAC CNT", Integer.toString(cnt));
 		
 		log.info("SPAC 여부 수집 종료");
 	}

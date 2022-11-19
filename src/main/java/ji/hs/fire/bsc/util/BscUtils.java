@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
@@ -16,6 +18,23 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class BscUtils {
+	/**
+	 * 현재 시간이 배치 실행시간과 같은지 확인하여 리턴
+	 * @param hh
+	 * @return
+	 */
+	public static boolean isRunTime(String hh) {
+		return hh.equals(new SimpleDateFormat("HH").format(new Date()));
+	}
+	
+	/**
+	 * 현재 시간을 리턴
+	 * @return
+	 */
+	public static String thisDateTime() {
+		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+	}
+	
 	/**
 	 * json을 Map형식으로 리턴
 	 * @param json

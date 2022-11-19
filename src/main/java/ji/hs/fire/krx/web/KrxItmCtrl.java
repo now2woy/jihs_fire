@@ -2,12 +2,12 @@ package ji.hs.fire.krx.web;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ji.hs.fire.bsc.util.BscUtils;
 import ji.hs.fire.krx.svc.KrxItmService;
-import ji.hs.fire.krx.vo.KrxItmVO;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -17,23 +17,28 @@ import lombok.RequiredArgsConstructor;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/krxItm")
+@RequestMapping("/api/krxs")
 public class KrxItmCtrl {
+	/**
+	 * 
+	 */
 	private final KrxItmService krxItmService;
+	
+	private static final String MSG_SUCCESS = "success";
 	
 	/**
 	 * 한국거래소 종목 기본 정보 수집
 	 * @param dartKeyVO
 	 * @return
 	 */
-	@GetMapping("")
-	public ResponseEntity<KrxItmVO> insert() throws Exception {
-		// 한국거래소 종목 기본 정보 수집
-		krxItmService.krxItmCollection();
+	@PostMapping("/batch")
+	public ResponseEntity<String> insert() throws Exception {
 		
-		// 한국거래소 종목 스팩여부 정보 수집
-		krxItmService.krxItmSpacYnCollection();
+		if(BscUtils.isRunTime("01")){
+			// 한국거래소 종목 기본 정보 수집
+			krxItmService.krxBscCollection();
+		}
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(null);
+		return ResponseEntity.status(HttpStatus.CREATED).body(MSG_SUCCESS);
 	}
 }

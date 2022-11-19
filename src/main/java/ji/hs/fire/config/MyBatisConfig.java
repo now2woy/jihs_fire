@@ -14,6 +14,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
+/**
+ * DB 및 Mybatis 설정
+ * @author now2w
+ *
+ */
 @Configuration
 @MapperScan(basePackages = {"ji.hs.fire"})
 public class MyBatisConfig {
