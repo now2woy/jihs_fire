@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 전자공시시스템 종목 마스터 Service
+ * 전자공시시스템 종목 정보 Service
  * @author now2w
  *
  */

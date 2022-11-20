@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ji.hs.fire.dart.mpr.DartItmMapper">
-
+	
+<!-- 코드 상세 전체 조회 -->
+	<select id="selectAll" resultType="ji.hs.fire.dart.vo.DartItmVO" parameterType="ji.hs.fire.dart.vo.DartItmVO">
+		SELECT DART_ITM_CD
+		     , DART_ITM_CD_NM
+		     , ITM_CD
+		     , (SELECT CASE WHEN COUNT(*) = 0  THEN 'N' ELSE 'Y' END FROM DT_FNLTT_MT X WHERE A.DART_ITM_CD = X.DART_ITM_CD AND X.YR = #{yr} AND X.QT_CD = #{qtCd}) AS CLT_YN
+		  FROM DT_ITM_MT
+		 WHERE 1 = 1
+	<if test='itmCd != null and itmCd != ""'>
+		   AND ITM_CD = #{itmCd}
+	</if>
+	<if test='itmCd == null or itmCd == ""'>
+		   AND ITM_CD IS NOT NULL
+		   AND ITM_CD != ''
+	</if>
+		  ORDER BY DART_ITM_CD ASC
+	</select>
+	
 <!-- DART_ITM_CD 조건 전자공시시스템 종목 마스터 Count 조회 -->
 	<select id="selectCount" resultType="Integer" parameterType="ji.hs.fire.dart.vo.DartItmVO">
 	<![CDATA[

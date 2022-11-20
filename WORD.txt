@@ -22,3 +22,10 @@ STANDARD		STD					STD						표준
 SPAC			SPAC				SPAC					스팩
 KIND			KND					KND						종류
 CLASSIFICATION	CL					CL						구분
+currency		CRC					CRC						통화
+BATCH			BATCH				BATCH					배치
+PARAMETER		PARM				PARM					파라미터
+EXECUTE			EXE					EXE						실행
+SUCCESS			SUC					SUC						성공
+SEARCH			SRCH				SRCH					검색
+COLLECTION		CLT					CLT						수집

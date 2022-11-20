@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 코드 상세 CTRL
+ * 코드 정보 CTRL
  * @author now2w
  *
  */

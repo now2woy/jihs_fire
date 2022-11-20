@@ -18,7 +18,7 @@ import ji.hs.fire.bsc.vo.BscCdVO;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 코드 상세 CTRL
+ * 코드 정보 API CTRL
  * @author now2w
  *
  */

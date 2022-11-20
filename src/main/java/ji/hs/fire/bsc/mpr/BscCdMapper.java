@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Flush;
 import ji.hs.fire.bsc.vo.BscCdVO;
 
 /**
- * 코드 상세 Mapper
+ * 코드 정보 Mapper
  * @author now2w
  *
  */

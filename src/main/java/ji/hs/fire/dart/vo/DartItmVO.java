@@ -13,19 +13,28 @@ public class DartItmVO {
 	 * 전자공시시스템 종목코드
 	 */
 	private String dartItmCd;
-	
 	/**
 	 * 전자공시시스템 종목코드명
 	 */
 	private String dartItmCdNm;
-	
 	/**
 	 * 종목코드
 	 */
 	private String itmCd;
-	
 	/**
 	 * 상장일자
 	 */
 	private String modDt;
+	/**
+	 * 연도
+	 */
+	private String yr;
+	/**
+	 * 분기코드
+	 */
+	private String qtCd;
+	/**
+	 * 수집여부
+	 */
+	private String cltYn;
 }

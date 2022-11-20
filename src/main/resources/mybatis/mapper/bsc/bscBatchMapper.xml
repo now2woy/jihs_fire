@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ji.hs.fire.bsc.mpr.BscCdMapper">
+<!-- 배치 정보 목록 조회 -->
+	<select id="selectAll" resultType="ji.hs.fire.bsc.vo.BscBatchVO">
+		SELECT SEQ
+			 , BATCH_CD
+			 , PARM_1ST
+			 , PARM_2ND
+			 , PARM_3RD
+			 , PARM_4TH
+			 , EXE_YN
+			 , SUC_YN
+		  FROM BC_BATCH_MT
+		 WHERE 1 = 1
+	<if test='batchCd != null and batchCd != ""'>
+		   AND BATCH_CD = #{batchCd}
+	</if>
+	<if test='exeYn != null and exeYn != ""'>
+		   AND EXE_YN = #{exeYn}
+	</if>
+		 ORDER BY SEQ ASC
+	<if test='srchCnt != 0'>
+		 LIMIT #{srchCnt}
+	</if>
+	</select>
+	
+<!-- 배치 정보 수정 -->
+	<update id="update" parameterType="ji.hs.fire.bsc.vo.BscBatchVO" flushCache="true">
+		UPDATE BC_BATCH_MT
+		   SET SEQ = #{seq}
+	<if test='exeYn != null and exeYn != "" and exeYn != "N"'>
+		     , EXE_YN = #{exeYn}
+		     , EXE_DT = SYSDATE
+	</if>
+	<if test='sucYn != null and sucYn != ""'>
+		     , SUC_YN = #{sucYn}
+	</if>
+		 WHERE SEQ = #{seq}
+	</update>
+</mapper>

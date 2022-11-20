@@ -12,15 +12,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 전자공시시스템 종목 마스터 CTRL
+ * 전자공시시스템 종목 정보 API CTRL
  * @author now2w
  *
  */
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/dartItm")
-public class DartItmCtrl {
+@RequestMapping("/api/darts")
+public class DartItmApiCtrl {
 	private final DartItmService dartItmService;
 	
 	/**

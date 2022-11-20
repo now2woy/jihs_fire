@@ -1,10 +1,9 @@
 package ji.hs.fire.bsc.vo;
 
-import lombok.Builder;
 import lombok.Data;
 
 /**
- * 코드 상세 VO
+ * 코드 정보 VO
  * @author now2w
  *
  */

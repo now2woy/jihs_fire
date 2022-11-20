@@ -13,7 +13,7 @@ import ji.hs.fire.bsc.vo.BscCdVO;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 코드 컬럼 CTRL
+ * 코드 컬럼 정보 API CTRL
  * @author now2w
  *
  */

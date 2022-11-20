@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ji.hs.fire.dart.mpr.DartItmMapper">
+	
+<!-- 전자공시시스템 종목 입력 -->
+	<insert id="insert" parameterType="ji.hs.fire.dart.vo.DartItmVO" flushCache="true">
+	<![CDATA[
+		INSERT INTO DT_FNLTT_MT (
+			   DART_ITM_CD
+			 , YR
+			 , QT_CD
+			 , SEQ
+			 , SJ_CD
+			 , SJ_NM
+			 , ACNT_ID
+			 , ACNT_NM
+			 , ACNT_DTL
+			 , TH_TM_NM
+			 , TH_TM_AMT
+			 , TH_TM_ADD_AMT
+			 , FRM_TM_NM
+			 , FRM_TM_AMT
+			 , FRM_TM_ADD_AMT
+			 , ORD
+			 , CRC_CD
+			 , ITM_CD
+			 , FS_CD
+			 ) VALUES (
+			   #{dartItmCd}
+			 , #{yr}
+			 , #{qtCd}
+			 , (SELECT MAX(NVL(SEQ, 0)) + 1 FROM DT_FNLTT_MT WHERE DART_ITM_CD = #{dartItmCd} AND YR = #{yr} AND QT_CD = #{qtCd})
+			 , #{sjCd}
+			 , #{sjNm}
+			 , #{acntId}
+			 , #{acntNm}
+			 , #{acntDtl}
+			 , #{thTmNm}
+			 , #{thTmAmt}
+			 , #{thTmAddAmt}
+			 , #{frmTmNm}
+			 , #{frmTmAmt}
+			 , #{frmTmAddAmt}
+			 , #{ord}
+			 , #{crcCd}
+			 , #{itmCd}
+			 , #{fsCd}
+			 )
+	]]>
+	</insert>
+</mapper>
