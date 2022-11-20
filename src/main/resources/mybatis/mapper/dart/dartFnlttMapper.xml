@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="ji.hs.fire.dart.mpr.DartItmMapper">
+<mapper namespace="ji.hs.fire.dart.mpr.DartFnlttMapper">
 	
 <!-- 전자공시시스템 종목 입력 -->
-	<insert id="insert" parameterType="ji.hs.fire.dart.vo.DartItmVO" flushCache="true">
+	<insert id="insert" parameterType="ji.hs.fire.dart.vo.DartFnlttVO" flushCache="true">
 	<![CDATA[
 		INSERT INTO DT_FNLTT_MT (
 			   DART_ITM_CD
