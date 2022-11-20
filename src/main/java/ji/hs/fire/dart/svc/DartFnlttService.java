@@ -10,6 +10,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -60,6 +61,7 @@ public class DartFnlttService {
 	 * Dart 재무제표 수집
 	 * @throws Exception
 	 */
+	@Transactional
 	@Async
 	public void dartFnlttCollection() throws Exception {
 		final ObjectMapper mapper = new ObjectMapper();
@@ -87,10 +89,11 @@ public class DartFnlttService {
 			
 			// 수집 대상 종목 조회
 			for(DartItmVO dartItmVO : dartItmMapper.selectAll(parmDartItmVO)) {
+				
 				// 수집여부가 N인것만 수집
 				if("N".equals(dartItmVO.getCltYn())) {
 					// 사용할 수 있는 API KEY가 있는지 확인
-					if(keyList.size() <= (keyNum + 1)) {
+					if(keyList.size() >= (keyNum + 1)) {
 						String fsCd = "CFS";
 						
 						Map<String, Object> map = mapper.readValue(getDataFromUrl(keyList.get(keyNum).getApiKey(), dartItmVO.getDartItmCd(), bscBatchVO.getParm1st(), bscBatchVO.getParm2nd(), fsCd), mapper.getTypeFactory().constructMapLikeType(Map.class, String.class, Object.class));
@@ -106,7 +109,7 @@ public class DartFnlttService {
 								keyNum = keyNum + 1;
 								
 								// 사용할 수 있는 API KEY가 있는지 확인
-								if(keyList.size() <= (keyNum + 1)) {
+								if(keyList.size() >= (keyNum + 1)) {
 									map = mapper.readValue(getDataFromUrl(keyList.get(keyNum).getApiKey(), dartItmVO.getDartItmCd(), bscBatchVO.getParm1st(), bscBatchVO.getParm2nd(), fsCd), mapper.getTypeFactory().constructMapLikeType(Map.class, String.class, Object.class));
 								}
 							}
@@ -116,7 +119,7 @@ public class DartFnlttService {
 							keyNum = keyNum + 1;
 							
 							// 사용할 수 있는 API KEY가 있는지 확인
-							if(keyList.size() <= (keyNum + 1)) {
+							if(keyList.size() >= (keyNum + 1)) {
 								map = mapper.readValue(getDataFromUrl(keyList.get(keyNum).getApiKey(), dartItmVO.getDartItmCd(), bscBatchVO.getParm1st(), bscBatchVO.getParm2nd(), fsCd), mapper.getTypeFactory().constructMapLikeType(Map.class, String.class, Object.class));
 							}
 						}
@@ -180,6 +183,8 @@ public class DartFnlttService {
 								dartFnlttMapper.insert(dartFnlttVO);
 							}
 							
+							log.info("{}({}) {} 수집", dartItmVO.getItmCd(), dartItmVO.getDartItmCd(), dartItmVO.getDartItmCdNm());
+							
 						// 여러번 조회한 뒤에도 정상적인 값이 아닐 경우 배치 다시 실행
 						} else {
 							bscBatchVO.setExeYn("N");
@@ -215,8 +220,8 @@ public class DartFnlttService {
 		String result = null;
 		InputStream is = null;
 		try {
-			// 1분에 1000건이 넘으면 24시간 차단을 당하기 때문에 100ms 슬립한다.
-			Thread.sleep(100L);
+			// 1분에 1000건이 넘으면 24시간 차단, 1건당 60ms을 사용할 경우 정확하게 1분에 1000건 처리 가능, 여유를 두고 65ms 으로 세팅
+			Thread.sleep(65L);
 			
 			URL url = new URL(dartFnlttUrl + "?crtfc_key=" + dartApiKey + "&corp_code=" + dartItmCd + "&bsns_year=" + yr + "&reprt_code=" + qt + "&fs_div=" + fsDiv);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();

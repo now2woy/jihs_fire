@@ -29,7 +29,7 @@
 			   #{dartItmCd}
 			 , #{yr}
 			 , #{qtCd}
-			 , (SELECT MAX(NVL(SEQ, 0)) + 1 FROM DT_FNLTT_MT WHERE DART_ITM_CD = #{dartItmCd} AND YR = #{yr} AND QT_CD = #{qtCd})
+			 , (SELECT NVL(MAX(X.SEQ), 0) + 1 FROM DT_FNLTT_MT X WHERE X.DART_ITM_CD = #{dartItmCd} AND X.YR = #{yr} AND X.QT_CD = #{qtCd})
 			 , #{sjCd}
 			 , #{sjNm}
 			 , #{acntId}

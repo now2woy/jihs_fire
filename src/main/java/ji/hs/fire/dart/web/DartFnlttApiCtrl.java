@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ji.hs.fire.bsc.util.BscUtils;
 import ji.hs.fire.dart.svc.DartFnlttService;
 import lombok.RequiredArgsConstructor;
 
@@ -34,8 +35,11 @@ public class DartFnlttApiCtrl {
 	 */
 	@PostMapping("/batch")
 	public ResponseEntity<String> batch() throws Exception {
-		// 비동기 방식으로 데이터 수집
-		dartFnlttService.dartFnlttCollection();
+		// 세벽 2시에만 동작
+		if(BscUtils.isRunTime("02")){
+			// 비동기 방식으로 데이터 수집
+			dartFnlttService.dartFnlttCollection();
+		}
 		
 		// 성공 리턴
 		return ResponseEntity.status(HttpStatus.CREATED).body(SUCCESS);

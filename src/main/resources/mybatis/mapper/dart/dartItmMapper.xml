@@ -8,7 +8,7 @@
 		     , DART_ITM_CD_NM
 		     , ITM_CD
 		     , (SELECT CASE WHEN COUNT(*) = 0  THEN 'N' ELSE 'Y' END FROM DT_FNLTT_MT X WHERE A.DART_ITM_CD = X.DART_ITM_CD AND X.YR = #{yr} AND X.QT_CD = #{qtCd}) AS CLT_YN
-		  FROM DT_ITM_MT
+		  FROM DT_ITM_MT A
 		 WHERE 1 = 1
 	<if test='itmCd != null and itmCd != ""'>
 		   AND ITM_CD = #{itmCd}
