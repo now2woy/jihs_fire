@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ji.hs.fire.bsc.mpr.BscCdColMapper">
+<!-- 코드 컬럼 전체 조회 -->
+	<select id="selectAll" resultType="ji.hs.fire.bsc.vo.BscCdColVO">
+		SELECT CD_COL
+		     , CD_COL_NM
+		     , USE_YN
+		  FROM BC_CD_MT
+		 WHERE 1 = 1
+	<if test='useYn != null and useYn != ""'>
+		   AND USE_YN = #{useYn}
+	</if>
+		 ORDER BY CD_COL ASC
+	</select>
+	
+<!-- 코드 컬럼 입력 -->
+	<insert id="insert" parameterType="ji.hs.fire.bsc.vo.BscCdColVO" flushCache="true">
+	<![CDATA[
+		INSERT INTO BC_CD_MT (
+			   CD_COL
+			 , CD_COL_NM
+			 , USE_YN
+			 ) VALUES (
+			   #{cdCol}
+			 , #{cdColNm}
+			 , #{useYn}
+			 )
+	]]>
+	</insert>
+	
+<!-- 코드 컬럼 수정 -->
+	<update id="update" parameterType="ji.hs.fire.bsc.vo.BscCdColVO" flushCache="true">
+		UPDATE BC_CD_MT
+		   SET CD_COL = #{cdCol}
+		     , CD_COL_NM = #{cdColNm}
+		     , USE_YN = #{useYn}
+		 WHERE CD_COL = #{cdCol}
+	</update>
+</mapper>

@@ -8,23 +8,15 @@ import lombok.Data;
  *
  */
 @Data
-public class BscCdVO {
+public class BscCdColVO {
 	/**
 	 * 코드컬럼
 	 */
 	private String cdCol;
 	/**
-	 * 코드
+	 * 코드컬럼명
 	 */
-	private String cd;
-	/**
-	 * 코드명
-	 */
-	private String cdNm;
-	/**
-	 * 순번
-	 */
-	private int ord;
+	private String cdColNm;
 	/**
 	 * 사용여부
 	 */

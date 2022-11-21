@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ji.hs.fire.bsc.mpr.BscBatchMapper;
+import ji.hs.fire.bsc.util.BscConstants;
 import ji.hs.fire.bsc.vo.BscBatchVO;
 import ji.hs.fire.dart.mpr.DartKeyMapper;
 import ji.hs.fire.dart.mpr.DartFnlttMapper;
@@ -61,9 +63,11 @@ public class DartFnlttService {
 	 * Dart 재무제표 수집
 	 * @throws Exception
 	 */
-	@Transactional
 	@Async
+	@Transactional
 	public void dartFnlttCollection() throws Exception {
+		MDC.put(BscConstants.LOG_KEY, BscConstants.LOG_KEY_DART);
+		
 		final ObjectMapper mapper = new ObjectMapper();
 		
 		// DART API KEY 조회
@@ -206,6 +210,8 @@ public class DartFnlttService {
 			
 			log.info("{}년도 {}분기 재무제표 수집 종료", bscBatchVO.getParm1st(), bscBatchVO.getParm2nd());
 		}
+		
+		MDC.clear();
 	}
 	
 	/**

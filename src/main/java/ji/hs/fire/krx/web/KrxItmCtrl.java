@@ -33,8 +33,8 @@ public class KrxItmCtrl {
 	 */
 	@PostMapping("/batch")
 	public ResponseEntity<String> insert() throws Exception {
-		
-		if(BscUtils.isRunTime("01")){
+		// 02시 실행
+		if(BscUtils.isRunTime("02")){
 			// 한국거래소 종목 기본 정보 수집
 			krxItmService.krxBscCollection();
 		}

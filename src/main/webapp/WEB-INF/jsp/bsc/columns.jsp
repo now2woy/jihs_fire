@@ -18,10 +18,10 @@ $(document).ready(function () {
 			$.each(json, function(key, value){
 				$("#data tbody").append(
 						"<tr>"
-						+ "	<td><a href=\"javascript:goCd('" + value.cdCol + "');\">" + value.cdCol + "</a></td>"
-						+"	<td><a href=\"javascript:goCd('" + value.cdCol + "');\">" + value.cdColNm + "</a></td>"
-						+"	<td style=\"text-align: center;\"><a href=\"javascript:goCd('" + value.cdCol + "');\">" + value.useYn + "</a></td>"
-						+"	<td style=\"text-align: center;\"><a href=\"javascript:modify();\"><i class=\"fa fa-gears\"></i> 수정</a></td>"
+						+ "	<td id=\"TD_CD_COL_" + value.cdCol + "\"><a href=\"javascript:goCd('" + value.cdCol + "');\">" + value.cdCol + "</a></td>"
+						+"	<td id=\"TD_CD_COL_NM_" + value.cdCol + "\"><a href=\"javascript:goCd('" + value.cdCol + "');\">" + value.cdColNm + "</a></td>"
+						+"	<td id=\"TD_USE_YN_" + value.cdCol + "\" style=\"text-align: center;\"><a href=\"javascript:goCd('" + value.cdCol + "');\">" + value.useYn + "</a></td>"
+						+"	<td id=\"TD_BTN_" + value.cdCol + "\" style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:modify('" + value.cdCol + "');\"><i class=\"fa fa-gears\"></i> 수정</a></td>"
 						+"</tr>");
 			});
 		}
@@ -38,18 +38,73 @@ function goCd(cdCol){
 /**
  * 수정
  */
-function modify(){
+function modify(id){
+	var cdCol = $("#TD_CD_COL_" + id + " a").text();
+	var cdColNm = $("#TD_CD_COL_NM_" + id + " a").text();
+	var useYn = $("#TD_USE_YN_" + id + " a").text();
 	
+	var select = "<select id=\"USE_YN_" + id + "\" class=\"form-control\">";
+	
+	if(useYn == "Y"){
+		select = select + "<option selected=\"selected\" value=\"Y\">Y</option><option value=\"N\">N</option></select>";
+	} else {
+		select = select + "<option value=\"Y\">Y</option><option selected=\"selected\" value=\"N\">N</option></select>";
+	}
+	
+	$("#TD_CD_COL_" + id).empty();
+	$("#TD_CD_COL_NM_" + id).empty();
+	$("#TD_USE_YN_" + id).empty();
+	$("#TD_BTN_" + id).empty();
+	
+	$("#TD_CD_COL_" + id).append("<input type=\"text\" id=\"CD_COL_" + id + "\" class=\"form-control\" value=\"" + cdCol + "\" readonly=\"readonly\" />");
+	$("#TD_CD_COL_NM_" + id).append("<input type=\"text\" id=\"CD_COL_NM_" + id + "\" class=\"form-control\" value=\"" + cdColNm + "\" />");
+	$("#TD_USE_YN_" + id).append(select);
+	$("#TD_BTN_" + id).append("<a href=\"javascript:save('" + id + "', 'PUT');\"><i class=\"fa fa-gears\"></i> 저장</a>");
 }
 
+/**
+ * 등록 버튼
+ */
 function add(){
 	$("#data tbody").append(
 			"<tr>"
-			+ "	<td></td>"
-			+"	<td></td>"
-			+"	<td></td>"
-			+"	<td style=\"text-align: center;\"><a href=\"javascript:modify();\"><i class=\"fa fa-gears\"></i> 저장</a></td>"
+			+ "	<td><input type=\"text\" id=\"CD_COL_NEW\" name=\"CD_COL_NEW\" class=\"form-control\" value=\"\" /></td>"
+			+"	<td><input type=\"text\" id=\"CD_COL_NM_NEW\" name=\"CD_COL_NM_NEW\" class=\"form-control\" value=\"\" /></td>"
+			+"	<td style=\"text-align: center;\">"
+			+"		<select id=\"USE_YN_NEW\" name=\"USE_YN_NEW\" class=\"form-control\">"
+			+"			<option value=\"Y\">Y</option>"
+			+"			<option value=\"N\">N</option>"
+			+"		</select>"
+			+"	</td>"
+			+"	<td style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:save('NEW', 'POST');\"><i class=\"fa fa-gears\"></i> 저장</a></td>"
 			+"</tr>");
+	
+	$("#btn_div").attr("style", "float: right; display : none;")
+}
+
+/**
+ * 저장버튼
+ */
+function save(id, method){
+	if(confirm("저장하시겠습니까?")){
+		var param = new Object();
+		
+		param.cdCol = $("#CD_COL_" + id).val();
+		param.cdColNm = $("#CD_COL_NM_" + id).val();
+		param.useYn = $("#USE_YN_" + id).val();
+		
+		$.ajax({
+			url: "/api/code/columns"
+			, data : JSON.stringify(param)
+			, method: method
+			, dataType: "json"
+			, contentType: 'application/json'
+			, async : false
+		})
+		.done(function(json) {
+			location.reload();
+		});
+	}
 }
 </script>
 </head>
@@ -86,6 +141,12 @@ function add(){
 								<div class="x_content">
 									<div class="table-responsive">
 										<table id="data" class="table jambo_table bulk_action">
+											<colgroup>
+												<col style="width: 35%;" />
+												<col style="width: 35%;" />
+												<col style="width: 15%;" />
+												<col style="width: 15%;" />
+											</colgroup>
 											<thead>
 												<tr class="headings">
 													<th class="column-title" style="text-align: center;">컬럼</th>
@@ -101,7 +162,7 @@ function add(){
 								</div>
 								
 							<!-- 버튼 영역 시작 -->
-								<div style="float: right;">
+								<div id="btn_div" style="float: right;">
 									<button type="button" class="btn btn-success" onclick="add();">등록</button>
 								</div>
 							<!-- 버튼 영역 종료 -->

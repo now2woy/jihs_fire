@@ -35,8 +35,8 @@ public class DartFnlttApiCtrl {
 	 */
 	@PostMapping("/batch")
 	public ResponseEntity<String> batch() throws Exception {
-		// 세벽 2시에만 동작
-		if(BscUtils.isRunTime("02")){
+		// 03시 실행
+		if(BscUtils.isRunTime("03")){
 			// 비동기 방식으로 데이터 수집
 			dartFnlttService.dartFnlttCollection();
 		}

@@ -7,16 +7,19 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ji.hs.fire.bsc.mpr.BscCdMapper;
+import ji.hs.fire.bsc.util.BscConstants;
 import ji.hs.fire.bsc.util.BscUtils;
 import ji.hs.fire.bsc.vo.BscCdVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 코드 상세 Service
+ * 코드 정보 Service
  * @author now2w
  *
  */
@@ -33,66 +36,15 @@ public class BscCdService {
 	private String krxJsonUrl;
 	
 	/**
-	 * 코드 컬럼 목록 조회
-	 * @return
-	 * @throws Exception
-	 */
-	public List<BscCdVO> listCdColumn() throws Exception {
-		return bscCdMapper.selectAllCdColumn();
-	}
-	
-	/**
-	 * 코드 상세 목록 조회
-	 * @param bscCdVO
-	 * @return
-	 * @throws Exception
-	 */
-	public List<BscCdVO> list(BscCdVO bscCdVO) throws Exception {
-		return bscCdMapper.selectAll(bscCdVO);
-	}
-	
-	/**
-	 * 코드 상세 입력
-	 * @param bscCdVO
-	 * @return
-	 * @throws Exception
-	 */
-	public BscCdVO insert(BscCdVO bscCdVO) throws Exception {
-		bscCdMapper.insert(bscCdVO);
-		
-		return bscCdVO;
-	}
-	
-	/**
-	 * 코드 상세 수정
-	 * @param bscCdVO
-	 * @return
-	 * @throws Exception
-	 */
-	public BscCdVO update(BscCdVO bscCdVO) throws Exception {
-		bscCdMapper.update(bscCdVO);
-		
-		return bscCdVO;
-	}
-	
-	/**
-	 * 코드 상세 삭제
-	 * @param bscCdVO
-	 * @return
-	 * @throws Exception
-	 */
-	public BscCdVO delete(BscCdVO bscCdVO) throws Exception {
-		bscCdMapper.delete(bscCdVO);
-		
-		return null;
-	}
-	
-	/**
 	 * KRX 코드 수집
 	 * @throws Exception
 	 */
+	@Async
+	@Transactional
 	@SuppressWarnings("unchecked")
 	public void krxCdCollection() throws Exception {
+		MDC.put(BscConstants.LOG_KEY, BscConstants.LOG_KEY_BSC);
+		
 		BscCdVO bscCdVO = new BscCdVO();
 		bscCdVO.setCdCol("MKT_CD");
 		
@@ -112,6 +64,8 @@ public class BscCdService {
 			// ITM_CL_CD 수집
 			itmClCdCollection(outBlockList);
 		}
+		
+		MDC.clear();
 	}
 	
 	/**
@@ -129,7 +83,7 @@ public class BscCdService {
 			
 			// 입력된 코드가 없을 경우 입력
 			if(bscCdMapper.selectCount(bscCdVO) != 1) {
-				bscCdMapper.insert(bscCdVO);
+				bscCdMapper.insertBatch(bscCdVO);
 			}
 		}
 		
@@ -151,7 +105,7 @@ public class BscCdService {
 			
 			// 입력된 코드가 없을 경우 입력
 			if(bscCdMapper.selectCount(bscCdVO) != 1) {
-				bscCdMapper.insert(bscCdVO);
+				bscCdMapper.insertBatch(bscCdVO);
 			}
 		}
 		
