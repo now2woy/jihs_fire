@@ -188,9 +188,13 @@ public class DartFnlttService {
 							}
 							
 							log.info("{}({}) {} 수집", dartItmVO.getItmCd(), dartItmVO.getDartItmCd(), dartItmVO.getDartItmCdNm());
+						
+						// 13번은 오류 아님
+						} else if("013".equals(map.get("status"))) {
 							
 						// 여러번 조회한 뒤에도 정상적인 값이 아닐 경우 배치 다시 실행
 						} else {
+							log.info("{}({}) {} {} 실패", dartItmVO.getItmCd(), dartItmVO.getDartItmCd(), dartItmVO.getDartItmCdNm(), map.get("status"));
 							bscBatchVO.setExeYn("N");
 						}
 					// 조회할 데이터가 있는데 키가 없을 경우 배치 다시 실행
