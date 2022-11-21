@@ -50,7 +50,7 @@ function add(){
 			+"			<option value=\"N\">N</option>"
 			+"		</select>"
 			+"	</td>"
-			+"	<td style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:save('NEW', 'POST');\"><i class=\"fa fa-gears\"></i> 저장</a></td>"
+			+"	<td style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:save('NEW', 'POST');\"><i class=\"fa fa-floppy-o\"></i> 저장</a></td>"
 			+"</tr>");
 }
 

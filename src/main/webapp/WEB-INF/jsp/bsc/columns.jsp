@@ -59,7 +59,7 @@ function modify(id){
 	$("#TD_CD_COL_" + id).append("<input type=\"text\" id=\"CD_COL_" + id + "\" class=\"form-control\" value=\"" + cdCol + "\" readonly=\"readonly\" />");
 	$("#TD_CD_COL_NM_" + id).append("<input type=\"text\" id=\"CD_COL_NM_" + id + "\" class=\"form-control\" value=\"" + cdColNm + "\" />");
 	$("#TD_USE_YN_" + id).append(select);
-	$("#TD_BTN_" + id).append("<a href=\"javascript:save('" + id + "', 'PUT');\"><i class=\"fa fa-gears\"></i> 저장</a>");
+	$("#TD_BTN_" + id).append("<a href=\"javascript:save('" + id + "', 'PUT');\"><i class=\"fa fa-floppy-o\"></i> 저장</a>");
 }
 
 /**
@@ -76,7 +76,7 @@ function add(){
 			+"			<option value=\"N\">N</option>"
 			+"		</select>"
 			+"	</td>"
-			+"	<td style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:save('NEW', 'POST');\"><i class=\"fa fa-gears\"></i> 저장</a></td>"
+			+"	<td style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:save('NEW', 'POST');\"><i class=\"fa fa-floppy-o\"></i> 저장</a></td>"
 			+"</tr>");
 	
 	$("#btn_div").attr("style", "float: right; display : none;")
