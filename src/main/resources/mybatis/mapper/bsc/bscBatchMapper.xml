@@ -31,7 +31,7 @@
 		   SET SEQ = #{seq}
 	<if test='exeYn != null and exeYn != "" and exeYn != "N"'>
 		     , EXE_YN = #{exeYn}
-		     , EXE_DT = SYSDATE
+		     , EXE_DT = NOW()
 	</if>
 	<if test='sucYn != null and sucYn != ""'>
 		     , SUC_YN = #{sucYn}
