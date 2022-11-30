@@ -4,88 +4,43 @@
 <head>
 <%@ include file="/WEB-INF/jsp/common/inc.jsp" %>
 <script type="text/javascript">
+
+//저장 함수에서 사용하는 경로
+var SAVE_URL = "/api/codes";
+
+//테이블 구성 정보
+var data = [];
+
+data.push({"NM" : "CD_COL_",	"IDX" : "cd",	"VAL" : "cdCol",	"FUNC" : "",	"TYPE" : "text",	"OPT" : " readonly=\"readonly\""});
+data.push({"NM" : "CD_",		"IDX" : "cd",	"VAL" : "cd",		"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
+data.push({"NM" : "CD_NM_",		"IDX" : "cd",	"VAL" : "cdNm",		"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
+data.push({"NM" : "ORD_",		"IDX" : "cd",	"VAL" : "ord",		"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
+data.push({"NM" : "USE_YN_",	"IDX" : "cd",	"VAL" : "useYn",	"FUNC" : "",	"TYPE" : "select",	"OPT" : ""});
+
 $(document).ready(function () {
 	var params = new URL(location.href).searchParams;
 	var url = "/api/codes/" + params.get("cdCol");
 	
-	$.ajax({
-		url: url
-		, data : null
-		, method: "GET"
-		, dataType: "json"
-		, async : true
-	})
-	.done(function(json) {
-		if(json.length != 0){
-			$.each(json, function(key, value){
-				$("#data tbody").append(
-						"<tr>"
-						+ "	<td>" + value.cdCol + "</td>"
-						+"	<td>" + value.cd + "</td>"
-						+"	<td>" + value.cdNm + "</td>"
-						+"	<td style=\"text-align: right;\">" + value.ord + "</td>"
-						+"	<td style=\"text-align: center;\">" + value.useYn + "</td>"
-						+"	<td style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:modify();\"><i class=\"fa fa-gears\"></i> 수정</a></td>"
-						+"</tr>");
-			});
-		}
-	});
+	ls_table_init(url);
 });
 
 /**
  * 등록 버튼
  */
 function add(){
+	// 기본 로직 처리 후 추가 처리
+	ls_table_add();
+	
 	var params = new URL(location.href).searchParams;
 	
-	$("#data tbody").append(
-			"<tr>"
-			+ "	<td><input type=\"text\" id=\"CD_COL_NEW\" class=\"form-control\" value=\"" + params.get("cdCol") + "\" readonly=\"readonly\" /></td>"
-			+"	<td><input type=\"text\" id=\"CD_NEW\" class=\"form-control\" value=\"\" /></td>"
-			+"	<td><input type=\"text\" id=\"CD_NM_NEW\" class=\"form-control\" value=\"\" /></td>"
-			+"	<td style=\"text-align: right;\"><input type=\"text\" id=\"ORD_NEW\" class=\"form-control\" value=\"\" /></td>"
-			+"	<td style=\"text-align: center;\">"
-			+"		<select id=\"USE_YN_NEW\" class=\"form-control\">"
-			+"			<option value=\"Y\">Y</option>"
-			+"			<option value=\"N\">N</option>"
-			+"		</select>"
-			+"	</td>"
-			+"	<td style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:save('NEW', 'POST');\"><i class=\"fa fa-floppy-o\"></i> 저장</a></td>"
-			+"</tr>");
-}
-
-/**
- * 저장버튼
- */
-function save(id, method){
-	if(confirm("저장하시겠습니까?")){
-		var param = new Object();
-		
-		param.cdCol = $("#CD_COL_" + id).val();
-		param.cd = $("#CD_" + id).val();
-		param.cdNm = $("#CD_NM_" + id).val();
-		param.ord = $("#ORD_" + id).val();
-		param.useYn = $("#USE_YN_" + id).val();
-		
-		$.ajax({
-			url: "/api/codes"
-			, data : JSON.stringify(param)
-			, method: method
-			, dataType: "json"
-			, contentType: 'application/json'
-			, async : false
-		})
-		.done(function(json) {
-			location.reload();
-		});
-	}
+	$("#CD_COL_NEW").val(params.get("cdCol"));
 }
 
 /**
  * 목록 버튼
  */
 function list() {
-	location.href="/bsc/columns.do";
+	location.href="/bsc/column.do";
 }
 </script>
 </head>
@@ -148,8 +103,8 @@ function list() {
 								
 							<!-- 버튼 영역 시작 -->
 								<div style="float: right;">
-									<button type="button" class="btn btn-secondary" onclick="list();">목록</button>
-									<button type="button" class="btn btn-success" onclick="add();">등록</button>
+									<button type="button" id="list-btn" class="btn btn-secondary" onclick="list();">목록</button>
+									<button type="button" id="add-btn" class="btn btn-success" onclick="add();">등록</button>
 								</div>
 							<!-- 버튼 영역 종료 -->
 								

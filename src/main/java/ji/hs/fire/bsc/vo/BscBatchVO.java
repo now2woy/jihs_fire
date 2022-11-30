@@ -18,6 +18,10 @@ public class BscBatchVO {
 	 */
 	private String batchCd;
 	/**
+	 * 배치명
+	 */
+	private String batchNm;
+	/**
 	 * 파라미터 1
 	 */
 	private String parm1st;
@@ -44,5 +48,9 @@ public class BscBatchVO {
 	/**
 	 * 검색건수
 	 */
-	private int srchCnt;
+	private int limit;
+	/**
+	 * 페이지번호
+	 */
+	private int offset;
 }

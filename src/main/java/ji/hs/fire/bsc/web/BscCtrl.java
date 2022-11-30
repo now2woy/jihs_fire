@@ -12,22 +12,31 @@ import lombok.RequiredArgsConstructor;
  */
 @Controller
 @RequiredArgsConstructor
-public class BscCdCtrl {
+public class BscCtrl {
 	/**
 	 * 코드 컬럼 조회
 	 * @return
 	 */
-	@GetMapping("/bsc/columns.do")
+	@GetMapping("/bsc/column.do")
 	public String column() {
-		return "/bsc/columns";
+		return "/bsc/column";
 	}
 	
 	/**
 	 * 코드 조회
 	 * @return
 	 */
-	@GetMapping("/bsc/codes.do")
+	@GetMapping("/bsc/code.do")
 	public String codes() {
-		return "/bsc/codes";
+		return "/bsc/code";
+	}
+	
+	/**
+	 * 배치 조회
+	 * @return
+	 */
+	@GetMapping("/bsc/batch.do")
+	public String batchs() {
+		return "/bsc/batch";
 	}
 }

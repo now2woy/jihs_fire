@@ -32,3 +32,4 @@
 
 <!-- Custom Theme Scripts -->
 <script src="/js/custom.js"></script>
+<script src="/js/jihs.js"></script>

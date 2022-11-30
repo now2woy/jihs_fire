@@ -11,7 +11,8 @@
 		<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 			<div class="menu_section">
 				<ul class="nav side-menu">
-					<li><a href="/bsc/columns.do"><i class="fa fa-gears"></i> Codes</a></li>
+					<li><a href="/bsc/column.do"><i class="fa fa-code"></i> Code</a></li>
+					<li><a href="/bsc/batch.do"><i class="fa fa-gears"></i> Batch</a></li>
 				</ul>
 			</div>
 		</div>

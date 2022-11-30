@@ -5,13 +5,14 @@
 	<select id="selectAll" resultType="ji.hs.fire.bsc.vo.BscBatchVO">
 		SELECT SEQ
 			 , BATCH_CD
+			 , (SELECT CD_NM FROM BC_CD_DT X WHERE X.CD_COL = 'BATCH_CD' AND X.CD = A.BATCH_CD) AS BATCH_NM
 			 , PARM_1ST
 			 , PARM_2ND
 			 , PARM_3RD
 			 , PARM_4TH
 			 , EXE_YN
 			 , SUC_YN
-		  FROM BC_BATCH_MT
+		  FROM BC_BATCH_MT A
 		 WHERE 1 = 1
 	<if test='batchCd != null and batchCd != ""'>
 		   AND BATCH_CD = #{batchCd}
@@ -20,8 +21,11 @@
 		   AND EXE_YN = #{exeYn}
 	</if>
 		 ORDER BY SEQ ASC
-	<if test='srchCnt != 0'>
-		 LIMIT #{srchCnt}
+	<if test='limit != null and limit != 0'>
+		 LIMIT #{limit}
+		<if test='offset != null and offset != 0'>
+		 OFFSET #{offset}
+		</if>
 	</if>
 	</select>
 	

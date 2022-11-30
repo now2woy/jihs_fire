@@ -76,7 +76,7 @@ public class DartFnlttService {
 		BscBatchVO parmBatchVO = new BscBatchVO();
 		parmBatchVO.setBatchCd("00001");
 		parmBatchVO.setExeYn("N");
-		parmBatchVO.setSrchCnt(1);
+		parmBatchVO.setLimit(1);
 		
 		int keyNum = 0;
 		
