@@ -46,6 +46,14 @@ public class BscBatchVO {
 	 */
 	private String sucYn;
 	/**
+	 * 실행시작일시
+	 */
+	private String exeStDt;
+	/**
+	 * 실행종료일시
+	 */
+	private String exeEdDt;
+	/**
 	 * 검색건수
 	 */
 	private int limit;
@@ -53,4 +61,8 @@ public class BscBatchVO {
 	 * 페이지번호
 	 */
 	private int offset;
+	/**
+	 * 업데이트숫자 = 1 : 배치 시작, 2 : 배치 종료
+	 */
+	private int updCnt;
 }

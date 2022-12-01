@@ -84,6 +84,12 @@ public class DartFnlttService {
 		for(BscBatchVO bscBatchVO : bscBatchMapper.selectAll(parmBatchVO)) {
 			log.info("{}년도 {}분기 재무제표 수집 시작", bscBatchVO.getParm1st(), bscBatchVO.getParm2nd());
 			
+			// 1 : 배치 시작
+			bscBatchVO.setUpdCnt(1);
+			
+			// 배치 실행 시간 입력
+			bscBatchMapper.update(bscBatchVO);
+			
 			// 배치 실행 했으니 일단 완료
 			bscBatchVO.setExeYn("Y");
 			
@@ -208,6 +214,9 @@ public class DartFnlttService {
 			if("Y".equals(bscBatchVO.getExeYn())) {
 				bscBatchVO.setSucYn("Y");
 			}
+			
+			// 2 : 배치 종료
+			bscBatchVO.setUpdCnt(2);
 			
 			// 베치 결과 UPDATE
 			bscBatchMapper.update(bscBatchVO);

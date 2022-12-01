@@ -12,6 +12,8 @@
 			 , PARM_4TH
 			 , EXE_YN
 			 , SUC_YN
+			 , DATE_FORMAT(EXE_ST_DT, "%Y-%m-%d %H:%i:%s") AS EXE_ST_DT
+			 , DATE_FORMAT(EXE_ED_DT, "%Y-%m-%d %H:%i:%s") AS EXE_ED_DT
 		  FROM BC_BATCH_MT A
 		 WHERE 1 = 1
 	<if test='batchCd != null and batchCd != ""'>
@@ -35,7 +37,12 @@
 		   SET SEQ = #{seq}
 	<if test='exeYn != null and exeYn != "" and exeYn != "N"'>
 		     , EXE_YN = #{exeYn}
-		     , EXE_DT = NOW()
+	</if>
+	<if test='updCnt != null and updCnt == 1'>
+		     , EXE_ST_DT = NOW()
+	</if>
+	<if test='updCnt != null and updCnt == 2'>
+		     , EXE_ED_DT = NOW()
 	</if>
 	<if test='sucYn != null and sucYn != ""'>
 		     , SUC_YN = #{sucYn}
