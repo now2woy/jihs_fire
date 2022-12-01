@@ -23,4 +23,11 @@ public interface BscBatchMapper {
 	 * @throws Exception
 	 */
 	public int update(BscBatchVO bscBatchVO) throws Exception;
+	/**
+	 * 배치 정보 입력
+	 * @param bscBatchVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int insert(BscBatchVO bscBatchVO) throws Exception;
 }

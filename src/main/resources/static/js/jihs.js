@@ -16,17 +16,28 @@ function ls_table_init(url){
 				var html = "<tr>";
 				
 				data.forEach(function(item) {
-					html = html + "	<td id=\"TD_" + item["NM"] + value[item["IDX"]] + "\">";
+					html = html + "	<td id=\"TD_" + item["NM"] + value[item["IDX"]] + "\"" + bc_cd_to_val(item["TDST"]) + ">";
 					
 					if(item["FUNC"] != ""){
-						html = html + "<a href=\"#\" onclick=\"" + item["FUNC"] + "\">" + nullToBlank(value[item["VAL"]]) + "</a></td>";
+						html = html + "<a href=\"#\" onclick=\"" + item["FUNC"] + "\">" + bc_nullToBlank(value[item["VAL"]]) + "</a></td>";
 					} else {
-						html = html + nullToBlank(value[item["VAL"]]) + "</td>";
+						html = html + bc_nullToBlank(value[item["VAL"]]) + "</td>";
 					}
 					idx = value[item["IDX"]];
 				});
 				
-				html = html + "	<td id=\"TD_BTN_" + idx + "\" style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:ls_table_mod('" + idx + "');\"><i class=\"fa fa-pencil\"></i> 수정</a></td>";
+				// 수정 버튼 여부가 "Y" 일 때만 생성
+				if(MOD_BTN_YN == "Y"){
+					// MOD_BTN 가 ""이 아닐 때 다른 값으로 변경
+					if(MOD_BTN != ""){
+						html = html + "	<td id=\"TD_BTN_" + idx + "\" style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:" + MOD_BTN + "('" + idx + "');\"><i class=\"fa fa-pencil\"></i> 수정</a></td>";
+					}else{
+						html = html + "	<td id=\"TD_BTN_" + idx + "\" style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:ls_table_mod('" + idx + "');\"><i class=\"fa fa-pencil\"></i> 수정</a></td>";
+					}
+				} else {
+					html = html + "	<td id=\"TD_BTN_" + idx + "\" style=\"text-align: center; vertical-align: middle;\"></td>";
+				}
+				
 				html = html + "</tr>";
 				
 				$("#data tbody").append(html);
@@ -42,10 +53,17 @@ function ls_table_add(){
 	var html = "<tr>";
 	
 	data.forEach(function(item) {
-		if(item["TYPE"] == "text"){
-			html = html + "	<td><input type=\"text\" id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\" value=\"\"" + item["OPT"] + " /></td>";
-		} else if(item["TYPE"] == "select"){
-			html = html + "	<td style=\"text-align: center;\"><select id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\"" + item["OPT"] + "><option value=\"Y\">Y</option><option value=\"N\">N</option></select></td>"
+		// 텍스트박스
+		if(item["TYPE"] == "T"){
+			html = html + "	<td id=\"TD_" + item["NM"] + "NEW\"" + bc_cd_to_val(item["TDST"]) + "><input type=\"text\" id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\" value=\"\"" + bc_cd_to_val(item["OPT"]) + " /></td>";
+		
+		// 셀렉트박스
+		} else if(item["TYPE"] == "S"){
+			html = html + "	<td id=\"TD_" + item["NM"] + "NEW\"" + bc_cd_to_val(item["TDST"]) + "><select id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\"" + bc_cd_to_val(item["OPT"]) + "><option value=''>선택</option><option value=\"Y\">Y</option><option value=\"N\">N</option></select></td>"
+		
+		// 없음
+		} else if(item["TYPE"] == "N"){
+			html = html + "	<td id=\"TD_" + item["NM"] + "NEW\"" + bc_cd_to_val(item["TDST"]) + "></td>"
 		}
 	});
 	
@@ -64,21 +82,24 @@ function ls_table_mod(id){
 		// 데이터 추출
 		item["DATA"] = $("#TD_" + item["NM"] + id).text();
 		
-		// 데이터 삭제
-		$("#TD_" + item["NM"] + id).empty();
+		// 타입이 없지 않을 경우
+		if(item["TYPE"] != "N"){
+			// 데이터 삭제
+			$("#TD_" + item["NM"] + id).empty();
+		}
 		
 		// 인풋박스로 변경
-		// text 타입
-		if(item["TYPE"] == "text"){
-			$("#TD_" + item["NM"] + id).append("<input type=\"text\" id=\"" + item["NM"] + id + "\" class=\"form-control\" value=\"" + item["DATA"] + "\"" + item["OPT"] + " />");
+		// 텍스트박스
+		if(item["TYPE"] == "T"){
+			$("#TD_" + item["NM"] + id).append("<input type=\"text\" id=\"" + item["NM"] + id + "\" class=\"form-control\" value=\"" + item["DATA"] + "\"" + bc_cd_to_val(item["OPT"]) + " />");
 			
-		// select 타입
-		} else if(item["TYPE"] == "select"){
+		// 셀렉트박스
+		} else if(item["TYPE"] == "S"){
 			if(item["DATA"] == "Y"){
-				$("#TD_" + item["NM"] + id).append("<select id=\"" + item["NM"] + id + "\" class=\"form-control\"" + item["OPT"] + "><option selected=\"selected\" value=\"Y\">Y</option><option value=\"N\">N</option></select>");
+				$("#TD_" + item["NM"] + id).append("<select id=\"" + item["NM"] + id + "\" class=\"form-control\"" + bc_cd_to_val(item["OPT"]) + "><option value=''>선택</option><option selected=\"selected\" value=\"Y\">Y</option><option value=\"N\">N</option></select>");
 				
 			} else if(item["data"] == "N"){
-				$("#TD_" + item["NM"] + id).append("<select id=\"" + item["NM"] + id + "\" class=\"form-control\"" + item["OPT"] + "><option value=\"Y\">Y</option><option selected=\"selected\" value=\"N\">N</option></select>");
+				$("#TD_" + item["NM"] + id).append("<select id=\"" + item["NM"] + id + "\" class=\"form-control\"" + bc_cd_to_val(item["OPT"]) + "><option value=''>선택</option><option value=\"Y\">Y</option><option selected=\"selected\" value=\"N\">N</option></select>");
 			}
 		}
 	});
@@ -94,7 +115,11 @@ function ls_table_save(id, method){
 		var param = new Object();
 		
 		data.forEach(function(item) {
-			param[item["VAL"]] = $("#" + item["NM"] + id).val();
+			if(item["VAL2"] != ""){
+				param[item["VAL2"]] = $("#" + item["NM"] + id).val();
+			} else {
+				param[item["VAL"]] = $("#" + item["NM"] + id).val();
+			}
 		});
 		
 		$.ajax({
@@ -111,7 +136,48 @@ function ls_table_save(id, method){
 	}
 }
 
-function nullToBlank(str){
+/**
+ * 코드 컬럼에 해당하는 코드를 select 박스로 만들어서 리턴
+ */
+function ct_cd_select(cdCol){
+	var result = "<select id=\"#ID#\" class=\"form-control\"><option value=''>선택</option>";
+	
+	$.ajax({
+		url: "/api/codes/" + cdCol
+		, data : null
+		, method: "GET"
+		, dataType: "json"
+		, async : false
+	})
+	.done(function(json) {
+		if(json.length != 0){
+			$.each(json, function(key, value){
+				result = result + "<option value=\"" + value["cd"] + "\">" + value["cdNm"] + "</option>";
+			});
+		}
+	});
+	
+	result = result + "</select>";
+	
+	return result;
+}
+
+function bc_cd_to_val(cd){
+	if(cd == "O_D"){
+		return " disabled=\"disabled\"";
+	} else if(cd == "O_R"){
+		return " readonly=\"readonly\"";
+	} else if(cd == "T_C"){
+		return " style=\"text-align: center;\"";
+	} else {
+		return "";
+	}
+}
+
+/**
+ * null을 ""으로 변환한다.
+ */
+function bc_nullToBlank(str){
 	if(str == null){
 		return "";
 	} else {

@@ -30,6 +30,31 @@
 		</if>
 	</if>
 	</select>
+		
+<!-- 배치 컬럼 입력 -->
+	<insert id="insert" parameterType="ji.hs.fire.bsc.vo.BscBatchVO" flushCache="true">
+	<![CDATA[
+		INSERT INTO BC_BATCH_MT (
+			   SEQ
+			 , BATCH_CD
+			 , PARM_1ST
+			 , PARM_2ND
+			 , PARM_3RD
+			 , PARM_4TH
+			 , EXE_YN
+			 , SUC_YN
+			 ) VALUES (
+			   #{seq}
+			 , #{batchCd}
+			 , #{parm1st}
+			 , #{parm2nd}
+			 , #{parm3rd}
+			 , #{parm4th}
+			 , #{exeYn}
+			 , #{sucYn}
+			 )
+	]]>
+	</insert>
 	
 <!-- 배치 정보 수정 -->
 	<update id="update" parameterType="ji.hs.fire.bsc.vo.BscBatchVO" flushCache="true">

@@ -8,25 +8,46 @@
 //저장 함수에서 사용하는 경로
 var SAVE_URL = "/api/batchs";
 
+// 초기화 시 수정 버튼 함수, ""일 경우 기본 함수 설정
+var MOD_BTN = "";
+
+// 초기화 시 수정 버튼이 있는지 여부
+var MOD_BTN_YN = "N";
+
 //테이블 구성 정보
 var data = [];
 
-data.push({"NM" : "SEQ_",		"IDX" : "seq",	"VAL" : "seq",		"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
-data.push({"NM" : "BATCH_NM_",	"IDX" : "seq",	"VAL" : "batchNm",	"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
-data.push({"NM" : "PARM_1ST_",	"IDX" : "seq",	"VAL" : "parm1st",	"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
-data.push({"NM" : "PARM_2ND_",	"IDX" : "seq",	"VAL" : "parm2nd",	"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
-data.push({"NM" : "PARM_3RD_",	"IDX" : "seq",	"VAL" : "parm3rd",	"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
-data.push({"NM" : "PARM_4TH_",	"IDX" : "seq",	"VAL" : "parm4th",	"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
-data.push({"NM" : "EXE_YN_",	"IDX" : "seq",	"VAL" : "exeYn",	"FUNC" : "",	"TYPE" : "select",	"OPT" : ""});
-data.push({"NM" : "SUC_YN_",	"IDX" : "seq",	"VAL" : "sucYn",	"FUNC" : "",	"TYPE" : "select",	"OPT" : ""});
-data.push({"NM" : "EXE_ST_DT_",	"IDX" : "seq",	"VAL" : "exeStDt",	"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
-data.push({"NM" : "EXE_ED_DT_",	"IDX" : "seq",	"VAL" : "exeEdDt",	"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
+data.push({"NM" : "SEQ_",		"IDX" : "seq",	"VAL" : "seq",		"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "BATCH_NM_",	"IDX" : "seq",	"VAL" : "batchNm",	"VAL2" : "batchCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : ""});
+data.push({"NM" : "PARM_1ST_",	"IDX" : "seq",	"VAL" : "parm1st",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "PARM_2ND_",	"IDX" : "seq",	"VAL" : "parm2nd",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "PARM_3RD_",	"IDX" : "seq",	"VAL" : "parm3rd",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "PARM_4TH_",	"IDX" : "seq",	"VAL" : "parm4th",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "EXE_YN_",	"IDX" : "seq",	"VAL" : "exeYn",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "S",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "SUC_YN_",	"IDX" : "seq",	"VAL" : "sucYn",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "S",	"OPT" : "O_D",	"TDST" : "T_C"});
+data.push({"NM" : "EXE_ST_DT_",	"IDX" : "seq",	"VAL" : "exeStDt",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
+data.push({"NM" : "EXE_ED_DT_",	"IDX" : "seq",	"VAL" : "exeEdDt",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
+
+// 배치코드 셀렉트박스
+var BATCH_CD_SELECT;
 
 $(document).ready(function () {
 	var url = "/api/batchs/";
 	
 	ls_table_init(url);
+	
+	BATCH_CD_SELECT = ct_cd_select("BATCH_CD");
 });
+
+/**
+* 등록 버튼
+*/
+function add(){
+	// 기본 로직 처리 후 추가 처리
+	ls_table_add();
+	
+	$("#TD_BATCH_NM_NEW").append(BATCH_CD_SELECT.replace("#ID#", "BATCH_NM_NEW"));
+}
 </script>
 </head>
 
@@ -63,16 +84,17 @@ $(document).ready(function () {
 									<div class="table-responsive">
 										<table id="data" class="table jambo_table bulk_action">
 											<colgroup>
-												<col />
-												<col />
-												<col />
-												<col />
-												<col />
-												<col />
-												<col />
-												<col />
-												<col />
-												<col />
+												<col style="width: 5%;" />
+												<col style="width: 20%;" />
+												<col style="width: 9%;" />
+												<col style="width: 9%;" />
+												<col style="width: 9%;" />
+												<col style="width: 9%;" />
+												<col style="width: 7%;" />
+												<col style="width: 7%;" />
+												<col style="width: 10%;" />
+												<col style="width: 10%;" />
+												<col style="width: 5%;" />
 											</colgroup>
 											<thead>
 												<tr class="headings">
@@ -86,6 +108,7 @@ $(document).ready(function () {
 													<th class="column-title" style="text-align: center;">성공여부</th>
 													<th class="column-title" style="text-align: center;">실행시작일시</th>
 													<th class="column-title" style="text-align: center;">실행종료일시</th>
+													<th class="column-title" style="text-align: center;">-</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -96,7 +119,7 @@ $(document).ready(function () {
 								
 							<!-- 버튼 영역 시작 -->
 								<div style="float: right;">
-									<button type="button" id="add-btn" class="btn btn-success" onclick="ls_table_add();">등록</button>
+									<button type="button" id="add-btn" class="btn btn-success" onclick="add();">등록</button>
 								</div>
 							<!-- 버튼 영역 종료 -->
 								

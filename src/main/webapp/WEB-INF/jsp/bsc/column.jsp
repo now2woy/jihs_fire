@@ -8,12 +8,18 @@
 // 저장 함수에서 사용하는 경로
 var SAVE_URL = "/api/code/columns";
 
+//초기화 시 수정 버튼 함수, ""일 경우 기본 함수 설정
+var MOD_BTN = "";
+
+//초기화 시 수정 버튼이 있는지 여부
+var MOD_BTN_YN = "Y";
+
 // 테이블 구성 정보
 var data = [];
 
-data.push({"NM" : "CD_COL_",	"IDX" : "cdCol",	"VAL" : "cdCol",	"FUNC" : "goCd(this);",	"TYPE" : "text",	"OPT" : ""});
-data.push({"NM" : "CD_COL_NM_",	"IDX" : "cdCol",	"VAL" : "cdColNm",	"FUNC" : "goCd(this);",	"TYPE" : "text",	"OPT" : ""});
-data.push({"NM" : "USE_YN_",	"IDX" : "cdCol",	"VAL" : "useYn",	"FUNC" : "",			"TYPE" : "select",	"OPT" : ""});
+data.push({"NM" : "CD_COL_",	"IDX" : "cdCol",	"VAL" : "cdCol",	"VAL2" : "",	"FUNC" : "goCd(this);",	"TYPE" : "T",	"OPT" : "",	"TDST" : ""});
+data.push({"NM" : "CD_COL_NM_",	"IDX" : "cdCol",	"VAL" : "cdColNm",	"VAL2" : "",	"FUNC" : "goCd(this);",	"TYPE" : "T",	"OPT" : "",	"TDST" : ""});
+data.push({"NM" : "USE_YN_",	"IDX" : "cdCol",	"VAL" : "useYn",	"VAL2" : "",	"FUNC" : "",			"TYPE" : "S",	"OPT" : "",	"TDST" : "T_C"});
 
 $(document).ready(function () {
 	var url = "/api/code/columns";

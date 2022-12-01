@@ -8,14 +8,20 @@
 //저장 함수에서 사용하는 경로
 var SAVE_URL = "/api/codes";
 
+//초기화 시 수정 버튼 함수, ""일 경우 기본 함수 설정
+var MOD_BTN = "";
+
+//초기화 시 수정 버튼이 있는지 여부
+var MOD_BTN_YN = "Y";
+
 //테이블 구성 정보
 var data = [];
 
-data.push({"NM" : "CD_COL_",	"IDX" : "cd",	"VAL" : "cdCol",	"FUNC" : "",	"TYPE" : "text",	"OPT" : " readonly=\"readonly\""});
-data.push({"NM" : "CD_",		"IDX" : "cd",	"VAL" : "cd",		"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
-data.push({"NM" : "CD_NM_",		"IDX" : "cd",	"VAL" : "cdNm",		"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
-data.push({"NM" : "ORD_",		"IDX" : "cd",	"VAL" : "ord",		"FUNC" : "",	"TYPE" : "text",	"OPT" : ""});
-data.push({"NM" : "USE_YN_",	"IDX" : "cd",	"VAL" : "useYn",	"FUNC" : "",	"TYPE" : "select",	"OPT" : ""});
+data.push({"NM" : "CD_COL_",	"IDX" : "cd",	"VAL" : "cdCol",	"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
+data.push({"NM" : "CD_",		"IDX" : "cd",	"VAL" : "cd",		"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "CD_NM_",		"IDX" : "cd",	"VAL" : "cdNm",		"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : ""});
+data.push({"NM" : "ORD_",		"IDX" : "cd",	"VAL" : "ord",		"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "USE_YN_",	"IDX" : "cd",	"VAL" : "useYn",	"VAL2" : "",	"FUNC" : "",	"TYPE" : "S",	"OPT" : "",		"TDST" : "T_C"});
 
 $(document).ready(function () {
 	var params = new URL(location.href).searchParams;
