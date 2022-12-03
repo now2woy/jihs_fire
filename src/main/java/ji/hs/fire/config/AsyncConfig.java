@@ -38,7 +38,7 @@ public class AsyncConfig {
 		taskExecutor.setCorePoolSize(CORE_POOL_SIZE);
 		taskExecutor.setMaxPoolSize(MAX_POOL_SIZE);
 		taskExecutor.setQueueCapacity(QUEUE_CAPACITY);
-		taskExecutor.setThreadNamePrefix("JIHS-FIRE-ASYNC-");
+		taskExecutor.setThreadNamePrefix("ASYNC-");
 		return taskExecutor;
 	}
 }

@@ -2,13 +2,13 @@
 <configuration>
 	<appender name="CONSOLE_OUT" class="ch.qos.logback.core.ConsoleAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
-			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level [%15.15thread] %-40.40logger{36} : %msg%n</Pattern>
+			<Pattern>[%d{yyyyMMdd HH:mm:ss.SSS}] %-5level [%9.9thread] %-40.40logger{36} : %msg%n</Pattern>
 		</layout>
 	</appender>
 	
 	<appender name="FILE_OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
-			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level [%15.15thread] %-40.40logger{36} : %msg%n</Pattern>
+			<Pattern>[%d{yyyyMMdd HH:mm:ss.SSS}] %-5level [%9.9thread] %-40.40logger{36} : %msg%n</Pattern>
 		</layout>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${LOG_HOME}/DFLT_%d{yyyyMMdd}.log</fileNamePattern>
@@ -23,7 +23,7 @@
 		<sift>
 			<appender name="SIFT_${LOGKEY}" class="ch.qos.logback.core.rolling.RollingFileAppender">
 				<layout class="ch.qos.logback.classic.PatternLayout">
-					<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level [%15.15thread] %-40.40logger{36} : %msg%n</Pattern>
+					<Pattern>[%d{yyyyMMdd HH:mm:ss.SSS}] %-5level [%9.9thread] %-40.40logger{36} : %msg%n</Pattern>
 				</layout>
 				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 					<fileNamePattern>${LOG_HOME}/${LOGKEY}_%d{yyyyMMdd}.log</fileNamePattern>

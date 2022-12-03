@@ -140,7 +140,7 @@ public class KrxService {
 				for(Map<String, String> json : (List<Map<String, String>>)BscUtils.jsonParse(doc.text()).get("OutBlock_1")) {
 					// 종가가 "-" 일 경우 휴장
 					if("-".equals(json.get("TDD_CLSPRC"))) {
-						log.info("한국거래소 종목 거래 정보 수집 시장 : {}, 거래일자 : {}, 거래일 아님", bscCdVO.getCdNm(), bscBatchVO.getParm1st());
+						log.info("한국거래소 종목 거래 정보 수집 / 시장 : {}, 거래일 아님", bscCdVO.getCdNm(), bscBatchVO.getParm1st());
 						break;
 						
 					} else {
