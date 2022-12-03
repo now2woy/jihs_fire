@@ -9,21 +9,6 @@ $(document).ready(function () {
 	$NAV_MENU = $('.nav_menu');
 	$FOOTER = $('footer');
 	
-	var setContentHeight = function () {
-		// reset height
-		$RIGHT_COL.css('min-height', $(window).height());
-		
-		var bodyHeight = $BODY.outerHeight(),
-			footerHeight = $BODY.hasClass('footer_fixed') ? -10 : $FOOTER.height(),
-			leftColHeight = $LEFT_COL.eq(1).height() + $SIDEBAR_FOOTER.height(),
-			contentHeight = bodyHeight < leftColHeight ? leftColHeight : bodyHeight;
-		
-		// normalize content
-		contentHeight -= $NAV_MENU.height() + footerHeight;
-		
-		$RIGHT_COL.css('min-height', contentHeight);
-	};
-	
 	var openUpMenu = function () {
 		$SIDEBAR_MENU.find('li').removeClass('active active-sm');
 		$SIDEBAR_MENU.find('li ul').slideUp();
@@ -41,7 +26,7 @@ $(document).ready(function () {
 		
 		$BODY.toggleClass('nav-md nav-sm');
 		
-		setContentHeight();
+		//setContentHeight();
 		
 		$('.dataTable').each(function () { $(this).dataTable().fnDraw(); });
 	});
@@ -53,7 +38,7 @@ $(document).ready(function () {
 		if ($li.is('.active')) {
 			$li.removeClass('active active-sm');
 			$('ul:first', $li).slideUp(function () {
-				setContentHeight();
+				//setContentHeight();
 			});
 		} else {
 			// prevent closing menu if we are on child menu
@@ -70,7 +55,7 @@ $(document).ready(function () {
 			$li.addClass('active');
 			
 			$('ul:first', $li).slideDown(function () {
-				setContentHeight();
+				//setContentHeight();
 			});
 		}
 	});

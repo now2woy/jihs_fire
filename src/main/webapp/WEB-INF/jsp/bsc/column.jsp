@@ -50,53 +50,48 @@ function goCd(node){
 		<!-- 상단 메뉴 종료 -->
 			
 		<!-- page content -->
-			<div class="right_col" role="main">
+			<div class="right_col" role="main" style="min-height: 991px;">
 				<div class="">
 					<div class="clearfix"></div>
-					
-					<div class="row" style="display: block; min-height: 880px;">
-						<div class="col-md-12 col-sm-12  ">
-							<div class="x_panel">
-								<div class="x_title">
-									<h2>코드 컬럼 목록</h2>
-									<ul class="nav navbar-right panel_toolbox" style="min-width: 40px;">
-										<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-										<li><a class="close-link"><i class="fa fa-close"></i></a>
-										</li>
-									</ul>
-									<div class="clearfix"></div>
-								</div>
-								<div class="x_content">
-									<div class="table-responsive">
-										<table id="data" class="table jambo_table bulk_action">
-											<colgroup>
-												<col style="width: 35%;" />
-												<col style="width: 35%;" />
-												<col style="width: 15%;" />
-												<col style="width: 15%;" />
-											</colgroup>
-											<thead>
-												<tr class="headings">
-													<th class="column-title" style="text-align: center;">컬럼</th>
-													<th class="column-title" style="text-align: center;">컬럼명</th>
-													<th class="column-title" style="text-align: center;">사용여부</th>
-													<th class="column-title" style="text-align: center;">-</th>
-												</tr>
-											</thead>
-											<tbody>
-											</tbody>
-										</table>
-									</div>
-								</div>
-								
-							<!-- 버튼 영역 시작 -->
-								<div id="btn_div" style="float: right;">
-									<button type="button" id="add-btn" class="btn btn-success" onclick="ls_table_add();">등록</button>
-								</div>
-							<!-- 버튼 영역 종료 -->
-								
+					<div class="x_panel">
+						<div class="x_title">
+							<h2>코드 컬럼 목록</h2>
+							<ul class="nav navbar-right panel_toolbox" style="min-width: 40px;">
+								<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+								<li><a class="close-link"><i class="fa fa-close"></i></a>
+								</li>
+							</ul>
+							<div class="clearfix"></div>
+						</div>
+						<div class="x_content">
+							<div class="table-responsive">
+								<table id="data" class="table jambo_table bulk_action">
+									<colgroup>
+										<col style="width: 35%;" />
+										<col style="width: 35%;" />
+										<col style="width: 15%;" />
+										<col style="width: 15%;" />
+									</colgroup>
+									<thead>
+										<tr class="headings">
+											<th class="column-title" style="text-align: center;">컬럼</th>
+											<th class="column-title" style="text-align: center;">컬럼명</th>
+											<th class="column-title" style="text-align: center;">사용여부</th>
+											<th class="column-title" style="text-align: center;">-</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
 							</div>
 						</div>
+						
+					<!-- 버튼 영역 시작 -->
+						<div id="btn_div" style="float: right;">
+							<button type="button" id="add-btn" class="btn btn-success" onclick="ls_table_add();">등록</button>
+						</div>
+					<!-- 버튼 영역 종료 -->
+						
 					</div>
 				</div>
 			</div>
