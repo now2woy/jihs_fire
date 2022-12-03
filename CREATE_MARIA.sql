@@ -59,6 +59,27 @@ CREATE TABLE KX_ITM_MT (
 
 ALTER TABLE KX_ITM_MT ADD PRIMARY KEY (ITM_CD);
 
+CREATE TABLE KX_ITM_DT (
+	   ITM_CD			VARCHAR(10)		NOT NULL	COMMENT '종목코드'
+	 , DT				DATE			NOT NULL	COMMENT '변경일자'
+	 , ISU_STK_QTY		DECIMAL(20)		NULL		COMMENT '상장주식수'
+) ENGINE=INNODB COMMENT='한국거래소 주식종목 추가정보';
+
+ALTER TABLE KX_ITM_DT ADD PRIMARY KEY (ITM_CD, DT);
+
+CREATE TABLE KX_TRD_MT (
+	   ITM_CD			VARCHAR(10)		NOT NULL	COMMENT '종목코드'
+	 , DT				DATE			NOT NULL	COMMENT '거래일자'
+	 , ST_AMT			DECIMAL(20)		NULL		COMMENT '시가'
+	 , ED_AMT			DECIMAL(20)		NULL		COMMENT '종가'
+	 , LW_AMT			DECIMAL(20)		NULL		COMMENT '저가'
+	 , HG_AMT			DECIMAL(20)		NULL		COMMENT '고가'
+	 , INCR_AMT			DECIMAL(20)		NULL		COMMENT '증감액'
+	 , TRD_QTY			DECIMAL(20)		NULL		COMMENT '거래량'
+) ENGINE=INNODB COMMENT='한국거래소 주식종목 거래 정보';
+
+ALTER TABLE KX_TRD_MT ADD PRIMARY KEY (ITM_CD, DT);
+
 --------------------------------------------------------------------
 /* BASIC */
 --------------------------------------------------------------------

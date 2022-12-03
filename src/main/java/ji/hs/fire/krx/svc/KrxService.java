@@ -1,21 +1,28 @@
 package ji.hs.fire.krx.svc;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ji.hs.fire.bsc.mpr.BscBatchMapper;
 import ji.hs.fire.bsc.mpr.BscCdMapper;
+import ji.hs.fire.bsc.util.BscConstants;
 import ji.hs.fire.bsc.util.BscUtils;
+import ji.hs.fire.bsc.vo.BscBatchVO;
 import ji.hs.fire.bsc.vo.BscCdVO;
 import ji.hs.fire.krx.mpr.KrxItmMapper;
+import ji.hs.fire.krx.mpr.KrxTrdMapper;
 import ji.hs.fire.krx.vo.KrxItmVO;
+import ji.hs.fire.krx.vo.KrxTrdVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,15 +34,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class KrxItmService {
+public class KrxService {
 	/**
 	 * BC_CD_DT 쿼리
 	 */
 	private final BscCdMapper bscCdMapper;
 	/**
+	 * 배치 정보
+	 */
+	private final BscBatchMapper bscBatchMapper;
+	/**
 	 * KX_ITM_MT 쿼리
 	 */
 	private final KrxItmMapper krxItmMapper;
+	/**
+	 * KX_TRD_MT 쿼리
+	 */
+	private final KrxTrdMapper krxTrdMapper;
 	
 	/**
 	 * 한국거래소 JSON URL
@@ -52,7 +67,9 @@ public class KrxItmService {
 	 */
 	@Async
 	@Transactional
-	public Map<String, String> krxBscCollection() throws Exception {
+	public Map<String, String> bscCollection() throws Exception {
+		MDC.put(BscConstants.LOG_KEY, BscConstants.LOG_KEY_KRX);
+		
 		String thisDateTime = BscUtils.thisDateTime();
 		
 		log.info("{} 한국거래소 종목 기본 정보 수집 시작", thisDateTime);
@@ -61,12 +78,110 @@ public class KrxItmService {
 		
 		
 		// 한국거래소 종목 수집
-		krxItmCollection(result);
+		itmCollection(result);
 		
 		// 한국거래소 종목의 스팩여부 수집
-		krxItmSpacYnCollection(result);
+		itmSpacYnCollection(result);
 		
 		log.info("{} 한국거래소 종목 기본 정보 수집 종료", thisDateTime);
+		
+		MDC.clear();
+		
+		return result;
+	}
+	
+	/**
+	 * 한국거래소 종목 거래 정보 수집
+	 * @return
+	 * @throws Exception
+	 */
+	@Async
+	@Transactional
+	public Map<String, String> trdCollection() throws Exception {
+		MDC.put(BscConstants.LOG_KEY, BscConstants.LOG_KEY_KRX);
+		
+		Map<String, String> result = new HashMap<>();
+		
+		BscCdVO parmBscCdVO = new BscCdVO();
+		parmBscCdVO.setCdCol("MKT_CD");
+		List<BscCdVO> mktCdList = bscCdMapper.selectAll(parmBscCdVO);
+		
+		BscBatchVO parmBatchVO = new BscBatchVO();
+		parmBatchVO.setBatchCd("00002");
+		parmBatchVO.setExeYn("N");
+		parmBatchVO.setLimit(10);
+		List<BscBatchVO> batchList = bscBatchMapper.selectAll(parmBatchVO);
+		
+		int cnt = 0;
+		
+		for(BscBatchVO bscBatchVO : batchList) {
+			log.info("{} 일자 한국거래소 종목 거래 정보 수집 시작", bscBatchVO.getParm1st());
+			
+			// 1 : 배치 시작
+			bscBatchVO.setUpdCnt(1);
+			
+			// 배치 실행 시간 입력
+			bscBatchMapper.update(bscBatchVO);
+			
+			// 배치 실행 했으니 일단 완료
+			bscBatchVO.setExeYn("Y");
+			
+			// 시장 단위로 처리
+			for(BscCdVO bscCdVO : mktCdList) {
+				log.info("한국거래소 종목 거래 정보 수집 / 시장 : {} 시작", bscCdVO.getCdNm());
+				
+				// KRX URL 호출
+				Document doc = Jsoup.connect(krxJsonUrl)
+						.data("bld", "dbms/MDC/STAT/standard/MDCSTAT01501")
+						.data("mktId", bscCdVO.getCd())
+						.data("trdDd", bscBatchVO.getParm1st())
+						.get();
+				
+				for(Map<String, String> json : (List<Map<String, String>>)BscUtils.jsonParse(doc.text()).get("OutBlock_1")) {
+					// 종가가 "-" 일 경우 휴장
+					if("-".equals(json.get("TDD_CLSPRC"))) {
+						log.info("한국거래소 종목 거래 정보 수집 시장 : {}, 거래일자 : {}, 거래일 아님", bscCdVO.getCdNm(), bscBatchVO.getParm1st());
+						break;
+						
+					} else {
+						KrxTrdVO krxTrdVO = new KrxTrdVO();
+						
+						krxTrdVO.setItmCd(json.get("ISU_SRT_CD"));
+						krxTrdVO.setDt(bscBatchVO.getParm1st());
+						krxTrdVO.setStAmt(new BigDecimal(json.get("TDD_OPNPRC").replaceAll(",", "")));
+						krxTrdVO.setEdAmt(new BigDecimal(json.get("TDD_CLSPRC").replaceAll(",", "")));
+						krxTrdVO.setLwAmt(new BigDecimal(json.get("TDD_LWPRC").replaceAll(",", "")));
+						krxTrdVO.setHgAmt(new BigDecimal(json.get("TDD_HGPRC").replaceAll(",", "")));
+						krxTrdVO.setIncrAmt(new BigDecimal(json.get("CMPPREVDD_PRC").replaceAll(",", "")));
+						krxTrdVO.setTrdQty(new BigDecimal(json.get("ACC_TRDVOL").replaceAll(",", "")));
+						
+						// 데이터 입력
+						krxTrdMapper.insert(krxTrdVO);
+					}
+					
+					cnt++;
+				}
+				
+				log.info("한국거래소 종목 거래 정보 수집 / 시장 : {} 종료", bscCdVO.getCdNm());
+			}
+			
+			// 배치가 정상 실행되었을 경우 성공여부가 'Y'이다.
+			if("Y".equals(bscBatchVO.getExeYn())) {
+				bscBatchVO.setSucYn("Y");
+			}
+			
+			// 2 : 배치 종료
+			bscBatchVO.setUpdCnt(2);
+			
+			// 베치 결과 UPDATE
+			bscBatchMapper.update(bscBatchVO);
+			
+			log.info("{} 일자 한국거래소 종목 거래 정보 수집 종료", bscBatchVO.getParm1st());
+		}
+		
+		result.put("CNT", Integer.toString(cnt));
+		
+		MDC.clear();
 		
 		return result;
 	}
@@ -78,7 +193,7 @@ public class KrxItmService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional
-	private void krxItmCollection(Map<String, String> result) throws Exception {
+	private void itmCollection(Map<String, String> result) throws Exception {
 		Map<String, String> itmKndCd = createCdMap("ITM_KND_CD");
 		Map<String, String> itmClCd = createCdMap("ITM_CL_CD");
 		
@@ -134,7 +249,7 @@ public class KrxItmService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional
-	private void krxItmSpacYnCollection(Map<String, String> result) throws Exception {
+	private void itmSpacYnCollection(Map<String, String> result) throws Exception {
 		log.info("SPAC 여부 수집 시작");
 		
 		int cnt = 0;

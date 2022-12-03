@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<div class="col-md-3 left_col">
+<div class="col-md-3 left_col" style="height: 100%;">
 	<div class="left_col scroll-view">
 		<div class="navbar nav_title" style="border: 0;">
 			<a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>은퇴계획</span></a>
@@ -11,8 +11,13 @@
 		<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 			<div class="menu_section">
 				<ul class="nav side-menu">
-					<li><a href="/bsc/column.do"><i class="fa fa-code"></i> Code</a></li>
-					<li><a href="/bsc/batch.do"><i class="fa fa-gears"></i> Batch</a></li>
+					<li><a><i class="fa fa-gears"></i> Settings <span class="fa fa-chevron-down"></span></a>
+						<ul class="nav child_menu">
+							<li><a href="/bsc/column.do">Code</a></li>
+							<li><a href="/bsc/batch.do">Batch</a></li>
+						</ul>
+					</li>
+					<li><a href="/bsc/batch.do"><i class="fa fa-bar-chart"></i> Batch</a></li>
 				</ul>
 			</div>
 		</div>

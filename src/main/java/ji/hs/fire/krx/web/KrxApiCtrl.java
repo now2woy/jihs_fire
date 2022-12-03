@@ -1,13 +1,16 @@
 package ji.hs.fire.krx.web;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ji.hs.fire.bsc.util.BscConstants;
 import ji.hs.fire.bsc.util.BscUtils;
-import ji.hs.fire.krx.svc.KrxItmService;
+import ji.hs.fire.krx.svc.KrxService;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -18,27 +21,36 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/krxs")
-public class KrxItmCtrl {
+public class KrxApiCtrl {
 	/**
 	 * 
 	 */
-	private final KrxItmService krxItmService;
-	
-	private static final String MSG_SUCCESS = "success";
+	private final KrxService krxService;
 	
 	/**
 	 * 한국거래소 종목 기본 정보 수집
 	 * @param dartKeyVO
 	 * @return
 	 */
-	@PostMapping("/batch")
-	public ResponseEntity<String> insert() throws Exception {
+	@PostMapping("/batchs/bsc")
+	public ResponseEntity<String> bscCollection() throws Exception {
 		// 02시 실행
 		if(BscUtils.isRunTime("02")){
 			// 한국거래소 종목 기본 정보 수집
-			krxItmService.krxBscCollection();
+			krxService.bscCollection();
 		}
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(MSG_SUCCESS);
+		return ResponseEntity.status(HttpStatus.CREATED).body(BscConstants.SUCCESS);
+	}
+	
+	/**
+	 * 한국거래소 종목 기본 정보 수집
+	 * @param dartKeyVO
+	 * @return
+	 */
+	@PostMapping("/batchs/trd")
+	public ResponseEntity<Map<String, String>> trdCollection() throws Exception {
+		// 한국거래소 종목 거래 정보 수집
+		return ResponseEntity.status(HttpStatus.CREATED).body(krxService.trdCollection());
 	}
 }

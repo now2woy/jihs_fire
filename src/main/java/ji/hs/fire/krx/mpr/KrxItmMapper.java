@@ -31,7 +31,6 @@ public interface KrxItmMapper {
 	 * @param krxItmVO
 	 * @throws Exception
 	 */
-	@Flush
 	public int insert(KrxItmVO krxItmVO) throws Exception;
 	
 	/**
@@ -39,6 +38,5 @@ public interface KrxItmMapper {
 	 * @param krxItmVO
 	 * @throws Exception
 	 */
-	@Flush
 	public int update(KrxItmVO krxItmVO) throws Exception;
 }

@@ -17,6 +17,11 @@ public class BscConstants {
 	public static final String LOG_KEY_DART = "DART";
 	
 	/**
+	 * 로그 키 : KRX 한국거래소
+	 */
+	public static final String LOG_KEY_KRX = "KRX";
+	
+	/**
 	 * 로그 키 : BSC
 	 */
 	public static final String LOG_KEY_BSC = "BSC";
