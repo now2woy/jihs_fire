@@ -1,10 +1,13 @@
 package ji.hs.fire.krx.svc;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.MDC;
@@ -102,6 +105,8 @@ public class KrxService {
 		
 		Map<String, String> result = new HashMap<>();
 		
+		int cnt = 0;
+		
 		BscCdVO parmBscCdVO = new BscCdVO();
 		parmBscCdVO.setCdCol("MKT_CD");
 		List<BscCdVO> mktCdList = bscCdMapper.selectAll(parmBscCdVO);
@@ -112,8 +117,39 @@ public class KrxService {
 		parmBatchVO.setLimit(10);
 		List<BscBatchVO> batchList = bscBatchMapper.selectAll(parmBatchVO);
 		
-		int cnt = 0;
+		// 조회된 배치가 없을 경우
+		if(batchList.isEmpty()) {
+			parmBatchVO.setBatchCd("00002");
+			parmBatchVO.setExeYn("Y");
+			parmBatchVO.setLimit(1);
+			// 마지막 실행 된 자료 조회
+			BscBatchVO tempBatchVO = bscBatchMapper.selectAll(parmBatchVO).get(0);
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			
+			String yesterday = sdf.format(DateUtils.addDays(new Date(), -1));
+			
+			// 10번 반복한다.
+			for(int i = 1; i <= 10; i++) {
+				String parm1st = sdf.format(DateUtils.addDays(sdf.parse(tempBatchVO.getParm1st()), i));
+				
+				// 파라미터1이 어제보다 작거나 같을 경우
+				if(Integer.parseInt(parm1st) <= Integer.parseInt(yesterday)) {
+					BscBatchVO targetBscBatchVO = new BscBatchVO();
+					targetBscBatchVO.setSeq(tempBatchVO.getSeq() + i);
+					targetBscBatchVO.setBatchCd(tempBatchVO.getBatchCd());
+					targetBscBatchVO.setParm1st(parm1st);
+					targetBscBatchVO.setExeYn("N");
+					
+					batchList.add(targetBscBatchVO);
+					
+					// 배치 정보 테이블에 데이터 입력
+					bscBatchMapper.insert(targetBscBatchVO);
+				}
+			}
+		}
 		
+		// 조회된 배치를 처리 한다.
 		for(BscBatchVO bscBatchVO : batchList) {
 			log.info("{} 일자 한국거래소 종목 거래 정보 수집 시작", bscBatchVO.getParm1st());
 			
