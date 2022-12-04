@@ -2,6 +2,7 @@ package ji.hs.fire.bsc.mpr;
 
 import java.util.List;
 
+import ji.hs.fire.bsc.vo.BscBatchVO;
 import ji.hs.fire.bsc.vo.BscCdColVO;
 
 /**
@@ -16,6 +17,13 @@ public interface BscCdColMapper {
 	 * @throws Exception
 	 */
 	public List<BscCdColVO> selectAll() throws Exception;
+	/**
+	 * 코드 컬럼 건수 조회
+	 * @param bscCdColVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int selectCount(BscCdColVO bscCdColVO) throws Exception;
 	/**
 	 * 코드 컬럼 입력
 	 * @param bscCdColVO

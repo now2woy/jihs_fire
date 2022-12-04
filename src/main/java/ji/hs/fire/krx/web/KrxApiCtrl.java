@@ -1,6 +1,6 @@
 package ji.hs.fire.krx.web;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ji.hs.fire.bsc.util.BscConstants;
 import ji.hs.fire.bsc.util.BscUtils;
-import ji.hs.fire.bsc.vo.BscBatchVO;
 import ji.hs.fire.krx.mpr.KrxItmMapper;
 import ji.hs.fire.krx.svc.KrxService;
 import ji.hs.fire.krx.vo.KrxItmVO;
@@ -33,24 +32,31 @@ public class KrxApiCtrl {
 	 */
 	private final KrxItmMapper krxItmMapper;
 	/**
-	 * 
+	 * 한국거래소 Service
 	 */
 	private final KrxService krxService;
 	
 	/**
-	 * 배치 정보 목록 조회
+	 * 한국거래소 종목 목록 조회
 	 * @param schBatchCd
 	 * @param schExeYn
 	 * @return
 	 * @throws Exception
 	 */
 	@GetMapping("")
-	public ResponseEntity<List<KrxItmVO>> list(@RequestParam(required = false) String schMktCd, @RequestParam(required = false) String schItmNm, @RequestParam(required = false) String schSpacYn) throws Exception {
+	public ResponseEntity<Map<String, Object>> list(@RequestParam(required = false) String schMktCd
+											 , @RequestParam(required = false) String schItmNm
+											 , @RequestParam(required = false) String schSpacYn) throws Exception {
 		KrxItmVO krxItmVO = new KrxItmVO();
 		krxItmVO.setMktCd(schMktCd);
 		krxItmVO.setItmNm(schItmNm);
 		krxItmVO.setSpacYn(schSpacYn);
-		return ResponseEntity.status(HttpStatus.OK).body(krxItmMapper.selectAll(krxItmVO));
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("count", krxItmMapper.selectCount(krxItmVO));
+		result.put("data", krxItmMapper.selectAll(krxItmVO));
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
 	/**

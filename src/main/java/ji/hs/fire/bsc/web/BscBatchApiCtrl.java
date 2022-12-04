@@ -1,6 +1,7 @@
 package ji.hs.fire.bsc.web;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ji.hs.fire.bsc.mpr.BscBatchMapper;
+import ji.hs.fire.bsc.svc.BscBatchService;
 import ji.hs.fire.bsc.vo.BscBatchVO;
 import lombok.RequiredArgsConstructor;
 
@@ -25,24 +27,40 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/batchs")
 public class BscBatchApiCtrl {
 	/**
-	 * 배치 정보 Service
+	 * 배치 정보 Mapper
 	 */
 	private final BscBatchMapper bscBatchMapper;
+	/**
+	 * 배치 정보 Service
+	 */
+	private final BscBatchService bscBatchService;
 	
 	/**
 	 * 배치 정보 목록 조회
 	 * @param schBatchCd
 	 * @param schExeYn
+	 * @param limit
+	 * @param offset
 	 * @return
 	 * @throws Exception
 	 */
 	@GetMapping("")
-	public ResponseEntity<List<BscBatchVO>> list(@RequestParam(required = false) String schBatchCd, @RequestParam(required = false) String schExeYn) throws Exception {
+	public ResponseEntity<Map<String, Object>> list(@RequestParam(required = false) String schBatchCd
+											   , @RequestParam(required = false) String schExeYn
+											   , @RequestParam(defaultValue = "10") int limit
+											   , @RequestParam(defaultValue = "0") int offset) throws Exception {
 		BscBatchVO bscBatchVO = new BscBatchVO();
 		bscBatchVO.setBatchCd(schBatchCd);
 		bscBatchVO.setExeYn(schExeYn);
+		bscBatchVO.setLimit(limit);
+		bscBatchVO.setOffset(offset);
 		bscBatchVO.setOrder(2);
-		return ResponseEntity.status(HttpStatus.OK).body(bscBatchMapper.selectAll(bscBatchVO));
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("count", bscBatchMapper.selectCount(bscBatchVO));
+		result.put("data", bscBatchMapper.selectAll(bscBatchVO));
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
 	/**
@@ -54,7 +72,7 @@ public class BscBatchApiCtrl {
 	@PostMapping("")
 	public ResponseEntity<BscBatchVO> insert(@RequestBody BscBatchVO bscBatchVO) throws Exception {
 		
-		bscBatchMapper.insert(bscBatchVO);
+		bscBatchService.insert(bscBatchVO);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(bscBatchVO);
 	}

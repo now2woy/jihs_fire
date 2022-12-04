@@ -1,6 +1,7 @@
 package ji.hs.fire.bsc.web;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +35,12 @@ public class BscCdColApiCtrl {
 	 * @return
 	 */
 	@GetMapping("")
-	public ResponseEntity<List<BscCdColVO>> list() throws Exception {
-		return ResponseEntity.status(HttpStatus.OK).body(bscCdColMapper.selectAll());
+	public ResponseEntity<Map<String, Object>> list() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		result.put("count", bscCdColMapper.selectCount(new BscCdColVO()));
+		result.put("data", bscCdColMapper.selectAll());
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
 	/**

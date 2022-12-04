@@ -10,8 +10,8 @@ function ls_table_init(url){
 		, async : true
 	})
 	.done(function(json) {
-		if(json.length != 0){
-			$.each(json, function(key, value){
+		if(json.data.length != 0){
+			$.each(json.data, function(key, value){
 				var idx;
 				var html = "<tr>";
 				

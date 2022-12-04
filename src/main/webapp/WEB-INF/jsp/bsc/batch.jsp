@@ -17,7 +17,7 @@ var MOD_BTN_YN = "N";
 //테이블 구성 정보
 var data = [];
 
-data.push({"NM" : "SEQ_",		"IDX" : "seq",	"VAL" : "seq",		"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "SEQ_",		"IDX" : "seq",	"VAL" : "seq",		"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
 data.push({"NM" : "BATCH_NM_",	"IDX" : "seq",	"VAL" : "batchNm",	"VAL2" : "batchCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : ""});
 data.push({"NM" : "PARM_1ST_",	"IDX" : "seq",	"VAL" : "parm1st",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
 data.push({"NM" : "PARM_2ND_",	"IDX" : "seq",	"VAL" : "parm2nd",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
@@ -58,7 +58,7 @@ function add(){
 function sch(){
 	$("#data tbody").empty();
 	
-	collapseLinkOnClick($("#SCH_BATCH_CD").parent().parent());
+	collapseLinkOnClick($("#search-fa-chevron"));
 	
 	var schBatchCd = $("#SCH_BATCH_CD").val();
 	var schExeYn = $('input:radio[name=SCH_EXE_YN]:checked').val();
@@ -89,7 +89,7 @@ function sch(){
 						<div class="x_title">
 							<h2>검색</h2>
 							<ul class="nav navbar-right panel_toolbox" style="min-width: 40px;">
-								<li><a class="collapse-link"><i class="fa fa-chevron-down"></i></a></li>
+								<li><a id="search-fa-chevron" class="collapse-link"><i class="fa fa-chevron-down"></i></a></li>
 								<li><a class="close-link"><i class="fa fa-close"></i></a>
 								</li>
 							</ul>
@@ -140,6 +140,13 @@ function sch(){
 							</ul>
 							<div class="clearfix"></div>
 						</div>
+						
+						<div class="row">
+							<div class="col-sm-5">
+								<div class="dataTables_info" id="datatable-keytable_info" role="status" aria-live="polite" style="margin-left: 5px;"> 전체 57건 중 1페이지</div>
+							</div>
+						</div>
+						
 						<div class="x_content">
 							<div class="table-responsive">
 								<table id="data" class="table jambo_table bulk_action">
@@ -174,6 +181,24 @@ function sch(){
 									<tbody>
 									</tbody>
 								</table>
+							</div>
+							
+							<div class="row">
+								<div class="col-sm-5"></div>
+								<div class="col-sm-7">
+									<div class="dataTables_paginate paging_simple_numbers" id="datatable-keytable_paginate">
+										<ul class="pagination">
+											<li class="paginate_button previous disabled" id="datatable-keytable_previous"><a href="#" aria-controls="datatable-keytable" data-dt-idx="0" tabindex="0">Previous</a></li>
+											<li class="paginate_button active"><a href="#" aria-controls="datatable-keytable" data-dt-idx="1" tabindex="0">1</a></li>
+											<li class="paginate_button "><a href="#" aria-controls="datatable-keytable" data-dt-idx="2" tabindex="0">2</a></li>
+											<li class="paginate_button "><a href="#" aria-controls="datatable-keytable" data-dt-idx="3" tabindex="0">3</a></li>
+											<li class="paginate_button "><a href="#" aria-controls="datatable-keytable" data-dt-idx="4" tabindex="0">4</a></li>
+											<li class="paginate_button "><a href="#" aria-controls="datatable-keytable" data-dt-idx="5" tabindex="0">5</a></li>
+											<li class="paginate_button "><a href="#" aria-controls="datatable-keytable" data-dt-idx="6" tabindex="0">6</a></li>
+											<li class="paginate_button next" id="datatable-keytable_next"><a href="#" aria-controls="datatable-keytable" data-dt-idx="7" tabindex="0">Next</a></li>
+										</ul>
+									</div>
+								</div>
 							</div>
 							
 						<!-- 버튼 영역 시작 -->

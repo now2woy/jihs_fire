@@ -1,6 +1,7 @@
 package ji.hs.fire.bsc.web;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +42,12 @@ public class BscCdApiCtrl {
 	 * @return
 	 */
 	@GetMapping("")
-	public ResponseEntity<List<BscCdVO>> list() throws Exception {
-		return ResponseEntity.status(HttpStatus.OK).body(bscCdMapper.selectAll(new BscCdVO()));
+	public ResponseEntity<Map<String, Object>> list() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		result.put("count", bscCdMapper.selectCount(new BscCdVO()));
+		result.put("data", bscCdMapper.selectAll(new BscCdVO()));
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 		
 	/**
@@ -52,11 +57,15 @@ public class BscCdApiCtrl {
 	 * @throws Exception
 	 */
 	@GetMapping("/{cdCol}")
-	public ResponseEntity<List<BscCdVO>> list(@PathVariable("cdCol") String cdCol) throws Exception {
+	public ResponseEntity<Map<String, Object>> list(@PathVariable("cdCol") String cdCol) throws Exception {
 		BscCdVO bscCdVO = new BscCdVO();
 		bscCdVO.setCdCol(cdCol);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(bscCdMapper.selectAll(bscCdVO));
+		Map<String, Object> result = new HashMap<>();
+		result.put("count", bscCdMapper.selectCount(bscCdVO));
+		result.put("data", bscCdMapper.selectAll(bscCdVO));
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
 	/**
@@ -67,12 +76,16 @@ public class BscCdApiCtrl {
 	 * @throws Exception
 	 */
 	@GetMapping("/{cdCol}/{cd}")
-	public ResponseEntity<List<BscCdVO>> list(@PathVariable("cdCol") String cdCol, @PathVariable("cd") String cd) throws Exception {
+	public ResponseEntity<Map<String, Object>> list(@PathVariable("cdCol") String cdCol, @PathVariable("cd") String cd) throws Exception {
 		BscCdVO bscCdVO = new BscCdVO();
 		bscCdVO.setCdCol(cdCol);
 		bscCdVO.setCd(cd);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(bscCdMapper.selectAll(bscCdVO));
+		Map<String, Object> result = new HashMap<>();
+		result.put("count", bscCdMapper.selectCount(bscCdVO));
+		result.put("data", bscCdMapper.selectAll(bscCdVO));
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
 	/**

@@ -66,7 +66,9 @@ $(document).ready(function () {
 });
 
 function collapseLinkOnClick(element){
-	var $BOX_PANEL = $(element).closest('.x_panel'), $ICON = $(this).find('i'), $BOX_CONTENT = $BOX_PANEL.find('.x_content');
+	var $BOX_PANEL = $(element).closest('.x_panel');
+	var $ICON = $(element).find('i');
+	var $BOX_CONTENT = $BOX_PANEL.find('.x_content');
 	
 	// fix for some div with hardcoded fix class
 	if ($BOX_PANEL.attr('style')) {

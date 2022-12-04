@@ -37,6 +37,19 @@
 		</if>
 	</if>
 	</select>
+	
+<!-- 배치 정보 건수 조회 -->
+	<select id="selectCount" resultType="Integer" parameterType="ji.hs.fire.bsc.vo.BscBatchVO">
+		SELECT COUNT(*) AS CNT
+		  FROM BC_BATCH_MT A
+		 WHERE 1 = 1
+	<if test='batchCd != null and batchCd != ""'>
+		   AND BATCH_CD = #{batchCd}
+	</if>
+	<if test='exeYn != null and exeYn != ""'>
+		   AND EXE_YN = #{exeYn}
+	</if>
+	</select>
 		
 <!-- 배치 컬럼 입력 -->
 	<insert id="insert" parameterType="ji.hs.fire.bsc.vo.BscBatchVO" flushCache="true">
