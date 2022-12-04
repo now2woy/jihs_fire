@@ -21,11 +21,11 @@ data.push({"NM" : "ITM_CD_",	"IDX" : "itmCd",	"VAL" : "itmCd",	"VAL2" : "",			"F
 data.push({"NM" : "ITM_NM_",	"IDX" : "itmCd",	"VAL" : "itmNm",	"VAL2" : "",			"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : ""});
 data.push({"NM" : "MKT_NM_",	"IDX" : "itmCd",	"VAL" : "mktNm",	"VAL2" : "mktCd",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
 data.push({"NM" : "SPAC_YN_",	"IDX" : "itmCd",	"VAL" : "spacYn",	"VAL2" : "",			"FUNC" : "",	"TYPE" : "S",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "ITM_KND_NM_","IDX" : "itmCd",	"VAL" : "itmKndNm",	"VAL2" : "itmKndCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "ITM_CL_NM_",	"IDX" : "itmCd",	"VAL" : "itmClNm",	"VAL2" : "itmClCd",		"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "ITM_KND_NM_","IDX" : "itmCd",	"VAL" : "itmKndNm",	"VAL2" : "itmKndCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : ""});
+data.push({"NM" : "ITM_CL_NM_",	"IDX" : "itmCd",	"VAL" : "itmClNm",	"VAL2" : "itmClCd",		"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : ""});
 
 // 배치코드 셀렉트박스
-var BATCH_CD_SELECT;
+var MKT_CD_SELECT;
 
 // 목록 조회 URL
 var LIST_URL = "/api/krxs";
@@ -35,10 +35,10 @@ $(document).ready(function () {
 	//ls_table_init(LIST_URL);
 	
 	// 배치코드 셀렉트박스 생성
-	BATCH_CD_SELECT = ct_cd_select("BATCH_CD");
+	MKT_CD_SELECT = ct_cd_select("MKT_CD");
 	
 	// 검색 조건에 셀렉트박스 추가
-	$("#DIV_SCH_BATCH_CD").append(BATCH_CD_SELECT.replace("#ID#", "SCH_BATCH_CD"));
+	$("#DIV_SCH_MKT_CD").append(MKT_CD_SELECT.replace("#ID#", "SCH_MKT_CD"));
 });
 
 /**
@@ -54,10 +54,11 @@ function add(){
 function sch(){
 	$("#data tbody").empty();
 	
-	var schBatchCd = $("#SCH_BATCH_CD").val();
-	var schExeYn = $('input:radio[name=SCH_EXE_YN]:checked').val();
+	var schMktCd = $("#SCH_MKT_CD").val();
+	var schItmNm = $("#SCH_ITM_NM").val();
+	var schSpacYn = $('input:radio[name=SCH_SPAC_YN]:checked').val();
 	
-	ls_table_init(LIST_URL + "?schBatchCd=" + schBatchCd + "&schExeYn=" + schExeYn);
+	ls_table_init(LIST_URL + "?schMktCd=" + schMktCd + "&schItmNm=" + schItmNm + "&schSpacYn=" + schSpacYn);
 }
 </script>
 </head>
@@ -92,33 +93,33 @@ function sch(){
 							<div class="form-group row col-md-6 col-sm-6 ">
 								<div class="col-md-12 col-sm-12 " style="padding-bottom: 10px;">
 									<label class="control-label col-md-3 col-sm-3 " style="padding-top: 10px;">시장</label>
-									<div id="DIV_SCH_BATCH_CD" class="col-md-8 col-sm-8 "></div>
+									<div id="DIV_SCH_MKT_CD" class="col-md-8 col-sm-8 "></div>
 								</div>
 								<div class="col-md-12 col-sm-12 " style="padding-bottom: 10px;">
 									<label class="control-label col-md-3 col-sm-3 " style="padding-top: 10px;">종목명</label>
 									<div class="col-md-8 col-sm-8 ">
-										<input type="text" class="form-control" />
+										<input type="text" id="SCH_ITM_NM" class="form-control" />
 									</div>
 								</div>
 							</div>
 							
 							<div class="form-group row">
 								<div class="col-md-12 col-sm-12">
-									<label class="control-label col-md-3 col-sm-3 " style="padding-top: 10px;">실행여부</label>
+									<label class="control-label col-md-3 col-sm-3 " style="padding-top: 10px;">스팩여부</label>
 									<div class="col-md-8 col-sm-8 ">
 										<div class="radio">
 											<label>
-												<input type="radio" name="SCH_EXE_YN" class="flat" value="" checked="checked"> 선택
+												<input type="radio" name="SCH_SPAC_YN" class="flat" value="" checked="checked"> 선택
 											</label>
 										</div>
 										<div class="radio">
 											<label>
-												<input type="radio" name="SCH_EXE_YN" class="flat" value="Y"> 예
+												<input type="radio" name="SCH_SPAC_YN" class="flat" value="Y"> 예
 											</label>
 										</div>
 										<div class="radio">
 											<label>
-												<input type="radio" name="SCH_EXE_YN" class="flat" value="N"> 아니오
+												<input type="radio" name="SCH_SPAC_YN" class="flat" value="N"> 아니오
 											</label>
 										</div>
 									</div>
@@ -150,8 +151,8 @@ function sch(){
 										<col />
 										<col style="width: 10%;" />
 										<col style="width: 10%;" />
-										<col style="width: 10%;" />
-										<col style="width: 10%;" />
+										<col style="width: 15%;" />
+										<col style="width: 15%;" />
 									</colgroup>
 									<thead>
 										<tr class="headings">

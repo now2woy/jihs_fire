@@ -58,6 +58,8 @@ function add(){
 function sch(){
 	$("#data tbody").empty();
 	
+	collapseLinkOnClick($("#SCH_BATCH_CD").parent().parent());
+	
 	var schBatchCd = $("#SCH_BATCH_CD").val();
 	var schExeYn = $('input:radio[name=SCH_EXE_YN]:checked').val();
 	
