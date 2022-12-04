@@ -34,7 +34,7 @@ function ls_table_init(url){
 					}else{
 						html = html + "	<td id=\"TD_BTN_" + idx + "\" style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:ls_table_mod('" + idx + "');\"><i class=\"fa fa-pencil\"></i> 수정</a></td>";
 					}
-				} else {
+				} else if(MOD_BTN_YN == "N") {
 					html = html + "	<td id=\"TD_BTN_" + idx + "\" style=\"text-align: center; vertical-align: middle;\"></td>";
 				}
 				

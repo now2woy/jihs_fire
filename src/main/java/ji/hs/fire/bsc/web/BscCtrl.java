@@ -27,7 +27,7 @@ public class BscCtrl {
 	 * @return
 	 */
 	@GetMapping("/bsc/code.do")
-	public String codes() {
+	public String code() {
 		return "/bsc/code";
 	}
 	
@@ -36,7 +36,7 @@ public class BscCtrl {
 	 * @return
 	 */
 	@GetMapping("/bsc/batch.do")
-	public String batchs() {
+	public String batch() {
 		return "/bsc/batch";
 	}
 }

@@ -17,7 +17,11 @@
 							<li><a href="/bsc/batch.do">Batch</a></li>
 						</ul>
 					</li>
-					<li><a href="/bsc/batch.do"><i class="fa fa-bar-chart"></i> Batch</a></li>
+					<li><a><i class="fa fa-bar-chart"></i> Stocks <span class="fa fa-chevron-down"></span></a>
+						<ul class="nav child_menu">
+							<li><a href="/krx/stock.do">Stock</a></li>
+						</ul>
+					</li>
 				</ul>
 			</div>
 		</div>

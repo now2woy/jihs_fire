@@ -79,7 +79,7 @@ function sch(){
 		<!-- 상단 메뉴 종료 -->
 			
 		<!-- page content -->
-			<div class="right_col" role="main">
+			<div class="right_col" role="main" style="min-height: 929px;">
 				<div class="">
 					<div class="clearfix"></div>
 					<div class="x_panel" style="height: auto;">
@@ -95,12 +95,12 @@ function sch(){
 						</div>
 						<div class="x_content" style="display: none;">
 							<div class="form-group row col-md-6 col-sm-6 ">
-								<label class="control-label col-md-3 col-sm-3 ">배치명</label>
+								<label class="control-label col-md-3 col-sm-3 " style="padding-top: 10px;">배치명</label>
 								<div id="DIV_SCH_BATCH_CD" class="col-md-8 col-sm-8 "></div>
 							</div>
 							
 							<div class="form-group row">
-								<label class="control-label col-md-3 col-sm-3 ">실행여부</label>
+								<label class="control-label col-md-3 col-sm-3 " style="padding-top: 10px;">실행여부</label>
 								<div class="col-md-8 col-sm-8 ">
 									<div class="radio">
 										<label>

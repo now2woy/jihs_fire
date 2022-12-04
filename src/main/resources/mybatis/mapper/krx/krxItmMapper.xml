@@ -24,6 +24,31 @@
 	]]>
 	</select>
 	
+<!-- ITM_CD 조건 한국거래소 종목 마스터 단건 조회 -->
+	<select id="selectAll" resultType="ji.hs.fire.krx.vo.KrxItmVO" parameterType="ji.hs.fire.krx.vo.KrxItmVO">
+		SELECT ITM_CD
+		     , ITM_NM
+		     , MKT_CD
+		     , (SELECT CD_NM FROM BC_CD_DT X WHERE X.CD_COL = 'MKT_CD' AND A.MKT_CD = X.CD) AS MKT_NM
+		     , SPAC_YN
+		     , ITM_KND_CD
+		     , (SELECT CD_NM FROM BC_CD_DT X WHERE X.CD_COL = 'ITM_CL_CD' AND A.ITM_KND_CD = X.CD) AS ITM_KND_NM
+		     , ITM_CL_CD
+		     , (SELECT CD_NM FROM BC_CD_DT X WHERE X.CD_COL = 'ITM_CL_CD' AND A.ITM_CL_CD = X.CD) AS ITM_CL_NM
+		  FROM KX_ITM_MT A
+		 WHERE 1 = 1
+	<if test='mktCd != null and mktCd != ""'>
+		   AND MKT_CD = #{mktCd}
+	</if>
+	<if test='itmNm != null and itmNm != ""'>
+		   AND ITM_NM LIKE CONCAT('%', #{itmNm}, '%')
+	</if>
+	<if test='spacYn != null and spacYn != ""'>
+		   AND SPAC_YN = #{spacYn}
+	</if>
+		 ORDER BY ITM_NM ASC
+	</select>
+	
 <!-- 한국거래소 종목 입력 -->
 	<insert id="insert" parameterType="ji.hs.fire.krx.vo.KrxItmVO" flushCache="true">
 	<![CDATA[

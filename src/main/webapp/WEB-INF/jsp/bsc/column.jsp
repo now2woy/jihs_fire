@@ -50,7 +50,7 @@ function goCd(node){
 		<!-- 상단 메뉴 종료 -->
 			
 		<!-- page content -->
-			<div class="right_col" role="main" style="min-height: 991px;">
+			<div class="right_col" role="main" style="min-height: 929px;">
 				<div class="">
 					<div class="clearfix"></div>
 					<div class="x_panel">
