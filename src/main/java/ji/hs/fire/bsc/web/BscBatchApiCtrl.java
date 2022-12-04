@@ -41,6 +41,7 @@ public class BscBatchApiCtrl {
 		BscBatchVO bscBatchVO = new BscBatchVO();
 		bscBatchVO.setBatchCd(schBatchCd);
 		bscBatchVO.setExeYn(schExeYn);
+		bscBatchVO.setOrder(2);
 		return ResponseEntity.status(HttpStatus.OK).body(bscBatchMapper.selectAll(bscBatchVO));
 	}
 	
