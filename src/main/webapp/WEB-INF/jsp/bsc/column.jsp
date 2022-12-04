@@ -84,13 +84,13 @@ function goCd(node){
 									</tbody>
 								</table>
 							</div>
+							
+						<!-- 버튼 영역 시작 -->
+							<div id="btn_div" style="float: right;">
+								<button type="button" id="add-btn" class="btn btn-success" onclick="ls_table_add();">등록</button>
+							</div>
+						<!-- 버튼 영역 종료 -->
 						</div>
-						
-					<!-- 버튼 영역 시작 -->
-						<div id="btn_div" style="float: right;">
-							<button type="button" id="add-btn" class="btn btn-success" onclick="ls_table_add();">등록</button>
-						</div>
-					<!-- 버튼 영역 종료 -->
 						
 					</div>
 				</div>

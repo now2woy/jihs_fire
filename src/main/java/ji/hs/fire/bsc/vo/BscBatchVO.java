@@ -62,6 +62,10 @@ public class BscBatchVO {
 	 */
 	private int offset;
 	/**
+	 * 정렬 : 1 : SEQ ASC, 2 : SEQ DESC
+	 */
+	private int order;
+	/**
 	 * 업데이트숫자 = 1 : 배치 시작, 2 : 배치 종료
 	 */
 	private int updCnt;

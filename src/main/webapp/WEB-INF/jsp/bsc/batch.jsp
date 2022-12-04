@@ -69,6 +69,56 @@ function add(){
 					<div class="clearfix"></div>
 					<div class="x_panel">
 						<div class="x_title">
+							<h2>검색</h2>
+							<ul class="nav navbar-right panel_toolbox" style="min-width: 40px;">
+								<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+								<li><a class="close-link"><i class="fa fa-close"></i></a>
+								</li>
+							</ul>
+							<div class="clearfix"></div>
+						</div>
+						<div class="x_content">
+							<div class="form-group row col-md-6 col-sm-6 ">
+								<label class="control-label col-md-3 col-sm-3 ">배치명</label>
+								<div class="col-md-8 col-sm-8 ">
+									<select class="form-control">
+										<option value="">선택</option>
+										<option>테스트</option>
+										<option>테스트</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="form-group row">
+								<label class="control-label col-md-3 col-sm-3 ">실행여부</label>
+								<div class="col-md-8 col-sm-8 ">
+									<div class="radio">
+										<label>
+											<input type="radio" class="flat" checked name="iCheck"> 선택
+										</label>
+									</div>
+									<div class="radio">
+										<label>
+											<input type="radio" class="flat" name="iCheck"> 예
+										</label>
+									</div>
+									<div class="radio">
+										<label>
+											<input type="radio" class="flat" name="iCheck"> 아니오
+										</label>
+									</div>
+								</div>
+							</div>
+							
+							<div class="ln_solid"></div>
+							<div style="float: right;">
+								<button type="button" class="btn btn-primary">조회</button>
+							</div>
+						</div>
+					</div>
+					
+					<div class="x_panel">
+						<div class="x_title">
 							<h2>배치 목록</h2>
 							<ul class="nav navbar-right panel_toolbox" style="min-width: 40px;">
 								<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
@@ -112,13 +162,13 @@ function add(){
 									</tbody>
 								</table>
 							</div>
+							
+						<!-- 버튼 영역 시작 -->
+							<div style="float: right;">
+								<button type="button" id="add-btn" class="btn btn-success" onclick="add();">등록</button>
+							</div>
+						<!-- 버튼 영역 종료 -->
 						</div>
-						
-					<!-- 버튼 영역 시작 -->
-						<div style="float: right;">
-							<button type="button" id="add-btn" class="btn btn-success" onclick="add();">등록</button>
-						</div>
-					<!-- 버튼 영역 종료 -->
 					
 					</div>
 				</div>

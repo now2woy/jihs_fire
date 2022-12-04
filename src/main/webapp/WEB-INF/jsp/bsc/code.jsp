@@ -102,14 +102,14 @@ function list() {
 									</tbody>
 								</table>
 							</div>
+							
+						<!-- 버튼 영역 시작 -->
+							<div style="float: right;">
+								<button type="button" id="list-btn" class="btn btn-secondary" onclick="list();">목록</button>
+								<button type="button" id="add-btn" class="btn btn-success" onclick="add();">등록</button>
+							</div>
+						<!-- 버튼 영역 종료 -->
 						</div>
-						
-					<!-- 버튼 영역 시작 -->
-						<div style="float: right;">
-							<button type="button" id="list-btn" class="btn btn-secondary" onclick="list();">목록</button>
-							<button type="button" id="add-btn" class="btn btn-success" onclick="add();">등록</button>
-						</div>
-					<!-- 버튼 영역 종료 -->
 						
 					</div>
 				</div>

@@ -22,7 +22,14 @@
 	<if test='exeYn != null and exeYn != ""'>
 		   AND EXE_YN = #{exeYn}
 	</if>
+	<choose>
+		<when test="order == 2">
+		 ORDER BY SEQ DESC
+		</when>
+		<otherwise>
 		 ORDER BY SEQ ASC
+		</otherwise>
+	</choose>
 	<if test='limit != null and limit != 0'>
 		 LIMIT #{limit}
 		<if test='offset != null and offset != 0'>
@@ -63,12 +70,15 @@
 	<if test='exeYn != null and exeYn != "" and exeYn != "N"'>
 		     , EXE_YN = #{exeYn}
 	</if>
-	<if test='updCnt != null and updCnt == 1'>
+	<choose>
+		<when test="updCnt == 1">
 		     , EXE_ST_DT = NOW()
-	</if>
-	<if test='updCnt != null and updCnt == 2'>
+		</when>
+		<when test="updCnt == 2">
 		     , EXE_ED_DT = NOW()
-	</if>
+		</when>
+		<otherwise></otherwise>
+	</choose>
 	<if test='sucYn != null and sucYn != ""'>
 		     , SUC_YN = #{sucYn}
 	</if>
