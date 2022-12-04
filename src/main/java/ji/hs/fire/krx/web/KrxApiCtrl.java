@@ -45,8 +45,8 @@ public class KrxApiCtrl {
 	 */
 	@GetMapping("")
 	public ResponseEntity<Map<String, Object>> list(@RequestParam(required = false) String schMktCd
-											 , @RequestParam(required = false) String schItmNm
-											 , @RequestParam(required = false) String schSpacYn) throws Exception {
+												  , @RequestParam(required = false) String schItmNm
+												  , @RequestParam(required = false) String schSpacYn) throws Exception {
 		KrxItmVO krxItmVO = new KrxItmVO();
 		krxItmVO.setMktCd(schMktCd);
 		krxItmVO.setItmNm(schItmNm);

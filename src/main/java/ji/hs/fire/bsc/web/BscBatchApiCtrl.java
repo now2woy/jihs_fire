@@ -71,7 +71,6 @@ public class BscBatchApiCtrl {
 	 */
 	@PostMapping("")
 	public ResponseEntity<BscBatchVO> insert(@RequestBody BscBatchVO bscBatchVO) throws Exception {
-		
 		bscBatchService.insert(bscBatchVO);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(bscBatchVO);

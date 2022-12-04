@@ -96,7 +96,6 @@ public class BscCdApiCtrl {
 	 */
 	@PostMapping("")
 	public ResponseEntity<BscCdVO> insert(@RequestBody BscCdVO bscCdVO) throws Exception {
-		
 		bscCdMapper.insert(bscCdVO);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(bscCdVO);
