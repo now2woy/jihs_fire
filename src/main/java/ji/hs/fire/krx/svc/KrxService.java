@@ -122,6 +122,8 @@ public class KrxService {
 			parmBatchVO.setBatchCd("00002");
 			parmBatchVO.setExeYn("Y");
 			parmBatchVO.setLimit(1);
+			// SEQ DESC
+			parmBatchVO.setOrder(2);
 			// 마지막 실행 된 자료 조회
 			BscBatchVO tempBatchVO = bscBatchMapper.selectAll(parmBatchVO).get(0);
 			

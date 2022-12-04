@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ji.hs.fire.bsc.mpr.BscBatchMapper;
@@ -30,10 +31,16 @@ public class BscBatchApiCtrl {
 	
 	/**
 	 * 배치 정보 목록 조회
+	 * @param schBatchCd
+	 * @param schExeYn
 	 * @return
+	 * @throws Exception
 	 */
 	@GetMapping("")
-	public ResponseEntity<List<BscBatchVO>> list(@RequestBody(required = false) BscBatchVO bscBatchVO) throws Exception {
+	public ResponseEntity<List<BscBatchVO>> list(@RequestParam(required = false) String schBatchCd, @RequestParam(required = false) String schExeYn) throws Exception {
+		BscBatchVO bscBatchVO = new BscBatchVO();
+		bscBatchVO.setBatchCd(schBatchCd);
+		bscBatchVO.setExeYn(schExeYn);
 		return ResponseEntity.status(HttpStatus.OK).body(bscBatchMapper.selectAll(bscBatchVO));
 	}
 	

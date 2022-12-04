@@ -31,12 +31,18 @@ data.push({"NM" : "EXE_ED_DT_",	"IDX" : "seq",	"VAL" : "exeEdDt",	"VAL2" : "",		
 // 배치코드 셀렉트박스
 var BATCH_CD_SELECT;
 
+// 목록 조회 URL
+var LIST_URL = "/api/batchs";
+
 $(document).ready(function () {
-	var url = "/api/batchs/";
 	
-	ls_table_init(url);
+	ls_table_init(LIST_URL);
 	
+	// 배치코드 셀렉트박스 생성
 	BATCH_CD_SELECT = ct_cd_select("BATCH_CD");
+	
+	// 검색 조건에 셀렉트박스 추가
+	$("#DIV_SCH_BATCH_CD").append(BATCH_CD_SELECT.replace("#ID#", "SCH_BATCH_CD"));
 });
 
 /**
@@ -47,6 +53,15 @@ function add(){
 	ls_table_add();
 	
 	$("#TD_BATCH_NM_NEW").append(BATCH_CD_SELECT.replace("#ID#", "BATCH_NM_NEW"));
+}
+
+function sch(){
+	$("#data tbody").empty();
+	
+	var schBatchCd = $("#SCH_BATCH_CD").val();
+	var schExeYn = $('input:radio[name=SCH_EXE_YN]:checked').val();
+	
+	ls_table_init(LIST_URL + "?schBatchCd=" + schBatchCd + "&schExeYn=" + schExeYn);
 }
 </script>
 </head>
@@ -67,26 +82,21 @@ function add(){
 			<div class="right_col" role="main">
 				<div class="">
 					<div class="clearfix"></div>
-					<div class="x_panel">
+					<div class="x_panel" style="height: auto;">
+					<form action="/bsc/batch.do" method="get">
 						<div class="x_title">
 							<h2>검색</h2>
 							<ul class="nav navbar-right panel_toolbox" style="min-width: 40px;">
-								<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+								<li><a class="collapse-link"><i class="fa fa-chevron-down"></i></a></li>
 								<li><a class="close-link"><i class="fa fa-close"></i></a>
 								</li>
 							</ul>
 							<div class="clearfix"></div>
 						</div>
-						<div class="x_content">
+						<div class="x_content" style="display: none;">
 							<div class="form-group row col-md-6 col-sm-6 ">
 								<label class="control-label col-md-3 col-sm-3 ">배치명</label>
-								<div class="col-md-8 col-sm-8 ">
-									<select class="form-control">
-										<option value="">선택</option>
-										<option>테스트</option>
-										<option>테스트</option>
-									</select>
-								</div>
+								<div id="DIV_SCH_BATCH_CD" class="col-md-8 col-sm-8 "></div>
 							</div>
 							
 							<div class="form-group row">
@@ -94,17 +104,17 @@ function add(){
 								<div class="col-md-8 col-sm-8 ">
 									<div class="radio">
 										<label>
-											<input type="radio" class="flat" checked name="iCheck"> 선택
+											<input type="radio" name="SCH_EXE_YN" class="flat" value="" checked="checked"> 선택
 										</label>
 									</div>
 									<div class="radio">
 										<label>
-											<input type="radio" class="flat" name="iCheck"> 예
+											<input type="radio" name="SCH_EXE_YN" class="flat" value="Y"> 예
 										</label>
 									</div>
 									<div class="radio">
 										<label>
-											<input type="radio" class="flat" name="iCheck"> 아니오
+											<input type="radio" name="SCH_EXE_YN" class="flat" value="N"> 아니오
 										</label>
 									</div>
 								</div>
@@ -112,9 +122,10 @@ function add(){
 							
 							<div class="ln_solid"></div>
 							<div style="float: right;">
-								<button type="button" class="btn btn-primary">조회</button>
+								<button type="button" class="btn btn-primary" onclick="sch();">조회</button>
 							</div>
 						</div>
+					</form>
 					</div>
 					
 					<div class="x_panel">
