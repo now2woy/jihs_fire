@@ -124,7 +124,13 @@ public class KrxService {
 			parmBatchVO.setLimit(1);
 			// SEQ DESC
 			parmBatchVO.setOrder(2);
-			// 마지막 실행 된 자료 조회
+			
+			// 마지막 SEQ 조회
+			int lastSeq = bscBatchMapper.selectAll(parmBatchVO).get(0).getSeq();
+			
+			parmBatchVO.setBatchCd("00002");
+			
+			// 마지막 배치 건 조회
 			BscBatchVO tempBatchVO = bscBatchMapper.selectAll(parmBatchVO).get(0);
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -138,7 +144,7 @@ public class KrxService {
 				// 파라미터1이 어제보다 작거나 같을 경우
 				if(Integer.parseInt(parm1st) <= Integer.parseInt(yesterday)) {
 					BscBatchVO targetBscBatchVO = new BscBatchVO();
-					targetBscBatchVO.setSeq(tempBatchVO.getSeq() + i);
+					targetBscBatchVO.setSeq(lastSeq + i);
 					targetBscBatchVO.setBatchCd(tempBatchVO.getBatchCd());
 					targetBscBatchVO.setParm1st(parm1st);
 					targetBscBatchVO.setExeYn("N");
