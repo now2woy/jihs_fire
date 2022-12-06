@@ -77,12 +77,13 @@ public class KrxApiCtrl {
 	
 	/**
 	 * 한국거래소 종목 기본 정보 수집
-	 * @param dartKeyVO
+	 * @param limit
 	 * @return
+	 * @throws Exception
 	 */
 	@PostMapping("/batchs/trd")
-	public ResponseEntity<Map<String, String>> trdCollection() throws Exception {
+	public ResponseEntity<Map<String, String>> trdCollection(@RequestParam(defaultValue = "10") int limit) throws Exception {
 		// 한국거래소 종목 거래 정보 수집
-		return ResponseEntity.status(HttpStatus.CREATED).body(krxService.trdCollection());
+		return ResponseEntity.status(HttpStatus.CREATED).body(krxService.trdCollection(limit));
 	}
 }

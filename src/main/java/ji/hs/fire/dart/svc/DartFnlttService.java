@@ -61,11 +61,12 @@ public class DartFnlttService {
 	
 	/**
 	 * Dart 재무제표 수집
+	 * @param limit
 	 * @throws Exception
 	 */
 	@Async
 	@Transactional
-	public void dartFnlttCollection() throws Exception {
+	public void dartFnlttCollection(int limit) throws Exception {
 		MDC.put(BscConstants.LOG_KEY, BscConstants.LOG_KEY_DART);
 		
 		final ObjectMapper mapper = new ObjectMapper();
@@ -76,7 +77,7 @@ public class DartFnlttService {
 		BscBatchVO parmBatchVO = new BscBatchVO();
 		parmBatchVO.setBatchCd("00001");
 		parmBatchVO.setExeYn("N");
-		parmBatchVO.setLimit(1);
+		parmBatchVO.setLimit(limit);
 		
 		int keyNum = 0;
 		

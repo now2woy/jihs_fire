@@ -95,12 +95,13 @@ public class KrxService {
 	
 	/**
 	 * 한국거래소 종목 거래 정보 수집
+	 * @param limit
 	 * @return
 	 * @throws Exception
 	 */
 	@Async
 	@Transactional
-	public Map<String, String> trdCollection() throws Exception {
+	public Map<String, String> trdCollection(int limit) throws Exception {
 		MDC.put(BscConstants.LOG_KEY, BscConstants.LOG_KEY_KRX);
 		
 		Map<String, String> result = new HashMap<>();
@@ -114,7 +115,7 @@ public class KrxService {
 		BscBatchVO parmBatchVO = new BscBatchVO();
 		parmBatchVO.setBatchCd("00002");
 		parmBatchVO.setExeYn("N");
-		parmBatchVO.setLimit(10);
+		parmBatchVO.setLimit(limit);
 		List<BscBatchVO> batchList = bscBatchMapper.selectAll(parmBatchVO);
 		
 		// 조회된 배치가 없을 경우
@@ -131,8 +132,8 @@ public class KrxService {
 			
 			String yesterday = sdf.format(DateUtils.addDays(new Date(), -1));
 			
-			// 10번 반복한다.
-			for(int i = 1; i <= 10; i++) {
+			// limit만큼 반복한다.
+			for(int i = 1; i <= limit; i++) {
 				String parm1st = sdf.format(DateUtils.addDays(sdf.parse(tempBatchVO.getParm1st()), i));
 				
 				// 파라미터1이 어제보다 작거나 같을 경우

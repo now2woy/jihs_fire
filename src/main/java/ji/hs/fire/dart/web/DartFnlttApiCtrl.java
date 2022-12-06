@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ji.hs.fire.bsc.util.BscUtils;
@@ -30,15 +31,16 @@ public class DartFnlttApiCtrl {
 	
 	/**
 	 * 전자공시시스템 재무제표 배치
+	 * @param limit
 	 * @return
 	 * @throws Exception
 	 */
 	@PostMapping("/batch")
-	public ResponseEntity<String> batch() throws Exception {
+	public ResponseEntity<String> batch(@RequestParam(defaultValue = "1") int limit) throws Exception {
 		// 03시 실행
 		if(BscUtils.isRunTime("03")){
 			// 비동기 방식으로 데이터 수집
-			dartFnlttService.dartFnlttCollection();
+			dartFnlttService.dartFnlttCollection(limit);
 		}
 		
 		// 성공 리턴
