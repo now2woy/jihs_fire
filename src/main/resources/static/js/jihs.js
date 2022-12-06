@@ -150,8 +150,8 @@ function ct_cd_select(cdCol){
 		, async : false
 	})
 	.done(function(json) {
-		if(json.length != 0){
-			$.each(json, function(key, value){
+		if(json.data.length != 0){
+			$.each(json.data, function(key, value){
 				result = result + "<option value=\"" + value["cd"] + "\">" + value["cdNm"] + "</option>";
 			});
 		}
