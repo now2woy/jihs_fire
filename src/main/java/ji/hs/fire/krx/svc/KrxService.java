@@ -120,8 +120,7 @@ public class KrxService {
 		
 		// 조회된 배치가 없을 경우
 		if(batchList.isEmpty()) {
-			parmBatchVO.setBatchCd("00002");
-			parmBatchVO.setExeYn("Y");
+			parmBatchVO = new BscBatchVO();
 			parmBatchVO.setLimit(1);
 			// SEQ DESC
 			parmBatchVO.setOrder(2);
