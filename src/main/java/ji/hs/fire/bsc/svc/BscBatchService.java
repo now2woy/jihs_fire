@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class BscBatchService {
 	/**
-	 * 
+	 * 배치 정보 Mapper
 	 */
 	private final BscBatchMapper bscBatchMapper;
 	

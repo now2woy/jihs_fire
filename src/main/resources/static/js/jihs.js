@@ -201,7 +201,7 @@ function ls_table_save(id, method){
 		});
 		
 		$.ajax({
-			url: SAVE_URL
+			url: PAGE_CONFIG["SAVE_URL"]
 			, data : JSON.stringify(param)
 			, method: method
 			, dataType: "json"

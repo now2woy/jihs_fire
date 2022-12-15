@@ -13,6 +13,7 @@
 				<ul class="nav side-menu">
 					<li><a><i class="fa fa-gears"></i> Settings <span class="fa fa-chevron-down"></span></a>
 						<ul class="nav child_menu">
+							<li><a href="/bsc/user.do">User</a></li>
 							<li><a href="/bsc/column.do">Code</a></li>
 							<li><a href="/bsc/batch.do">Batch</a></li>
 						</ul>

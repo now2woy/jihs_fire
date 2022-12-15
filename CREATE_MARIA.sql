@@ -118,3 +118,19 @@ CREATE TABLE BC_BATCH_MT (
 ) ENGINE=INNODB COMMENT='배치 정보';
 
 ALTER TABLE BC_BATCH_MT ADD PRIMARY KEY (SEQ);
+
+/* 사용자 정보 테이블 생성 */
+CREATE TABLE BC_US_MT (
+	  USR_ID	VARCHAR(100)	not null		comment '사용자ID'
+	, USR_NM	VARCHAR(100)	not null		comment '사용자명'
+) ENGINE=INNODB COMMENT='사용자 정보';
+
+ALTER TABLE BC_US_MT ADD PRIMARY KEY (USR_ID);
+
+
+
+
+
+
+
+

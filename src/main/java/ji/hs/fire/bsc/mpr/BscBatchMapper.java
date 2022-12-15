@@ -12,12 +12,14 @@ import ji.hs.fire.bsc.vo.BscBatchVO;
 public interface BscBatchMapper {
 	/**
 	 * 배치 정보 전체 조회
+	 * @param bscBatchVO
 	 * @return
 	 * @throws Exception
 	 */
 	public List<BscBatchVO> selectAll(BscBatchVO bscBatchVO) throws Exception;
 	/**
 	 * 배치 정보 건수 조회
+	 * @param bscBatchVO
 	 * @return
 	 * @throws Exception
 	 */

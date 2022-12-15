@@ -6,13 +6,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 코드 정보 CTRL
+ * 기본 정보 CTRL
  * @author now2w
  *
  */
 @Controller
 @RequiredArgsConstructor
 public class BscCtrl {
+	/**
+	 * 사용자 조회
+	 * @return
+	 */
+	@GetMapping("/bsc/user.do")
+	public String user() {
+		return "/bsc/user";
+	}
 	/**
 	 * 코드 컬럼 조회
 	 * @return

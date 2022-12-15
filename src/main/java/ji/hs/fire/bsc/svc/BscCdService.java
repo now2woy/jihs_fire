@@ -27,8 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class BscCdService {
+	/**
+	 * 코드 정보 Mapper
+	 */
 	private final BscCdMapper bscCdMapper;
-	
 	/**
 	 * 한국거래소 JSON URL
 	 */
