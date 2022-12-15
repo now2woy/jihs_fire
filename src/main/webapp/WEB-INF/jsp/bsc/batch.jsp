@@ -4,15 +4,20 @@
 <head>
 <%@ include file="/WEB-INF/jsp/common/inc.jsp" %>
 <script type="text/javascript">
-
-//저장 함수에서 사용하는 경로
-var SAVE_URL = "/api/batchs";
-
-// 초기화 시 수정 버튼 함수, ""일 경우 기본 함수 설정
-var MOD_BTN = "";
-
-// 초기화 시 수정 버튼이 있는지 여부
-var MOD_BTN_YN = "N";
+// 페이지 설정 정보
+var PAGE_CONFIG = [];
+// DB 저장 URL
+PAGE_CONFIG["SAVE_URL"] = "/api/batchs";
+// 목록 URL
+PAGE_CONFIG["LIST_URL"] = "/api/batchs";
+// 수정 버튼 함수, "" 시 기본 함수
+PAGE_CONFIG["MOD_BTN"] = "";
+// 수정 버튼 여부
+PAGE_CONFIG["MOD_BTN_YN"] = "N";
+// 페이지 사이즈
+PAGE_CONFIG["PAGING_YN"] = "Y";
+// 페이지 사이즈
+PAGE_CONFIG["PAGE_SIZE"] = 10;
 
 //테이블 구성 정보
 var data = [];
@@ -28,21 +33,15 @@ data.push({"NM" : "SUC_YN_",	"IDX" : "seq",	"VAL" : "sucYn",	"VAL2" : "",		"FUNC
 data.push({"NM" : "EXE_ST_DT_",	"IDX" : "seq",	"VAL" : "exeStDt",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
 data.push({"NM" : "EXE_ED_DT_",	"IDX" : "seq",	"VAL" : "exeEdDt",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
 
-// 배치코드 셀렉트박스
-var BATCH_CD_SELECT;
-
-// 목록 조회 URL
-var LIST_URL = "/api/batchs";
-
 $(document).ready(function () {
-	
-	ls_table_init(LIST_URL);
+	// 목록 초기화
+	ls_table_init(PAGE_CONFIG["LIST_URL"], 1);
 	
 	// 배치코드 셀렉트박스 생성
-	BATCH_CD_SELECT = ct_cd_select("BATCH_CD");
+	PAGE_CONFIG["BATCH_CD_SELECT"] = ct_cd_select("BATCH_CD");
 	
 	// 검색 조건에 셀렉트박스 추가
-	$("#DIV_SCH_BATCH_CD").append(BATCH_CD_SELECT.replace("#ID#", "SCH_BATCH_CD"));
+	$("#DIV_SCH_BATCH_CD").append(PAGE_CONFIG["BATCH_CD_SELECT"].replace("#ID#", "SCH_BATCH_CD"));
 });
 
 /**
@@ -52,9 +51,12 @@ function add(){
 	// 기본 로직 처리 후 추가 처리
 	ls_table_add();
 	
-	$("#TD_BATCH_NM_NEW").append(BATCH_CD_SELECT.replace("#ID#", "BATCH_NM_NEW"));
+	$("#TD_BATCH_NM_NEW").append(PAGE_CONFIG["BATCH_CD_SELECT"].replace("#ID#", "BATCH_NM_NEW"));
 }
 
+/**
+ * 검색
+ */
 function sch(){
 	$("#data tbody").empty();
 	
@@ -63,7 +65,7 @@ function sch(){
 	var schBatchCd = $("#SCH_BATCH_CD").val();
 	var schExeYn = $('input:radio[name=SCH_EXE_YN]:checked').val();
 	
-	ls_table_init(LIST_URL + "?schBatchCd=" + schBatchCd + "&schExeYn=" + schExeYn);
+	ls_table_init(PAGE_CONFIG["LIST_URL"] + "?schBatchCd=" + schBatchCd + "&schExeYn=" + schExeYn, 1);
 }
 </script>
 </head>
@@ -186,18 +188,7 @@ function sch(){
 							<div class="row">
 								<div class="col-sm-5"></div>
 								<div class="col-sm-7">
-									<div class="dataTables_paginate paging_simple_numbers" id="datatable-keytable_paginate">
-										<ul class="pagination">
-											<li class="paginate_button previous disabled" id="datatable-keytable_previous"><a href="#" aria-controls="datatable-keytable" data-dt-idx="0" tabindex="0">Previous</a></li>
-											<li class="paginate_button active"><a href="#" aria-controls="datatable-keytable" data-dt-idx="1" tabindex="0">1</a></li>
-											<li class="paginate_button "><a href="#" aria-controls="datatable-keytable" data-dt-idx="2" tabindex="0">2</a></li>
-											<li class="paginate_button "><a href="#" aria-controls="datatable-keytable" data-dt-idx="3" tabindex="0">3</a></li>
-											<li class="paginate_button "><a href="#" aria-controls="datatable-keytable" data-dt-idx="4" tabindex="0">4</a></li>
-											<li class="paginate_button "><a href="#" aria-controls="datatable-keytable" data-dt-idx="5" tabindex="0">5</a></li>
-											<li class="paginate_button "><a href="#" aria-controls="datatable-keytable" data-dt-idx="6" tabindex="0">6</a></li>
-											<li class="paginate_button next" id="datatable-keytable_next"><a href="#" aria-controls="datatable-keytable" data-dt-idx="7" tabindex="0">Next</a></li>
-										</ul>
-									</div>
+									<div id="paginate" class="dataTables_paginate paging_simple_numbers"></div>
 								</div>
 							</div>
 							

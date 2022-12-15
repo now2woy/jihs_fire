@@ -4,15 +4,18 @@
 <head>
 <%@ include file="/WEB-INF/jsp/common/inc.jsp" %>
 <script type="text/javascript">
-
-// 저장 함수에서 사용하는 경로
-var SAVE_URL = "/api/code/columns";
-
-//초기화 시 수정 버튼 함수, ""일 경우 기본 함수 설정
-var MOD_BTN = "";
-
-//초기화 시 수정 버튼이 있는지 여부
-var MOD_BTN_YN = "Y";
+//페이지 설정 정보
+var PAGE_CONFIG = [];
+// DB 저장 URL
+PAGE_CONFIG["SAVE_URL"] = "/api/code/columns";
+// 목록 URL
+PAGE_CONFIG["LIST_URL"] = "/api/code/columns";
+// 수정 버튼 함수, "" 시 기본 함수
+PAGE_CONFIG["MOD_BTN"] = "";
+// 수정 버튼 여부
+PAGE_CONFIG["MOD_BTN_YN"] = "Y";
+//페이지 사이즈
+PAGE_CONFIG["PAGING_YN"] = "N";
 
 // 테이블 구성 정보
 var data = [];
@@ -22,9 +25,7 @@ data.push({"NM" : "CD_COL_NM_",	"IDX" : "cdCol",	"VAL" : "cdColNm",	"VAL2" : "",
 data.push({"NM" : "USE_YN_",	"IDX" : "cdCol",	"VAL" : "useYn",	"VAL2" : "",	"FUNC" : "",			"TYPE" : "S",	"OPT" : "",	"TDST" : "T_C"});
 
 $(document).ready(function () {
-	var url = "/api/code/columns";
-	
-	ls_table_init(url);
+	ls_table_init(PAGE_CONFIG["LIST_URL"], 1);
 });
 
 /**

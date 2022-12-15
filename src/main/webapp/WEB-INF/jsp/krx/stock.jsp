@@ -4,15 +4,18 @@
 <head>
 <%@ include file="/WEB-INF/jsp/common/inc.jsp" %>
 <script type="text/javascript">
-
-//저장 함수에서 사용하는 경로
-var SAVE_URL = "/api/krxs";
-
-// 초기화 시 수정 버튼 함수, ""일 경우 기본 함수 설정
-var MOD_BTN = "";
-
-// 초기화 시 수정 버튼이 있는지 여부 Y : 있음, N : 없음(td 있음), E : 없음(td 없음)
-var MOD_BTN_YN = "E";
+//페이지 설정 정보
+var PAGE_CONFIG = [];
+// DB 저장 URL
+PAGE_CONFIG["SAVE_URL"] = "/api/krxs";
+// 목록 URL
+PAGE_CONFIG["LIST_URL"] = "/api/krxs";
+// 수정 버튼 함수, "" 시 기본 함수
+PAGE_CONFIG["MOD_BTN"] = "";
+// 수정 버튼 여부
+PAGE_CONFIG["MOD_BTN_YN"] = "E";
+//페이지 사이즈
+PAGE_CONFIG["PAGING_YN"] = "N";
 
 //테이블 구성 정보
 var data = [];
@@ -27,18 +30,15 @@ data.push({"NM" : "ITM_CL_NM_",	"IDX" : "itmCd",	"VAL" : "itmClNm",	"VAL2" : "it
 // 배치코드 셀렉트박스
 var MKT_CD_SELECT;
 
-// 목록 조회 URL
-var LIST_URL = "/api/krxs";
-
 $(document).ready(function () {
 	
 	//ls_table_init(LIST_URL);
 	
 	// 배치코드 셀렉트박스 생성
-	MKT_CD_SELECT = ct_cd_select("MKT_CD");
+	PAGE_CONFIG["MKT_CD_SELECT"] = ct_cd_select("MKT_CD");
 	
 	// 검색 조건에 셀렉트박스 추가
-	$("#DIV_SCH_MKT_CD").append(MKT_CD_SELECT.replace("#ID#", "SCH_MKT_CD"));
+	$("#DIV_SCH_MKT_CD").append(PAGE_CONFIG["MKT_CD_SELECT"].replace("#ID#", "SCH_MKT_CD"));
 });
 
 /**
@@ -58,7 +58,7 @@ function sch(){
 	var schItmNm = $("#SCH_ITM_NM").val();
 	var schSpacYn = $('input:radio[name=SCH_SPAC_YN]:checked').val();
 	
-	ls_table_init(LIST_URL + "?schMktCd=" + schMktCd + "&schItmNm=" + schItmNm + "&schSpacYn=" + schSpacYn);
+	ls_table_init(PAGE_CONFIG["LIST_URL"] + "?schMktCd=" + schMktCd + "&schItmNm=" + schItmNm + "&schSpacYn=" + schSpacYn, 1);
 }
 </script>
 </head>

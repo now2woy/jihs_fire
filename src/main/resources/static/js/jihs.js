@@ -1,15 +1,24 @@
 /**
  * 목록 테이블 초기화
  */
-function ls_table_init(url){
+function ls_table_init(url, idx){
+	var listUrl = url;
+	// 페이징 처리일 경우
+	if(PAGE_CONFIG["PAGING_YN"] == 'Y'){
+		listUrl = url + ls_pageing_parm(url, idx);
+	}
+	
+	$("#data tbody").empty();
+	
 	$.ajax({
-		url: url
+		url: listUrl
 		, data : null
 		, method: "GET"
 		, dataType: "json"
 		, async : true
 	})
 	.done(function(json) {
+		// 목록 처리
 		if(json.data.length != 0){
 			$.each(json.data, function(key, value){
 				var idx;
@@ -27,14 +36,14 @@ function ls_table_init(url){
 				});
 				
 				// 수정 버튼 여부가 "Y" 일 때만 생성
-				if(MOD_BTN_YN == "Y"){
+				if(PAGE_CONFIG["MOD_BTN_YN"] == "Y"){
 					// MOD_BTN 가 ""이 아닐 때 다른 값으로 변경
-					if(MOD_BTN != ""){
-						html = html + "	<td id=\"TD_BTN_" + idx + "\" style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:" + MOD_BTN + "('" + idx + "');\"><i class=\"fa fa-pencil\"></i> 수정</a></td>";
+					if(PAGE_CONFIG["MOD_BTN"] != ""){
+						html = html + "	<td id=\"TD_BTN_" + idx + "\" style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:" + PAGE_CONFIG["MOD_BTN"] + "('" + idx + "');\"><i class=\"fa fa-pencil\"></i> 수정</a></td>";
 					}else{
 						html = html + "	<td id=\"TD_BTN_" + idx + "\" style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:ls_table_mod('" + idx + "');\"><i class=\"fa fa-pencil\"></i> 수정</a></td>";
 					}
-				} else if(MOD_BTN_YN == "N") {
+				} else if(PAGE_CONFIG["MOD_BTN_YN"] == "N") {
 					html = html + "	<td id=\"TD_BTN_" + idx + "\" style=\"text-align: center; vertical-align: middle;\"></td>";
 				}
 				
@@ -43,7 +52,76 @@ function ls_table_init(url){
 				$("#data tbody").append(html);
 			});
 		}
+		
+		// 페이징 처리일 경우
+		if(PAGE_CONFIG["PAGING_YN"] == 'Y'){
+			if(json.count != 0){
+				PAGE_CONFIG["TOTAL_COUNT"] = json.count;
+				PAGE_CONFIG["THIS_PAGE_IDX"] = idx;
+				PAGE_CONFIG["MAX_PAGE_IDX"] = Math.floor(PAGE_CONFIG["TOTAL_COUNT"] / PAGE_CONFIG["PAGE_SIZE"]) + 1;
+				
+				ls_pageinate(url);
+			}
+		}
 	});
+}
+
+/**
+ * 페이징 파라미터 생성
+ */
+function ls_pageing_parm(url, idx){
+	var parm;
+	
+	if(url.indexOf('?') != -1){
+		parm = "&limit=" + PAGE_CONFIG["PAGE_SIZE"] + "&offset=" + PAGE_CONFIG["PAGE_SIZE"] * (idx - 1);
+	} else {
+		parm = "?limit=" + PAGE_CONFIG["PAGE_SIZE"] + "&offset=" + PAGE_CONFIG["PAGE_SIZE"] * (idx - 1);
+	}
+	
+	return parm;
+}
+
+/**
+ * 페이징 버튼 생성
+ */
+function ls_pageinate(url){
+	var page = "";
+	
+	// 전체 건수가 페이지 사이즈보다 클 경우에만 페이징을 만든다.
+	if(PAGE_CONFIG["TOTAL_COUNT"] > PAGE_CONFIG["PAGE_SIZE"]){
+		page = "<ul class=\"pagination\">";
+		
+		start_page_idx = (Math.floor((PAGE_CONFIG["THIS_PAGE_IDX"] - 1) / 10) * 10) + 1;
+		end_page_idx = start_page_idx + 10;
+		
+		if(end_page_idx > PAGE_CONFIG["MAX_PAGE_IDX"]){
+			end_page_idx = PAGE_CONFIG["MAX_PAGE_IDX"] + 1;
+		}
+		
+				
+		if(start_page_idx >= 10){
+			page = page + "<li class=\"paginate_button\"><a href=\"#\" onclick=\"ls_table_init('" + url + "', '1');\">◀</a></li>";
+			page = page + "<li class=\"paginate_button\"><a href=\"#\" onclick=\"ls_table_init('" + url + "', '" + (start_page_idx - 10) + "');\">◁</a></li>";
+		}
+		
+		for(var i = start_page_idx; i < end_page_idx; i++){
+			if(i == PAGE_CONFIG["THIS_PAGE_IDX"]){
+				page = page + "<li class=\"paginate_button\"><a href=\"#\" onclick=\"ls_table_init('" + url + "', '" + i + "');\" style=\"color : #FF0000;\">" + i + "</a></li>";
+			} else {
+				page = page + "<li class=\"paginate_button\"><a href=\"#\" onclick=\"ls_table_init('" + url + "', '" + i + "');\">" + i + "</a></li>";
+			}
+		}
+		
+		if((end_page_idx - 1) != PAGE_CONFIG["MAX_PAGE_IDX"]){
+			page = page + "<li class=\"paginate_button\"><a href=\"#\" onclick=\"ls_table_init('" + url + "', '" + end_page_idx + "');\">▷</a></li>";
+			page = page + "<li class=\"paginate_button\"><a href=\"#\" onclick=\"ls_table_init('" + url + "', '" + PAGE_CONFIG["MAX_PAGE_IDX"] + "');\">▶</a></li>";
+		}
+		
+		page = page + "</ul>";
+	}
+	
+	$("#paginate").empty();
+	$("#paginate").append(page);
 }
 
 /**
@@ -162,6 +240,9 @@ function ct_cd_select(cdCol){
 	return result;
 }
 
+/*
+ * 코드를 실제 값으로 변경
+ */
 function bc_cd_to_val(cd){
 	if(cd == "O_D"){
 		return " disabled=\"disabled\"";
