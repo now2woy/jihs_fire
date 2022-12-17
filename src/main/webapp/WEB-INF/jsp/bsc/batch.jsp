@@ -18,27 +18,29 @@ PAGE_CONFIG["MOD_BTN_YN"] = "N";
 PAGE_CONFIG["PAGING_YN"] = "Y";
 // 페이지 사이즈
 PAGE_CONFIG["PAGE_SIZE"] = 10;
+//인덱스
+PAGE_CONFIG["IDX"] = "seq";
 
 //테이블 구성 정보
 var data = [];
 
-data.push({"NM" : "SEQ_",		"IDX" : "seq",	"VAL" : "seq",		"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
-data.push({"NM" : "BATCH_NM_",	"IDX" : "seq",	"VAL" : "batchNm",	"VAL2" : "batchCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : ""});
-data.push({"NM" : "PARM_1ST_",	"IDX" : "seq",	"VAL" : "parm1st",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "PARM_2ND_",	"IDX" : "seq",	"VAL" : "parm2nd",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "PARM_3RD_",	"IDX" : "seq",	"VAL" : "parm3rd",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "PARM_4TH_",	"IDX" : "seq",	"VAL" : "parm4th",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "EXE_YN_",	"IDX" : "seq",	"VAL" : "exeYn",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "S",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "SUC_YN_",	"IDX" : "seq",	"VAL" : "sucYn",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "S",	"OPT" : "O_D",	"TDST" : "T_C"});
-data.push({"NM" : "EXE_ST_DT_",	"IDX" : "seq",	"VAL" : "exeStDt",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
-data.push({"NM" : "EXE_ED_DT_",	"IDX" : "seq",	"VAL" : "exeEdDt",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
+data.push({"NM" : "SEQ_",		"VAL" : "seq",		"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
+data.push({"NM" : "BATCH_NM_",	"VAL" : "batchNm",	"VAL2" : "batchCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : ""});
+data.push({"NM" : "PARM_1ST_",	"VAL" : "parm1st",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "PARM_2ND_",	"VAL" : "parm2nd",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "PARM_3RD_",	"VAL" : "parm3rd",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "PARM_4TH_",	"VAL" : "parm4th",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "EXE_YN_",	"VAL" : "exeYn",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "S",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "SUC_YN_",	"VAL" : "sucYn",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "S",	"OPT" : "O_D",	"TDST" : "T_C"});
+data.push({"NM" : "EXE_ST_DT_",	"VAL" : "exeStDt",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
+data.push({"NM" : "EXE_ED_DT_",	"VAL" : "exeEdDt",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
 
 $(document).ready(function () {
 	// 목록 초기화
 	ls_table_init(PAGE_CONFIG["LIST_URL"], 1);
 	
 	// 배치코드 셀렉트박스 생성
-	PAGE_CONFIG["BATCH_CD_SELECT"] = ct_cd_select("BATCH_CD");
+	PAGE_CONFIG["BATCH_CD_SELECT"] = ct_cd_select("/api/codes/BATCH_CD", "cd", "cdNm");
 	
 	// 검색 조건에 셀렉트박스 추가
 	$("#DIV_SCH_BATCH_CD").append(PAGE_CONFIG["BATCH_CD_SELECT"].replace("#ID#", "SCH_BATCH_CD"));

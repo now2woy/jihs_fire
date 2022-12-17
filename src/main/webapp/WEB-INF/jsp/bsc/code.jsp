@@ -14,17 +14,19 @@ PAGE_CONFIG["LIST_URL"] = "";
 PAGE_CONFIG["MOD_BTN"] = "";
 // 수정 버튼 여부
 PAGE_CONFIG["MOD_BTN_YN"] = "Y";
-//페이지 사이즈
+// 페이지 사이즈
 PAGE_CONFIG["PAGING_YN"] = "N";
+// 인덱스
+PAGE_CONFIG["IDX"] = "cd";
 
 //테이블 구성 정보
 var data = [];
 
-data.push({"NM" : "CD_COL_",	"IDX" : "cd",	"VAL" : "cdCol",	"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
-data.push({"NM" : "CD_",		"IDX" : "cd",	"VAL" : "cd",		"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "CD_NM_",		"IDX" : "cd",	"VAL" : "cdNm",		"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : ""});
-data.push({"NM" : "ORD_",		"IDX" : "cd",	"VAL" : "ord",		"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "USE_YN_",	"IDX" : "cd",	"VAL" : "useYn",	"VAL2" : "",	"FUNC" : "",	"TYPE" : "S",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "CD_COL_",	"VAL" : "cdCol",	"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
+data.push({"NM" : "CD_",		"VAL" : "cd",		"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "CD_NM_",		"VAL" : "cdNm",		"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : ""});
+data.push({"NM" : "ORD_",		"VAL" : "ord",		"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "USE_YN_",	"VAL" : "useYn",	"VAL2" : "",	"FUNC" : "",	"TYPE" : "S",	"OPT" : "",		"TDST" : "T_C"});
 
 $(document).ready(function () {
 	var params = new URL(location.href).searchParams;

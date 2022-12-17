@@ -16,12 +16,14 @@ PAGE_CONFIG["MOD_BTN"] = "";
 PAGE_CONFIG["MOD_BTN_YN"] = "Y";
 //페이지 사이즈
 PAGE_CONFIG["PAGING_YN"] = "N";
+//인덱스
+PAGE_CONFIG["IDX"] = "usrId";
 
 //테이블 구성 정보
 var data = [];
 
-data.push({"NM" : "USR_ID_",	"IDX" : "usrId",	"VAL" : "usrId",	"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "USR_NM",		"IDX" : "usrId",	"VAL" : "usrNm",	"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "USR_ID_",	"VAL" : "usrId",	"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "USR_NM",		"VAL" : "usrNm",	"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
 
 $(document).ready(function () {
 	ls_table_init(PAGE_CONFIG["LIST_URL"], 1);

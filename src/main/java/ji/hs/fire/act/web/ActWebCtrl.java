@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 계좌
+ * 계좌 WEB CTRL
  * @author now2w
  *
  */

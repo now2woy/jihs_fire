@@ -16,16 +16,18 @@ PAGE_CONFIG["MOD_BTN"] = "";
 PAGE_CONFIG["MOD_BTN_YN"] = "E";
 //페이지 사이즈
 PAGE_CONFIG["PAGING_YN"] = "N";
+//인덱스
+PAGE_CONFIG["IDX"] = "itmCd";
 
 //테이블 구성 정보
 var data = [];
 
-data.push({"NM" : "ITM_CD_",	"IDX" : "itmCd",	"VAL" : "itmCd",	"VAL2" : "",			"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "ITM_NM_",	"IDX" : "itmCd",	"VAL" : "itmNm",	"VAL2" : "",			"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : ""});
-data.push({"NM" : "MKT_NM_",	"IDX" : "itmCd",	"VAL" : "mktNm",	"VAL2" : "mktCd",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "SPAC_YN_",	"IDX" : "itmCd",	"VAL" : "spacYn",	"VAL2" : "",			"FUNC" : "",	"TYPE" : "S",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "ITM_KND_NM_","IDX" : "itmCd",	"VAL" : "itmKndNm",	"VAL2" : "itmKndCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : ""});
-data.push({"NM" : "ITM_CL_NM_",	"IDX" : "itmCd",	"VAL" : "itmClNm",	"VAL2" : "itmClCd",		"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : ""});
+data.push({"NM" : "ITM_CD_",	"VAL" : "itmCd",	"VAL2" : "",			"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "ITM_NM_",	"VAL" : "itmNm",	"VAL2" : "",			"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : ""});
+data.push({"NM" : "MKT_NM_",	"VAL" : "mktNm",	"VAL2" : "mktCd",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "SPAC_YN_",	"VAL" : "spacYn",	"VAL2" : "",			"FUNC" : "",	"TYPE" : "S",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "ITM_KND_NM_","VAL" : "itmKndNm",	"VAL2" : "itmKndCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : ""});
+data.push({"NM" : "ITM_CL_NM_",	"VAL" : "itmClNm",	"VAL2" : "itmClCd",		"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : ""});
 
 // 배치코드 셀렉트박스
 var MKT_CD_SELECT;
@@ -35,7 +37,7 @@ $(document).ready(function () {
 	//ls_table_init(LIST_URL);
 	
 	// 배치코드 셀렉트박스 생성
-	PAGE_CONFIG["MKT_CD_SELECT"] = ct_cd_select("MKT_CD");
+	PAGE_CONFIG["MKT_CD_SELECT"] = ct_cd_select("/api/codes/MKT_CD", "cd", "cdNm");
 	
 	// 검색 조건에 셀렉트박스 추가
 	$("#DIV_SCH_MKT_CD").append(PAGE_CONFIG["MKT_CD_SELECT"].replace("#ID#", "SCH_MKT_CD"));

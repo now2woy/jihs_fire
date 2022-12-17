@@ -20,7 +20,9 @@ public class BscBatchService {
 	 * 배치 정보 Mapper
 	 */
 	private final BscBatchMapper bscBatchMapper;
-	
+	/**
+	 * 채번 Service
+	 */
 	private final BscNoGenService bscNoGenService;
 	
 	/**

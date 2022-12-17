@@ -25,14 +25,14 @@ function ls_table_init(url, idx){
 				var html = "<tr>";
 				
 				data.forEach(function(item) {
-					html = html + "	<td id=\"TD_" + item["NM"] + value[item["IDX"]] + "\"" + bc_cd_to_val(item["TDST"]) + ">";
+					html = html + "	<td id=\"TD_" + item["NM"] + value[PAGE_CONFIG["IDX"]] + "\"" + bc_cd_to_val(item["TDST"]) + ">";
 					
 					if(item["FUNC"] != ""){
 						html = html + "<a href=\"#\" onclick=\"" + item["FUNC"] + "\">" + bc_nullToBlank(value[item["VAL"]]) + "</a></td>";
 					} else {
 						html = html + bc_nullToBlank(value[item["VAL"]]) + "</td>";
 					}
-					idx = value[item["IDX"]];
+					idx = value[PAGE_CONFIG["IDX"]];
 				});
 				
 				// 수정 버튼 여부가 "Y" 일 때만 생성
@@ -215,13 +215,13 @@ function ls_table_save(id, method){
 }
 
 /**
- * 코드 컬럼에 해당하는 코드를 select 박스로 만들어서 리턴
+ * 특정 URL의 값을 가져와 SELECT 박스를 만들어서 리턴
  */
-function ct_cd_select(cdCol){
+function ct_cd_select(url, val, nm){
 	var result = "<select id=\"#ID#\" class=\"form-control\"><option value=''>선택</option>";
 	
 	$.ajax({
-		url: "/api/codes/" + cdCol
+		url: url
 		, data : null
 		, method: "GET"
 		, dataType: "json"
@@ -230,7 +230,7 @@ function ct_cd_select(cdCol){
 	.done(function(json) {
 		if(json.data.length != 0){
 			$.each(json.data, function(key, value){
-				result = result + "<option value=\"" + value["cd"] + "\">" + value["cdNm"] + "</option>";
+				result = result + "<option value=\"" + value[val] + "\">" + value[nm] + "</option>";
 			});
 		}
 	});
