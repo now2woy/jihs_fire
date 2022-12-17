@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Controller
 @RequiredArgsConstructor
-public class BscCtrl {
+public class BscWebCtrl {
 	/**
 	 * 사용자 조회
 	 * @return

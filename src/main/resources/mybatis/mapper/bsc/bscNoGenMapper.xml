@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ji.hs.fire.bsc.mpr.BscNoGenMapper">
+<!-- 채번 단건 조회 -->
+	<select id="selectOne" resultType="Integer" parameterType="String">
+	<![CDATA[
+		SELECT NVL(NUM, 0) + 1 AS NUM
+		  FROM BC_NO_GEN
+		 WHERE GEN_KEY = #{genKey}
+		   FOR UPDATE WAIT 2
+	]]>
+	</select>
+		
+<!-- 채번 입력 -->
+	<insert id="insert" parameterType="String" flushCache="true">
+	<![CDATA[
+		INSERT INTO BC_NO_GEN (
+			   GEN_KEY
+			 , NUM
+			 ) VALUES (
+			   #{genKey}
+			 , 1
+			 )
+	]]>
+	</insert>
+	
+<!-- 채번 수정 -->
+	<update id="update" parameterType="String" flushCache="true">
+		UPDATE BC_NO_GEN
+		   SET NUM = NUM + 1
+		 WHERE GEN_KEY = #{genKey}
+	</update>
+</mapper>

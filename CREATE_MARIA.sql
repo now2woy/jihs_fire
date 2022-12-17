@@ -127,9 +127,44 @@ CREATE TABLE BC_US_MT (
 
 ALTER TABLE BC_US_MT ADD PRIMARY KEY (USR_ID);
 
+/* 채번 정보 테이블 생성 */
+CREATE TABLE BC_NO_GEN (
+	  GEN_KEY	VARCHAR(100)	NOT NULL	comment '채번키'
+	, NUM		DECIMAL(20)		NOT NULL	comment '번호'
+) ENGINE=INNODB COMMENT '채번';
+
+ALTER TABLE BC_NO_GEN ADD PRIMARY KEY (GEN_KEY);
 
 
+--------------------------------------------------------------------
+/* ACCOUNT */
+--------------------------------------------------------------------
 
+/* 계좌 정보 테이블 생성 */
+CREATE TABLE AC_MT (
+	  ACT_SEQ	DECIMAL(6)		not null				comment '계좌일련번호'
+	, ACT_NM	VARCHAR(200)	not null				comment '계좌명'
+	, ACT_CD	VARCHAR(5)		not null				comment '계좌코드'
+	, USR_ID	VARCHAR(100)	not null				comment '사용자ID'
+	, USE_YN	VARCHAR(1)		not null	default 'Y'	comment '사용여부'
+) ENGINE=INNODB COMMENT '계좌 정보';
+
+ALTER TABLE AC_MT ADD PRIMARY KEY (ACT_SEQ);
+
+/* 계좌 거래 정보 테이블 생성 */
+CREATE TABLE AC_DT (
+	ACT_SEQ		DECIMAL(6)		not null	comment '계좌일련번호'
+	TRD_SEQ		DECIMAL(20)		not null	comment '거래일련번호'
+	REL_TRD_SEQ	DECIMAL(20)		not null	comment '관련거래일련번호'
+	TRD_CD		VARCHAR(5)		not null	comment '거래코드'
+	AMT			DECIMAL(20)		null		comment '금액'
+	QTY			DECIMAL(20)		null		comment '수량'
+	NOTE		VARCHAR(4000)	null		comment '비고'
+	TRD_DT		DATETIME		null		comment '거래일시'
+	ED_DT		DATETIME		null		comment '만료일시'
+) ENGINE=INNODB COMMENT '계좌 거래내역';
+
+ALTER TABLE AC_DT ADD PRIMARY KEY (TRD_SEQ);
 
 
 

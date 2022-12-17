@@ -21,6 +21,8 @@ public class BscBatchService {
 	 */
 	private final BscBatchMapper bscBatchMapper;
 	
+	private final BscNoGenService bscNoGenService;
+	
 	/**
 	 * 배치 정보 입력
 	 * @param bscBatchVO
@@ -33,7 +35,7 @@ public class BscBatchService {
 			parmBscBatchVO.setOrder(2);
 			parmBscBatchVO.setLimit(1);
 			
-			bscBatchVO.setSeq(bscBatchMapper.selectAll(parmBscBatchVO).get(0).getSeq() + 1);
+			bscBatchVO.setSeq(bscNoGenService.generate("BC_BATCH_MT.SEQ"));
 		}
 		
 		return bscBatchMapper.insert(bscBatchVO);
