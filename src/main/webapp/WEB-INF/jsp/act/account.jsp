@@ -22,10 +22,10 @@ PAGE_CONFIG["IDX"] = "actSeq";
 //테이블 구성 정보
 var data = [];
 
-data.push({"NM" : "ACT_SEQ_",	"VAL" : "actSeq",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
-data.push({"NM" : "BK_CD_",		"VAL" : "bkNm",		"VAL2" : "bkCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "ACT_NM_",	"VAL" : "actNm",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "ACT_CD_",	"VAL" : "actCdNm",	"VAL2" : "actCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "ACT_SEQ_",	"VAL" : "actSeq",	"VAL2" : "",		"FUNC" : "goCd(this);",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
+data.push({"NM" : "BK_CD_",		"VAL" : "bkNm",		"VAL2" : "bkCd",	"FUNC" : "goCd(this);",	"TYPE" : "N",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "ACT_NM_",	"VAL" : "actNm",	"VAL2" : "",		"FUNC" : "goCd(this);",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "ACT_CD_",	"VAL" : "actCdNm",	"VAL2" : "actCd",	"FUNC" : "goCd(this);",	"TYPE" : "N",	"OPT" : "",		"TDST" : "T_C"});
 data.push({"NM" : "USR_NM_",	"VAL" : "usrNm",	"VAL2" : "usrId",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : "T_C"});
 
 $(document).ready(function () {
@@ -63,6 +63,13 @@ function mod(id){
 	$("#BK_CD_" + id + " option:contains('" + bkNm + "')").attr("selected", "selected");
 	$("#ACT_CD_" + id + " option:contains('" + actCdNm + "')").attr("selected", "selected");
 	$("#USR_NM_" + id + " option:contains('" + usrNm + "')").attr("selected", "selected");
+}
+
+/**
+ * 코드 목록
+ */
+function goCd(node){
+	location.href="/act/trade.do?actSeq=" + $(node).parent().parent().children(":first").text();
 }
 </script>
 </head>
