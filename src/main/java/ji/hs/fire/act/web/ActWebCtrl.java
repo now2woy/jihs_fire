@@ -18,7 +18,15 @@ public class ActWebCtrl {
 	 * @return
 	 */
 	@GetMapping("/act/account.do")
-	public String act() {
+	public String account() {
 		return "/act/account";
+	}
+	/**
+	 * 계좌 조회
+	 * @return
+	 */
+	@GetMapping("/act/trade.do")
+	public String trade() {
+		return "/act/trade";
 	}
 }

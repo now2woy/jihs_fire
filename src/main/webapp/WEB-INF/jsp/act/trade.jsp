@@ -85,7 +85,7 @@ function mod(id){
 					<div class="clearfix"></div>
 					<div class="x_panel">
 						<div class="x_title">
-							<h2>계좌 목록</h2>
+							<h2>계좌 거래 목록</h2>
 							<ul class="nav navbar-right panel_toolbox" style="min-width: 40px;">
 								<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
 								<li><a class="close-link"><i class="fa fa-close"></i></a>

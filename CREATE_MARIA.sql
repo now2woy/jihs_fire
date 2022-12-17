@@ -154,15 +154,16 @@ ALTER TABLE AC_MT ADD PRIMARY KEY (ACT_SEQ);
 
 /* 계좌 거래 정보 테이블 생성 */
 CREATE TABLE AC_DT (
-	ACT_SEQ		DECIMAL(6)		not null	comment '계좌일련번호'
-	TRD_SEQ		DECIMAL(20)		not null	comment '거래일련번호'
-	REL_TRD_SEQ	DECIMAL(20)		not null	comment '관련거래일련번호'
-	TRD_CD		VARCHAR(5)		not null	comment '거래코드'
-	AMT			DECIMAL(20)		null		comment '금액'
-	QTY			DECIMAL(20)		null		comment '수량'
-	NOTE		VARCHAR(4000)	null		comment '비고'
-	TRD_DT		DATETIME		null		comment '거래일시'
-	ED_DT		DATETIME		null		comment '만료일시'
+	  TRD_SEQ		DECIMAL(20)		NOT NULL	comment '거래일련번호'
+	, ACT_SEQ		DECIMAL(6)		NOT NULL	comment '계좌일련번호'
+	, REL_TRD_SEQ	DECIMAL(20)		NOT NULL	comment '관련거래일련번호'
+	, TRD_CD		VARCHAR(5)		NOT NULL	comment '거래코드'
+	, AMT			DECIMAL(20)		NULL		comment '금액'
+	, ITM_CD		VARCHAR(10)		NULL		COMMENT '종목코드'
+	, QTY			DECIMAL(20)		NULL		comment '수량'
+	, NOTE			VARCHAR(4000)	NULL		comment '비고'
+	, TRD_DT		DATETIME		NULL		comment '거래일시'
+	, ED_DT			DATETIME		NULL		comment '만료일시'
 ) ENGINE=INNODB COMMENT '계좌 거래내역';
 
 ALTER TABLE AC_DT ADD PRIMARY KEY (TRD_SEQ);

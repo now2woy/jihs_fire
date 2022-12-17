@@ -26,7 +26,7 @@ public interface ActMapper {
 	public int selectCount(ActVO actVO) throws Exception;
 	/**
 	 * 계좌 정보 입력
-	 * @param bscBatchVO
+	 * @param actVO
 	 * @return
 	 * @throws Exception
 	 */
