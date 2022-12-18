@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ji.hs.fire.act.mpr.ActTrdMapper;
+import ji.hs.fire.act.svc.ActTrdService;
 import ji.hs.fire.act.vo.ActTrdVO;
 import lombok.RequiredArgsConstructor;
 
@@ -27,9 +28,13 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/act/trades")
 public class ActTrdApiCtrl {
 	/**
-	 * 계좌 Mapper
+	 * 계좌 거래 Mapper
 	 */
 	private final ActTrdMapper actTrdMapper;
+	/**
+	 * 계좌 거래 Service
+	 */
+	private final ActTrdService actTrdService;
 	
 	/**
 	 * 계좌 정보 목록 조회
@@ -50,6 +55,7 @@ public class ActTrdApiCtrl {
 		
 		Map<String, Object> result = new HashMap<>();
 		result.put("count", actTrdMapper.selectCount(actTrdVO));
+		result.put("inOutSumAmt", actTrdMapper.selectInOutSumAmt(actTrdVO));
 		result.put("data", actTrdMapper.selectAll(actTrdVO));
 		
 		return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -63,7 +69,7 @@ public class ActTrdApiCtrl {
 	 */
 	@PostMapping("")
 	public ResponseEntity<ActTrdVO> insert(@RequestBody ActTrdVO actTrdVO) throws Exception {
-		actTrdMapper.insert(actTrdVO);
+		actTrdService.insert(actTrdVO);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(actTrdVO);
 	}

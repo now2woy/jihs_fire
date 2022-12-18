@@ -18,6 +18,8 @@ PAGE_CONFIG["MOD_BTN_YN"] = "E";
 PAGE_CONFIG["PAGING_YN"] = "N";
 //인덱스
 PAGE_CONFIG["IDX"] = "itmCd";
+//저장 함수
+PAGE_CONFIG["INS_FUNC"] = "";
 
 //테이블 구성 정보
 var data = [];

@@ -7,62 +7,79 @@
 //페이지 설정 정보
 var PAGE_CONFIG = [];
 // DB 저장 URL
-PAGE_CONFIG["SAVE_URL"] = "/api/act/accounts";
+PAGE_CONFIG["SAVE_URL"] = "/api/act/trades";
 // 목록 URL
-PAGE_CONFIG["LIST_URL"] = "/api/act/accounts";
+PAGE_CONFIG["LIST_URL"] = "/api/act/trades";
 // 수정 버튼 함수, "" 시 기본 함수
 PAGE_CONFIG["MOD_BTN"] = "mod";
 // 수정 버튼 여부
 PAGE_CONFIG["MOD_BTN_YN"] = "Y";
 // 페이지 사이즈
-PAGE_CONFIG["PAGING_YN"] = "N";
+PAGE_CONFIG["PAGING_YN"] = "Y";
+//페이지 사이즈
+PAGE_CONFIG["PAGE_SIZE"] = 10;
 // 인덱스
-PAGE_CONFIG["IDX"] = "actSeq";
+PAGE_CONFIG["IDX"] = "trdSeq";
+// 저장 함수
+PAGE_CONFIG["INS_FUNC"] = "save";
 
 //테이블 구성 정보
 var data = [];
 
-data.push({"NM" : "ACT_SEQ_",	"VAL" : "actSeq",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
-data.push({"NM" : "BK_CD_",		"VAL" : "bkNm",		"VAL2" : "bkCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "ACT_NM_",	"VAL" : "actNm",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "ACT_CD_",	"VAL" : "actCdNm",	"VAL2" : "actCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "USR_NM_",	"VAL" : "usrNm",	"VAL2" : "usrId",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "TRD_DT_",	"VAL" : "trdDt",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "DT",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "TRD_CD_",	"VAL" : "trdNm",	"VAL2" : "trdCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "AMT_",		"VAL" : "amt",		"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_R"});
+data.push({"NM" : "ITM_CD_",	"VAL" : "itmNm",	"VAL2" : "itmCd",	"FUNC" : "",	"TYPE" : "TB",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "QTY_",		"VAL" : "qty",		"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "NOTE_",		"VAL" : "note",		"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
+data.push({"NM" : "ED_DT_",		"VAL" : "edDt",		"VAL2" : "",		"FUNC" : "",	"TYPE" : "D",	"OPT" : "",		"TDST" : "T_C"});
 
 $(document).ready(function () {
-	ls_table_init(PAGE_CONFIG["LIST_URL"], 1);
+	var params = new URL(location.href).searchParams;
+	PAGE_CONFIG["LIST_URL"] = "/api/act/trades/" + params.get("actSeq");
 	
-	PAGE_CONFIG["BK_CD_SELECT"] = ct_cd_select("/api/codes/BK_CD", "cd", "cdNm");
-	PAGE_CONFIG["ACT_CD_SELECT"] = ct_cd_select("/api/codes/ACT_CD", "cd", "cdNm");
-	PAGE_CONFIG["USR_NM_SELECT"] = ct_cd_select("/api/users", "usrId", "usrNm");
+	ls_table_init(PAGE_CONFIG["LIST_URL"], 1, false);
+	
+	PAGE_CONFIG["TRD_CD_SELECT"] = ct_cd_select("/api/codes/TRD_CD", "cd", "cdNm");
+	
+	$("#IN_OUT_SUM_AMT").text(PAGE_CONFIG["LIST_DATA"].inOutSumAmt);
 });
 
+/**
+ * 등록 버튼
+ */
 function add(){
-	// 기본 로직 처리 후 추가 처리
 	ls_table_add();
 	
-	$("#TD_BK_CD_NEW").append(PAGE_CONFIG["BK_CD_SELECT"].replace("#ID#", "BK_CD_NEW"));
-	$("#TD_ACT_CD_NEW").append(PAGE_CONFIG["ACT_CD_SELECT"].replace("#ID#", "ACT_CD_NEW"));
-	$("#TD_USR_NM_NEW").append(PAGE_CONFIG["USR_NM_SELECT"].replace("#ID#", "USR_NM_NEW"));
+	$("#TD_TRD_CD_NEW").append(PAGE_CONFIG["TRD_CD_SELECT"].replace("#ID#", "TRD_CD_NEW"));
+}
+
+
+/**
+ * 목록 테이블 저장 버튼
+ */
+function save(id, method){
+	if(confirm("저장하시겠습니까?")){
+		var params = new URL(location.href).searchParams;
+		var param = ct_save_data(id);
+		
+		param["actSeq"] = params.get("actSeq");
+		
+		$.ajax({
+			url: PAGE_CONFIG["SAVE_URL"]
+			, data : JSON.stringify(param)
+			, method: method
+			, dataType: "json"
+			, contentType: 'application/json'
+			, async : false
+		})
+		.done(function(json) {
+			location.reload();
+		});
+	}
 }
 
 function mod(id){
-	ls_table_mod(id);
-	
-	var bkNm = $("#TD_BK_CD_" + id).text();
-	var actCdNm = $("#TD_ACT_CD_" + id).text();
-	var usrNm = $("#TD_USR_NM_" + id).text();
-	
-	$("#TD_BK_CD_" + id).empty();
-	$("#TD_ACT_CD_" + id).empty();
-	$("#TD_USR_NM_" + id).empty();
-	
-	$("#TD_BK_CD_" + id).append(PAGE_CONFIG["BK_CD_SELECT"].replace("#ID#", "BK_CD_" + id));
-	$("#TD_ACT_CD_" + id).append(PAGE_CONFIG["ACT_CD_SELECT"].replace("#ID#", "ACT_CD_" + id));
-	$("#TD_USR_NM_" + id).append(PAGE_CONFIG["USR_NM_SELECT"].replace("#ID#", "USR_NM_" + id));
-	
-	$("#BK_CD_" + id + " option:contains('" + bkNm + "')").attr("selected", "selected");
-	$("#ACT_CD_" + id + " option:contains('" + actCdNm + "')").attr("selected", "selected");
-	$("#USR_NM_" + id + " option:contains('" + usrNm + "')").attr("selected", "selected");
 }
 </script>
 </head>
@@ -85,6 +102,46 @@ function mod(id){
 					<div class="clearfix"></div>
 					<div class="x_panel">
 						<div class="x_title">
+							<h2>계좌 거래 요약</h2>
+							<ul class="nav navbar-right panel_toolbox" style="min-width: 40px;">
+								<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+								<li><a class="close-link"><i class="fa fa-close"></i></a>
+								</li>
+							</ul>
+							<div class="clearfix"></div>
+						</div>
+						<div class="x_content">
+							<div class="table-responsive">
+								<table class="table jambo_table bulk_action">
+									<colgroup>
+										<col style="width: 25%;" />
+										<col style="width: 25%;" />
+										<col style="width: 25%;" />
+										<col style="width: 25%;" />
+									</colgroup>
+									<thead>
+										<tr class="headings">
+											<th class="column-title" style="text-align: center;">입출금합계</th>
+											<th class="column-title" style="text-align: center;">총이자</th>
+											<th class="column-title" style="text-align: center;">총배당금</th>
+											<th class="column-title" style="text-align: center;">수수료합계</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td id="IN_OUT_SUM_AMT" style="text-align: center;"></td>
+											<td id="" style="text-align: center;">총출금액</td>
+											<td id="" style="text-align: center;">제세금합계</td>
+											<td id="" style="text-align: center;">수수료합계</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+					<div class="x_panel">
+						<div class="x_title">
 							<h2>계좌 거래 목록</h2>
 							<ul class="nav navbar-right panel_toolbox" style="min-width: 40px;">
 								<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
@@ -97,20 +154,24 @@ function mod(id){
 							<div class="table-responsive">
 								<table id="data" class="table jambo_table bulk_action">
 									<colgroup>
+										<col style="width: 20%;" />
+										<col style="width: 10%;" />
+										<col style="width: 10%;" />
+										<col style="width: 10%;" />
 										<col style="width: 10%;" />
 										<col style="width: 20%;" />
-										<col style="width: 20%;" />
-										<col style="width: 20%;" />
-										<col style="width: 20%;" />
+										<col style="width: 10%;" />
 										<col style="width: 10%;" />
 									</colgroup>
 									<thead>
 										<tr class="headings">
-											<th class="column-title" style="text-align: center;">일련번호</th>
-											<th class="column-title" style="text-align: center;">은행명</th>
-											<th class="column-title" style="text-align: center;">계좌명</th>
-											<th class="column-title" style="text-align: center;">계좌구분</th>
-											<th class="column-title" style="text-align: center;">소유주</th>
+											<th class="column-title" style="text-align: center;">거래일자</th>
+											<th class="column-title" style="text-align: center;">거래유형</th>
+											<th class="column-title" style="text-align: center;">금액</th>
+											<th class="column-title" style="text-align: center;">종목</th>
+											<th class="column-title" style="text-align: center;">수량</th>
+											<th class="column-title" style="text-align: center;">비고</th>
+											<th class="column-title" style="text-align: center;">만기일</th>
 											<th class="column-title" style="text-align: center;">-</th>
 										</tr>
 									</thead>
@@ -119,6 +180,12 @@ function mod(id){
 								</table>
 							</div>
 							
+							<div class="row">
+								<div class="col-sm-5"></div>
+								<div class="col-sm-7">
+									<div id="paginate" class="dataTables_paginate paging_simple_numbers"></div>
+								</div>
+							</div>
 						<!-- 버튼 영역 시작 -->
 							<div style="float: right;">
 								<button type="button" id="add-btn" class="btn btn-success" onclick="add();">등록</button>

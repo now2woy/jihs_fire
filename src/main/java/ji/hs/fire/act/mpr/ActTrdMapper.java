@@ -25,6 +25,13 @@ public interface ActTrdMapper {
 	 */
 	public int selectCount(ActTrdVO actTrdVO) throws Exception;
 	/**
+	 * 계좌 입출금 합계 금액 조회
+	 * @param actTrdVO
+	 * @return
+	 * @throws Exception
+	 */
+	public String selectInOutSumAmt(ActTrdVO actTrdVO) throws Exception;
+	/**
 	 * 계좌 거래 정보 입력
 	 * @param actTrdVO
 	 * @return

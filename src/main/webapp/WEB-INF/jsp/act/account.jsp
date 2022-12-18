@@ -18,6 +18,8 @@ PAGE_CONFIG["MOD_BTN_YN"] = "Y";
 PAGE_CONFIG["PAGING_YN"] = "N";
 // 인덱스
 PAGE_CONFIG["IDX"] = "actSeq";
+//저장 함수
+PAGE_CONFIG["INS_FUNC"] = "";
 
 //테이블 구성 정보
 var data = [];
@@ -29,7 +31,7 @@ data.push({"NM" : "ACT_CD_",	"VAL" : "actCdNm",	"VAL2" : "actCd",	"FUNC" : "goCd
 data.push({"NM" : "USR_NM_",	"VAL" : "usrNm",	"VAL2" : "usrId",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : "T_C"});
 
 $(document).ready(function () {
-	ls_table_init(PAGE_CONFIG["LIST_URL"], 1);
+	ls_table_init(PAGE_CONFIG["LIST_URL"], 1, true);
 	
 	PAGE_CONFIG["BK_CD_SELECT"] = ct_cd_select("/api/codes/BK_CD", "cd", "cdNm");
 	PAGE_CONFIG["ACT_CD_SELECT"] = ct_cd_select("/api/codes/ACT_CD", "cd", "cdNm");

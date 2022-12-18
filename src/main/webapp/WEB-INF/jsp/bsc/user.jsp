@@ -18,6 +18,8 @@ PAGE_CONFIG["MOD_BTN_YN"] = "Y";
 PAGE_CONFIG["PAGING_YN"] = "N";
 //인덱스
 PAGE_CONFIG["IDX"] = "usrId";
+//저장 함수
+PAGE_CONFIG["INS_FUNC"] = "";
 
 //테이블 구성 정보
 var data = [];
@@ -26,7 +28,7 @@ data.push({"NM" : "USR_ID_",	"VAL" : "usrId",	"VAL2" : "",	"FUNC" : "",	"TYPE" :
 data.push({"NM" : "USR_NM",		"VAL" : "usrNm",	"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
 
 $(document).ready(function () {
-	ls_table_init(PAGE_CONFIG["LIST_URL"], 1);
+	ls_table_init(PAGE_CONFIG["LIST_URL"], 1, true);
 });
 </script>
 </head>

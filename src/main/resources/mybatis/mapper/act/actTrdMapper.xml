@@ -7,16 +7,23 @@
 			 , ACT_SEQ
 			 , REL_TRD_SEQ
 			 , TRD_CD
-			 , (SELECT CD_NM FROM BC_CD_DT X WHERE A.TRD_CD = X.CD AND X.CD_COL = 'TRD_CD') AS TRD_CD_NM
+			 , (SELECT CD_NM FROM BC_CD_DT X WHERE A.TRD_CD = X.CD AND X.CD_COL = 'TRD_CD') AS TRD_NM
 			 , AMT
 			 , ITM_CD
 			 , (SELECT ITM_NM FROM KX_ITM_MT X WHERE A.ITM_CD = X.ITM_CD) AS ITM_NM
 			 , QTY
 			 , NOTE
-			 , DATE_FORMAT(TRD_DT,'%Y/%m/%d %H:%i') AS TRD_DT
-			 , DATE_FORMAT(ED_DT,'%Y/%m/%d %H:%i') AS ED_DT
+ 			 , CASE WHEN TRD_DT != '0000/00/00 00:00'
+			        THEN DATE_FORMAT(TRD_DT, '%Y/%m/%d %H:%i')
+			        ELSE ''
+			   END AS TRD_DT
+			 , CASE WHEN ED_DT != '0000/00/00 00:00'
+			        THEN DATE_FORMAT(ED_DT, '%Y/%m/%d %H:%i')
+			        ELSE ''
+			   END AS ED_DT
 		  FROM AC_DT A
 		 WHERE ACT_SEQ = #{actSeq}
+		 ORDER BY TRD_DT DESC, TRD_SEQ DESC
 		 LIMIT #{limit}
 		OFFSET #{offset}
 	</select>
@@ -26,6 +33,14 @@
 		SELECT COUNT(*) AS CNT
 		  FROM AC_DT A
 		 WHERE ACT_SEQ = #{actSeq}
+	</select>
+	
+<!-- 계좌 입출금 합계 금액 조회 -->
+	<select id="selectInOutSumAmt" resultType="String" parameterType="ji.hs.fire.act.vo.ActTrdVO">
+		SELECT SUM(AMT) AS IN_OUT_SUM_AMT
+		  FROM AC_DT A
+		 WHERE ACT_SEQ = #{actSeq}
+		   AND TRD_CD IN ('00001', '00002')
 	</select>
 	
 <!-- 계좌 정보 입력 -->
@@ -51,8 +66,8 @@
 			 , #{itmCd}
 			 , #{qty}
 			 , #{note}
-			 , #{trdDt}
-			 , #{edDt}
+			 , STR_TO_DATE(#{trdDt}, '%Y-%m-%dT%H:%i')
+			 , STR_TO_DATE(#{edDt}, '%Y-%m-%d')
 			 )
 	]]>
 	</insert>

@@ -20,6 +20,8 @@ PAGE_CONFIG["PAGING_YN"] = "Y";
 PAGE_CONFIG["PAGE_SIZE"] = 10;
 //인덱스
 PAGE_CONFIG["IDX"] = "seq";
+//저장 함수
+PAGE_CONFIG["INS_FUNC"] = "";
 
 //테이블 구성 정보
 var data = [];
@@ -37,7 +39,7 @@ data.push({"NM" : "EXE_ED_DT_",	"VAL" : "exeEdDt",	"VAL2" : "",		"FUNC" : "",	"T
 
 $(document).ready(function () {
 	// 목록 초기화
-	ls_table_init(PAGE_CONFIG["LIST_URL"], 1);
+	ls_table_init(PAGE_CONFIG["LIST_URL"], 1, true);
 	
 	// 배치코드 셀렉트박스 생성
 	PAGE_CONFIG["BATCH_CD_SELECT"] = ct_cd_select("/api/codes/BATCH_CD", "cd", "cdNm");

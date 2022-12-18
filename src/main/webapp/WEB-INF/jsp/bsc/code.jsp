@@ -18,6 +18,8 @@ PAGE_CONFIG["MOD_BTN_YN"] = "Y";
 PAGE_CONFIG["PAGING_YN"] = "N";
 // 인덱스
 PAGE_CONFIG["IDX"] = "cd";
+//저장 함수
+PAGE_CONFIG["INS_FUNC"] = "";
 
 //테이블 구성 정보
 var data = [];
@@ -33,7 +35,7 @@ $(document).ready(function () {
 	
 	PAGE_CONFIG["LIST_URL"] = "/api/codes/" + params.get("cdCol");
 	
-	ls_table_init(PAGE_CONFIG["LIST_URL"], 1);
+	ls_table_init(PAGE_CONFIG["LIST_URL"], 1, true);
 });
 
 /**

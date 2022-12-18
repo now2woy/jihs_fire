@@ -18,6 +18,8 @@ PAGE_CONFIG["MOD_BTN_YN"] = "Y";
 PAGE_CONFIG["PAGING_YN"] = "N";
 //인덱스
 PAGE_CONFIG["IDX"] = "cdCol";
+//저장 함수
+PAGE_CONFIG["INS_FUNC"] = "";
 
 // 테이블 구성 정보
 var data = [];
@@ -27,7 +29,7 @@ data.push({"NM" : "CD_COL_NM_",	"VAL" : "cdColNm",	"VAL2" : "",	"FUNC" : "goCd(t
 data.push({"NM" : "USE_YN_",	"VAL" : "useYn",	"VAL2" : "",	"FUNC" : "",			"TYPE" : "S",	"OPT" : "",	"TDST" : "T_C"});
 
 $(document).ready(function () {
-	ls_table_init(PAGE_CONFIG["LIST_URL"], 1);
+	ls_table_init(PAGE_CONFIG["LIST_URL"], 1, true);
 });
 
 /**
