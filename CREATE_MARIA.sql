@@ -48,7 +48,7 @@ ALTER TABLE DT_FNLTT_MT ADD PRIMARY KEY (DART_ITM_CD, YR, QT_CD, SEQ);
 --------------------------------------------------------------------
 CREATE TABLE KX_ITM_MT (
 	  ITM_CD			VARCHAR(10)		NOT NULL	COMMENT '종목코드'
-	, ITM_NM			VARCHAR(100)	NOT NULL	COMMENT '종목명'
+	, ITM_NM			VARCHAR(200)	NOT NULL	COMMENT '종목명'
 	, MKT_CD			VARCHAR(5)		NOT NULL	COMMENT '시장코드'
 	, STD_ITM_CD		VARCHAR(20)		NULL		COMMENT '표준종목코드'
 	, PUB_DT			DATE			NULL		COMMENT '상장일자'
