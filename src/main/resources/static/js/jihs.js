@@ -342,8 +342,19 @@ function bc_nullToBlank(str){
 }
 
 /**
+ * null을 "0"으로 변환한다.
+ */
+function bc_nullToZero(str){
+	if(str == null){
+		return "0";
+	} else {
+		return str;
+	}
+}
+
+/**
  * 숫자에 콤마 추가
  */
 function bc_num_format(num){
-	return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	return bc_nullToZero(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }

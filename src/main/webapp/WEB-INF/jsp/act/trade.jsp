@@ -42,6 +42,8 @@ $(document).ready(function () {
 	
 	PAGE_CONFIG["TRD_CD_SELECT"] = ct_cd_select("/api/codes/TRD_CD", "cd", "cdNm");
 	
+	$("#IN_SUM_AMT").text(bc_num_format(PAGE_CONFIG["LIST_DATA"].inSumAmt) + "원");
+	$("#OUT_SUM_AMT").text(bc_num_format(PAGE_CONFIG["LIST_DATA"].outSumAmt) + "원");
 	$("#IN_OUT_SUM_AMT").text(bc_num_format(PAGE_CONFIG["LIST_DATA"].inOutSumAmt) + "원");
 	$("#ITRST_SUM_AMT").text(bc_num_format(PAGE_CONFIG["LIST_DATA"].itrstSumAmt) + "원");
 	$("#DVDN_SUM_AMT").text(bc_num_format(PAGE_CONFIG["LIST_DATA"].dvdnSumAmt) + "원");
@@ -126,25 +128,34 @@ function mod(id){
 							<div class="table-responsive">
 								<table class="table jambo_table bulk_action">
 									<colgroup>
-										<col style="width: 25%;" />
-										<col style="width: 25%;" />
-										<col style="width: 25%;" />
-										<col style="width: 25%;" />
+										<col style="width: 14%;" />
+										<col style="width: 14%;" />
+										<col style="width: 14%;" />
+										<col style="width: 14%;" />
+										<col style="width: 14%;" />
+										<col style="width: 15%;" />
+										<col style="width: 15%;" />
 									</colgroup>
 									<thead>
 										<tr class="headings">
-											<th class="column-title" style="text-align: center;">입출금 합계</th>
-											<th class="column-title" style="text-align: center;">이자 합계</th>
-											<th class="column-title" style="text-align: center;">배당금 합계</th>
-											<th class="column-title" style="text-align: center;">수수료합계</th>
+											<th class="column-title" style="text-align: center;">총 입금액 ①</th>
+											<th class="column-title" style="text-align: center;">총 출금액 ②</th>
+											<th class="column-title" style="text-align: center;">입출금 합계 (① + ②)</th>
+											<th class="column-title" style="text-align: center;">총 이자금액 ③</th>
+											<th class="column-title" style="text-align: center;">총 배당금액 ④</th>
+											<th class="column-title" style="text-align: center;">총 수수료 ⑤</th>
+											<th class="column-title" style="text-align: center;">평가금액 (① + ② + ③ + ④ + ⑤ + a)</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
+											<td id="IN_SUM_AMT" style="text-align: center;"></td>
+											<td id="OUT_SUM_AMT" style="text-align: center;"></td>
 											<td id="IN_OUT_SUM_AMT" style="text-align: center;"></td>
 											<td id="ITRST_SUM_AMT" style="text-align: center;"></td>
 											<td id="DVDN_SUM_AMT" style="text-align: center;"></td>
 											<td id="" style="text-align: center;">수수료합계</td>
+											<td id="" style="text-align: center;">평가금액</td>
 										</tr>
 									</tbody>
 								</table>

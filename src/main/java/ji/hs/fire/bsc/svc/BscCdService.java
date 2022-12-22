@@ -67,6 +67,16 @@ public class BscCdService {
 			itmClCdCollection(outBlockList);
 		}
 		
+		// KRX URL 호출
+		Document doc = Jsoup.connect(krxJsonUrl)
+			.data("bld", "dbms/MDC/STAT/standard/MDCSTAT04601")
+			.get();
+		
+		List<Map<String, String>> outBlockList = (List<Map<String, String>>)BscUtils.jsonParse(doc.text()).get("output");
+		
+		// TAX_CL_CD 수집
+		taxClCdCollection(outBlockList);
+		
 		MDC.clear();
 	}
 	
@@ -112,5 +122,27 @@ public class BscCdService {
 		}
 		
 		log.info("ITM_CL_CD 수집 종료");
+	}
+	
+	/**
+	 * KRX > TAX_CL_CD 수집
+	 * @param outBlockList
+	 * @throws Exception
+	 */
+	private void taxClCdCollection(List<Map<String, String>> outBlockList) throws Exception {
+		log.info("TAX_CL_CD 수집 시작");
+		
+		for(Map<String, String> json : outBlockList) {
+			BscCdVO bscCdVO = new BscCdVO();
+			bscCdVO.setCdCol("TAX_CL_CD");
+			bscCdVO.setCdNm(json.get("TAX_TP_CD"));
+			
+			// 입력된 코드가 없을 경우 입력
+			if(bscCdMapper.selectCount(bscCdVO) != 1) {
+				bscCdMapper.insertBatch(bscCdVO);
+			}
+		}
+		
+		log.info("TAX_CL_CD 수집 종료");
 	}
 }

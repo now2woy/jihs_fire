@@ -45,6 +45,24 @@ public class ActTrdService {
 		List<String> trdCds = new ArrayList<>();
 		
 		trdCds.add("00001");
+		
+		actTrdVO.setTrdCds(trdCds);
+		
+		// 총입금액
+		result.put("inSumAmt", actTrdMapper.selectSumAmt(actTrdVO));
+		
+		trdCds = new ArrayList<>();
+		
+		trdCds.add("00002");
+		
+		actTrdVO.setTrdCds(trdCds);
+		
+		// 총출금액
+		result.put("outSumAmt", actTrdMapper.selectSumAmt(actTrdVO));
+		
+		trdCds = new ArrayList<>();
+		
+		trdCds.add("00001");
 		trdCds.add("00002");
 		
 		actTrdVO.setTrdCds(trdCds);
