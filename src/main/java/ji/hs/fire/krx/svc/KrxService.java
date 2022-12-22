@@ -79,7 +79,6 @@ public class KrxService {
 		
 		Map<String, String> result = new HashMap<>();
 		
-		
 		// 한국거래소 종목 수집
 		itmCollection(result);
 		
@@ -284,6 +283,53 @@ public class KrxService {
 			
 			log.info("{} 종목 정보 수집 종료", resultVO.getCd());
 		}
+	}
+	
+	/**
+	 * 한국거래소 ETF 종목 수집
+	 * @param result
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	@Transactional
+	private void etfCollection(Map<String, String> result) throws Exception {
+		Map<String, String> taxClCd = createCdMap("TAX_CL_CD");
+		
+		log.info("ETF 종목 정보 수집 시작");
+		
+		int cnt = 0;
+		
+		// KRX URL 호출
+		Document doc = Jsoup.connect(krxJsonUrl)
+				.data("bld", "dbms/MDC/STAT/standard/MDCSTAT04601")
+				.get();
+		
+		for(Map<String, String> json : (List<Map<String, String>>)BscUtils.jsonParse(doc.text()).get("output")) {
+			KrxItmVO krxItmVO = new KrxItmVO();
+			
+			krxItmVO.setItmCd(json.get("ISU_SRT_CD"));
+			krxItmVO.setItmNm(json.get("ISU_NM"));
+			krxItmVO.setMktCd("ETF");
+			krxItmVO.setPubDt(json.get("LIST_DD"));
+			krxItmVO.setStdItmCd(json.get("ISU_CD"));
+			krxItmVO.setTaxClCd(taxClCd.get(json.get("TAX_TP_CD")));
+			krxItmVO.setSpacYn("N");
+			
+			// 데이터가 있을 경우 수정
+			if(krxItmMapper.selectCount(krxItmVO) == 1) {
+				krxItmMapper.update(krxItmVO);
+				
+				// 데이터가 없을 경우 입력
+			} else {
+				krxItmMapper.insert(krxItmVO);
+			}
+			
+			cnt++;
+		}
+		
+		result.put("ETF CNT", Integer.toString(cnt));
+		
+		log.info("ETF 종목 정보 수집 종료");
 	}
 	
 	/**

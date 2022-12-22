@@ -53,4 +53,12 @@ public class KrxItmVO {
 	 * 주식구분명
 	 */
 	private String itmClNm;
+	/**
+	 * 과세유형코드
+	 */
+	private String taxClCd;
+	/**
+	 * 과세유형명
+	 */
+	private String taxClNm;
 }
