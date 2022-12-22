@@ -12,7 +12,7 @@ public class ActVO {
 	/**
 	 * 계좌일련번호
 	 */
-	private int actSeq;
+	private String actSeq;
 	/**
 	 * 계좌명
 	 */

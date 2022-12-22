@@ -30,7 +30,15 @@ function ls_table_init(url, idx, async){
 					if(item["FUNC"] != ""){
 						html = html + "<a href=\"#\" onclick=\"" + item["FUNC"] + "\">" + bc_nullToBlank(value[item["VAL"]]) + "</a></td>";
 					} else {
-						html = html + bc_nullToBlank(value[item["VAL"]]) + "</td>";
+						// 숫자일 경우
+						if(item["TYPE"] == "I"){
+							html = html + bc_num_format(bc_nullToBlank(value[item["VAL"]])) + "</td>";
+						
+						// 숫자가 아닐 경우
+						} else {
+							html = html + bc_nullToBlank(value[item["VAL"]]) + "</td>";
+							
+						}
 					}
 					idx = value[PAGE_CONFIG["IDX"]];
 				});
@@ -66,6 +74,121 @@ function ls_table_init(url, idx, async){
 		
 		PAGE_CONFIG["LIST_DATA"] = json;
 	});
+}
+
+/**
+ * 등록 버튼
+ */
+function ls_table_add(){
+	var html = "<tr>";
+	
+	data.forEach(function(item) {
+		// 텍스트박스
+		if(item["TYPE"] == "T" || item["TYPE"] == "I"){
+			html = html + "	<td id=\"TD_" + item["NM"] + "NEW\" style=\"" + bc_cd_to_val(item["TDST"]) + " vertical-align: middle;\"><input type=\"text\" id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\" value=\"\"" + bc_cd_to_val(item["OPT"]) + " /></td>";
+		
+		// 버튼있는 택스트박스
+		} else if(item["TYPE"] == "TB"){
+			html = html + "<td id=\"TD_" + item["NM"] + "NEW\" style=\"" + bc_cd_to_val(item["TDST"]) + " vertical-align: middle;\"><div class=\"input-group\" style=\"margin: 0px;\">";
+			html = html + "<input type=\"text\" id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\" value=\"\"" + bc_cd_to_val(item["OPT"]) + " />";
+			html = html + "<span><a href=\"#\" class=\"btn\" style=\"border: 1px solid #ddd; background-color: #fafafa; margin: 0px;\"><i class=\"fa fa-search\"></i></a></span>";
+			html = html + "</div></td>";
+		
+		// 셀렉트박스
+		} else if(item["TYPE"] == "S"){
+			html = html + "	<td id=\"TD_" + item["NM"] + "NEW\" style=\"" + bc_cd_to_val(item["TDST"]) + " vertical-align: middle;\"><select id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\"" + bc_cd_to_val(item["OPT"]) + "><option value=''>선택</option><option value=\"Y\">Y</option><option value=\"N\">N</option></select></td>";
+		
+		// 없음
+		} else if(item["TYPE"] == "N"){
+			html = html + "	<td id=\"TD_" + item["NM"] + "NEW\" style=\"" + bc_cd_to_val(item["TDST"]) + " vertical-align: middle;\"></td>";
+		
+		// 날자 선택
+		} else if(item["TYPE"] == "D"){
+			html = html + "	<td id=\"TD_" + item["NM"] + "NEW\" style=\"" + bc_cd_to_val(item["TDST"]) + " vertical-align: middle;\"><input type=\"date\" id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\" value=\"\"" + bc_cd_to_val(item["OPT"]) + " /></td>";
+			
+		// 날자-시간 선택
+		} else if(item["TYPE"] == "DT"){
+			html = html + "	<td id=\"TD_" + item["NM"] + "NEW\" style=\"" + bc_cd_to_val(item["TDST"]) + " vertical-align: middle;\"><input type=\"datetime-local\" id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\" value=\"\"" + bc_cd_to_val(item["OPT"]) + " /></td>";
+			
+		}
+	});
+	
+	// 저장 함수가 있을 경우
+	if(PAGE_CONFIG["INS_FUNC"] != ""){
+		html = html + "	<td style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:" + PAGE_CONFIG["INS_FUNC"] + "('NEW', 'POST');\"><i class=\"fa fa-floppy-o\"></i> 저장</a></td>";
+		
+	// 저장 함수가 없을 경우
+	} else {
+		html = html + "	<td style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:ls_table_save('NEW', 'POST');\"><i class=\"fa fa-floppy-o\"></i> 저장</a></td>";
+	}
+	
+	html = html + "</tr>";
+	
+	$("#data tbody").append(html);
+	$("#add-btn").attr("style", "display : none;");
+}
+
+/**
+ * 목록 테이블 수정 버튼
+ */
+function ls_table_mod(id){
+	data.forEach(function(item) {
+		// 데이터 추출
+		item["DATA"] = $("#TD_" + item["NM"] + id).text();
+		
+		// 타입이 없지 않을 경우
+		if(item["TYPE"] != "N"){
+			// 데이터 삭제
+			$("#TD_" + item["NM"] + id).empty();
+		}
+		
+		// 인풋박스로 변경
+		// 텍스트박스
+		if(item["TYPE"] == "T"){
+			$("#TD_" + item["NM"] + id).append("<input type=\"text\" id=\"" + item["NM"] + id + "\" class=\"form-control\" value=\"" + item["DATA"] + "\"" + bc_cd_to_val(item["OPT"]) + " />");
+			
+		// 숫자박스
+		} else if(item["TYPE"] == "I"){
+			$("#TD_" + item["NM"] + id).append("<input type=\"text\" id=\"" + item["NM"] + id + "\" class=\"form-control\" value=\"" + item["DATA"].replace(/,/gi, "") + "\"" + bc_cd_to_val(item["OPT"]) + " />");
+			
+		// 버튼있는 택스트박스
+		} else if(item["TYPE"] == "TB"){
+			var html = "<div class=\"input-group\" style=\"margin: 0px;\">";
+			html = html + "<input type=\"text\" id=\"" + item["NM"] + id + "\" class=\"form-control\" value=\"" + item["DATA"] + "\"" + bc_cd_to_val(item["OPT"]) + " />";
+			html = html + "<span><a href=\"#\" class=\"btn\" style=\"border: 1px solid #ddd; background-color: #fafafa; margin: 0px;\"><i class=\"fa fa-search\"></i></a></span>";
+			html = html + "</div>";
+			
+			$("#TD_" + item["NM"] + id).append(html);
+			
+		// 셀렉트박스
+		} else if(item["TYPE"] == "S"){
+			if(item["DATA"] == "Y"){
+				$("#TD_" + item["NM"] + id).append("<select id=\"" + item["NM"] + id + "\" class=\"form-control\"" + bc_cd_to_val(item["OPT"]) + "><option value=''>선택</option><option selected=\"selected\" value=\"Y\">Y</option><option value=\"N\">N</option></select>");
+				
+			} else if(item["data"] == "N"){
+				$("#TD_" + item["NM"] + id).append("<select id=\"" + item["NM"] + id + "\" class=\"form-control\"" + bc_cd_to_val(item["OPT"]) + "><option value=''>선택</option><option value=\"Y\">Y</option><option selected=\"selected\" value=\"N\">N</option></select>");
+			}
+			
+		// 날자 선택
+		} else if(item["TYPE"] == "D"){
+			$("#TD_" + item["NM"] + id).append("<input type=\"date\" id=\"" + item["NM"] + id + "\" class=\"form-control\" value=\"" + item["DATA"] + "\"" + bc_cd_to_val(item["OPT"]) + " />");
+			
+		// 날자-시간 선택
+		} else if(item["TYPE"] == "DT"){
+			$("#TD_" + item["NM"] + id).append("<input type=\"datetime-local\" id=\"" + item["NM"] + id + "\" class=\"form-control\" value=\"" + item["DATA"].replace(" ", "T") + ":00\"" + bc_cd_to_val(item["OPT"]) + " />");
+		}
+	});
+	
+	$("#TD_BTN_" + id).empty();
+	
+	// 저장 함수가 있을 경우
+	if(PAGE_CONFIG["INS_FUNC"] != ""){
+		$("#TD_BTN_" + id).append("<a href=\"javascript:" + PAGE_CONFIG["INS_FUNC"] + "('" + id + "', 'PUT');\"><i class=\"fa fa-floppy-o\"></i> 저장</a>");
+		
+	// 저장 함수가 없을 경우
+	} else {
+		$("#TD_BTN_" + id).append("<a href=\"javascript:ls_table_save('" + id + "', 'PUT');\"><i class=\"fa fa-floppy-o\"></i> 저장</a>");
+	}
 }
 
 /**
@@ -124,104 +247,6 @@ function ls_pageinate(url){
 	
 	$("#paginate").empty();
 	$("#paginate").append(page);
-}
-
-/**
- * 등록 버튼
- */
-function ls_table_add(){
-	var html = "<tr>";
-	
-	data.forEach(function(item) {
-		// 텍스트박스
-		if(item["TYPE"] == "T"){
-			html = html + "	<td id=\"TD_" + item["NM"] + "NEW\" style=\"" + bc_cd_to_val(item["TDST"]) + " vertical-align: middle;\"><input type=\"text\" id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\" value=\"\"" + bc_cd_to_val(item["OPT"]) + " /></td>";
-		
-		// 버튼있는 택스트박스
-		} else if(item["TYPE"] == "TB"){
-			html = html + "<td id=\"TD_" + item["NM"] + "NEW\" style=\"" + bc_cd_to_val(item["TDST"]) + " vertical-align: middle;\"><div class=\"input-group\" style=\"margin: 0px;\">";
-			html = html + "<input type=\"text\" id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\" value=\"\"" + bc_cd_to_val(item["OPT"]) + " />";
-			html = html + "<span><a href=\"#\" class=\"btn\" style=\"border: 1px solid #ddd; background-color: #fafafa; margin: 0px;\"><i class=\"fa fa-search\"></i></a></span>";
-			html = html + "</div></td>";
-		
-		// 셀렉트박스
-		} else if(item["TYPE"] == "S"){
-			html = html + "	<td id=\"TD_" + item["NM"] + "NEW\" style=\"" + bc_cd_to_val(item["TDST"]) + " vertical-align: middle;\"><select id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\"" + bc_cd_to_val(item["OPT"]) + "><option value=''>선택</option><option value=\"Y\">Y</option><option value=\"N\">N</option></select></td>";
-		
-		// 없음
-		} else if(item["TYPE"] == "N"){
-			html = html + "	<td id=\"TD_" + item["NM"] + "NEW\" style=\"" + bc_cd_to_val(item["TDST"]) + " vertical-align: middle;\"></td>";
-		
-		// 날자 선택
-		} else if(item["TYPE"] == "D"){
-			html = html + "	<td id=\"TD_" + item["NM"] + "NEW\" style=\"" + bc_cd_to_val(item["TDST"]) + " vertical-align: middle;\"><input type=\"date\" id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\" value=\"" + item["DATA"] + "\"" + bc_cd_to_val(item["OPT"]) + " /></td>";
-			
-		// 날자-시간 선택
-		} else if(item["TYPE"] == "DT"){
-			html = html + "	<td id=\"TD_" + item["NM"] + "NEW\" style=\"" + bc_cd_to_val(item["TDST"]) + " vertical-align: middle;\"><input type=\"datetime-local\" id=\"" + item["NM"] + "NEW\" name=\"" + item["NM"] + "NEW\" class=\"form-control\" value=\"" + item["DATA"] + "\"" + bc_cd_to_val(item["OPT"]) + " /></td>";
-			
-		}
-	});
-	
-	// 저장 함수가 있을 경우
-	if(PAGE_CONFIG["INS_FUNC"] != ""){
-		html = html + "	<td style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:" + PAGE_CONFIG["INS_FUNC"] + "('NEW', 'POST');\"><i class=\"fa fa-floppy-o\"></i> 저장</a></td>";
-		
-	// 저장 함수가 없을 경우
-	} else {
-		html = html + "	<td style=\"text-align: center; vertical-align: middle;\"><a href=\"javascript:ls_table_save('NEW', 'POST');\"><i class=\"fa fa-floppy-o\"></i> 저장</a></td>";
-	}
-	
-	html = html + "</tr>";
-	
-	$("#data tbody").append(html);
-	$("#add-btn").attr("style", "display : none;");
-}
-
-/**
- * 목록 테이블 수정 버튼
- */
-function ls_table_mod(id){
-	data.forEach(function(item) {
-		// 데이터 추출
-		item["DATA"] = $("#TD_" + item["NM"] + id).text();
-		
-		// 타입이 없지 않을 경우
-		if(item["TYPE"] != "N"){
-			// 데이터 삭제
-			$("#TD_" + item["NM"] + id).empty();
-		}
-		
-		// 인풋박스로 변경
-		// 텍스트박스
-		if(item["TYPE"] == "T"){
-			$("#TD_" + item["NM"] + id).append("<input type=\"text\" id=\"" + item["NM"] + id + "\" class=\"form-control\" value=\"" + item["DATA"] + "\"" + bc_cd_to_val(item["OPT"]) + " />");
-			
-		// 셀렉트박스
-		} else if(item["TYPE"] == "S"){
-			if(item["DATA"] == "Y"){
-				$("#TD_" + item["NM"] + id).append("<select id=\"" + item["NM"] + id + "\" class=\"form-control\"" + bc_cd_to_val(item["OPT"]) + "><option value=''>선택</option><option selected=\"selected\" value=\"Y\">Y</option><option value=\"N\">N</option></select>");
-				
-			} else if(item["data"] == "N"){
-				$("#TD_" + item["NM"] + id).append("<select id=\"" + item["NM"] + id + "\" class=\"form-control\"" + bc_cd_to_val(item["OPT"]) + "><option value=''>선택</option><option value=\"Y\">Y</option><option selected=\"selected\" value=\"N\">N</option></select>");
-			}
-			
-		// 날자-시간 선택
-		} else if(item["TYPE"] == "DT"){
-			$("#TD_" + item["NM"] + id).append("<input type=\"datetime-local\" id=\"" + item["NM"] + id + "\" class=\"form-control\" value=\"" + item["DATA"] + "\"" + bc_cd_to_val(item["OPT"]) + " />");
-		}
-	});
-	
-	$("#TD_BTN_" + id).empty();
-	
-	// 저장 함수가 있을 경우
-	if(PAGE_CONFIG["INS_FUNC"] != ""){
-		$("#TD_BTN_" + id).append("<a href=\"javascript:" + PAGE_CONFIG["INS_FUNC"] + "('" + id + "', 'PUT');\"><i class=\"fa fa-floppy-o\"></i> 저장</a>");
-		
-	// 저장 함수가 없을 경우
-	} else {
-		$("#TD_BTN_" + id).append("<a href=\"javascript:ls_table_save('" + id + "', 'PUT');\"><i class=\"fa fa-floppy-o\"></i> 저장</a>");
-	}
 }
 
 /**
@@ -314,4 +339,11 @@ function bc_nullToBlank(str){
 	} else {
 		return str;
 	}
+}
+
+/**
+ * 숫자에 콤마 추가
+ */
+function bc_num_format(num){
+	return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }

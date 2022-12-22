@@ -32,7 +32,7 @@ public class ActService {
 	 * @return
 	 */
 	public int insert(ActVO actVO) throws Exception {
-		actVO.setActSeq(bscNoGenService.generate("AC_MT.ACT_SEQ"));
+		actVO.setActSeq(Integer.toString(bscNoGenService.generate("AC_MT.ACT_SEQ")));
 		
 		return actMapper.insert(actVO);
 	}

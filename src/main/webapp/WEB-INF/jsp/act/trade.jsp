@@ -28,7 +28,7 @@ var data = [];
 
 data.push({"NM" : "TRD_DT_",	"VAL" : "trdDt",	"VAL2" : "",		"FUNC" : "",	"TYPE" : "DT",	"OPT" : "",		"TDST" : "T_C"});
 data.push({"NM" : "TRD_CD_",	"VAL" : "trdNm",	"VAL2" : "trdCd",	"FUNC" : "",	"TYPE" : "N",	"OPT" : "",		"TDST" : "T_C"});
-data.push({"NM" : "AMT_",		"VAL" : "amt",		"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_R"});
+data.push({"NM" : "AMT_",		"VAL" : "amt",		"VAL2" : "",		"FUNC" : "",	"TYPE" : "I",	"OPT" : "",		"TDST" : "T_R"});
 data.push({"NM" : "ITM_CD_",	"VAL" : "itmNm",	"VAL2" : "itmCd",	"FUNC" : "",	"TYPE" : "TB",	"OPT" : "",		"TDST" : "T_C"});
 data.push({"NM" : "QTY_",		"VAL" : "qty",		"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
 data.push({"NM" : "NOTE_",		"VAL" : "note",		"VAL2" : "",		"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
@@ -42,7 +42,9 @@ $(document).ready(function () {
 	
 	PAGE_CONFIG["TRD_CD_SELECT"] = ct_cd_select("/api/codes/TRD_CD", "cd", "cdNm");
 	
-	$("#IN_OUT_SUM_AMT").text(PAGE_CONFIG["LIST_DATA"].inOutSumAmt);
+	$("#IN_OUT_SUM_AMT").text(bc_num_format(PAGE_CONFIG["LIST_DATA"].inOutSumAmt) + "원");
+	$("#ITRST_SUM_AMT").text(bc_num_format(PAGE_CONFIG["LIST_DATA"].itrstSumAmt) + "원");
+	$("#DVDN_SUM_AMT").text(bc_num_format(PAGE_CONFIG["LIST_DATA"].dvdnSumAmt) + "원");
 });
 
 /**
@@ -79,7 +81,17 @@ function save(id, method){
 	}
 }
 
+/**
+ * 수정 버튼
+ */
 function mod(id){
+	ls_table_mod(id);
+	
+	var trdNm = $("#TD_TRD_CD_" + id).text();
+	
+	$("#TD_TRD_CD_" + id).empty();
+	$("#TD_TRD_CD_" + id).append(PAGE_CONFIG["TRD_CD_SELECT"].replace("#ID#", "TRD_CD_" + id));
+	$("#TRD_CD_" + id + " option:contains('" + trdNm + "')").attr("selected", "selected");
 }
 </script>
 </head>
@@ -121,17 +133,17 @@ function mod(id){
 									</colgroup>
 									<thead>
 										<tr class="headings">
-											<th class="column-title" style="text-align: center;">입출금합계</th>
-											<th class="column-title" style="text-align: center;">총이자</th>
-											<th class="column-title" style="text-align: center;">총배당금</th>
+											<th class="column-title" style="text-align: center;">입출금 합계</th>
+											<th class="column-title" style="text-align: center;">이자 합계</th>
+											<th class="column-title" style="text-align: center;">배당금 합계</th>
 											<th class="column-title" style="text-align: center;">수수료합계</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
 											<td id="IN_OUT_SUM_AMT" style="text-align: center;"></td>
-											<td id="" style="text-align: center;">총출금액</td>
-											<td id="" style="text-align: center;">제세금합계</td>
+											<td id="ITRST_SUM_AMT" style="text-align: center;"></td>
+											<td id="DVDN_SUM_AMT" style="text-align: center;"></td>
 											<td id="" style="text-align: center;">수수료합계</td>
 										</tr>
 									</tbody>
@@ -157,11 +169,11 @@ function mod(id){
 										<col style="width: 20%;" />
 										<col style="width: 10%;" />
 										<col style="width: 10%;" />
-										<col style="width: 10%;" />
+										<col style="width: 15%;" />
 										<col style="width: 10%;" />
 										<col style="width: 20%;" />
 										<col style="width: 10%;" />
-										<col style="width: 10%;" />
+										<col style="width: 5%;" />
 									</colgroup>
 									<thead>
 										<tr class="headings">

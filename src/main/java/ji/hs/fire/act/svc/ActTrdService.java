@@ -1,5 +1,10 @@
 package ji.hs.fire.act.svc;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 import ji.hs.fire.act.mpr.ActTrdMapper;
@@ -27,13 +32,56 @@ public class ActTrdService {
 	private final BscNoGenService bscNoGenService;
 	
 	/**
-	 * 
+	 * 계좌 거래 정보 목록
+	 * @param actTrdVO
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, Object> list(ActTrdVO actTrdVO) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		result.put("count", actTrdMapper.selectCount(actTrdVO));
+		result.put("data", actTrdMapper.selectAll(actTrdVO));
+		
+		List<String> trdCds = new ArrayList<>();
+		
+		trdCds.add("00001");
+		trdCds.add("00002");
+		
+		actTrdVO.setTrdCds(trdCds);
+		
+		// 입출금 합계
+		result.put("inOutSumAmt", actTrdMapper.selectSumAmt(actTrdVO));
+		
+		trdCds = new ArrayList<>();
+		
+		trdCds.add("00003");
+		
+		actTrdVO.setTrdCds(trdCds);
+		
+		// 이자 합계
+		result.put("itrstSumAmt", actTrdMapper.selectSumAmt(actTrdVO));
+		
+		trdCds = new ArrayList<>();
+		
+		trdCds.add("00004");
+		trdCds.add("00005");
+		
+		actTrdVO.setTrdCds(trdCds);
+		
+		// 배당 분배금 합계
+		result.put("dvdnSumAmt", actTrdMapper.selectSumAmt(actTrdVO));
+		
+		return result;
+	}
+	
+	/**
+	 * 계좌 거래 정보 입력
 	 * @param actTrdVO
 	 * @return
 	 * @throws Exception
 	 */
 	public int insert(ActTrdVO actTrdVO) throws Exception {
-		actTrdVO.setTrdSeq(bscNoGenService.generate("AC_DT.TRD_SEQ"));
+		actTrdVO.setTrdSeq(Integer.toString(bscNoGenService.generate("AC_DT.TRD_SEQ")));
 		
 		return actTrdMapper.insert(actTrdVO);
 	}

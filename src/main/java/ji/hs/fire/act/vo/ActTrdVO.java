@@ -1,5 +1,7 @@
 package ji.hs.fire.act.vo;
 
+import java.util.List;
+
 import lombok.Data;
 
 /**
@@ -12,15 +14,15 @@ public class ActTrdVO {
 	/**
 	 * 거래일련번호
 	 */
-	private int trdSeq;
+	private String trdSeq;
 	/**
 	 * 관련거래일련번호
 	 */
-	private int relTrdSeq;
+	private String relTrdSeq;
 	/**
 	 * 계좌일련번호
 	 */
-	private int actSeq;
+	private String actSeq;
 	/**
 	 * 거래코드
 	 */
@@ -32,7 +34,7 @@ public class ActTrdVO {
 	/**
 	 * 금액
 	 */
-	private int amt;
+	private String amt;
 	/**
 	 * 종목코드
 	 */
@@ -44,7 +46,7 @@ public class ActTrdVO {
 	/**
 	 * 수량
 	 */
-	private int qty;
+	private String qty;
 	/**
 	 * 비고
 	 */
@@ -57,6 +59,10 @@ public class ActTrdVO {
 	 * 만기일시
 	 */
 	private String edDt;
+	/**
+	 * 거래코드목록
+	 */
+	private List<String> trdCds;
 	/**
 	 * 검색건수
 	 */

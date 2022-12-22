@@ -1,6 +1,5 @@
 package ji.hs.fire.act.web;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ji.hs.fire.act.mpr.ActTrdMapper;
 import ji.hs.fire.act.svc.ActTrdService;
 import ji.hs.fire.act.vo.ActTrdVO;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +26,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/act/trades")
 public class ActTrdApiCtrl {
 	/**
-	 * 계좌 거래 Mapper
-	 */
-	private final ActTrdMapper actTrdMapper;
-	/**
 	 * 계좌 거래 Service
 	 */
 	private final ActTrdService actTrdService;
@@ -44,21 +38,15 @@ public class ActTrdApiCtrl {
 	 * @throws Exception
 	 */
 	@GetMapping("/{actSeq}")
-	public ResponseEntity<Map<String, Object>> list(@PathVariable("actSeq") int actSeq
+	public ResponseEntity<Map<String, Object>> list(@PathVariable("actSeq") String actSeq
 												  , @RequestParam(defaultValue = "10") int limit
 												  , @RequestParam(defaultValue = "0") int offset) throws Exception {
 		ActTrdVO actTrdVO = new ActTrdVO();
-		
 		actTrdVO.setActSeq(actSeq);
 		actTrdVO.setLimit(limit);
 		actTrdVO.setOffset(offset);
 		
-		Map<String, Object> result = new HashMap<>();
-		result.put("count", actTrdMapper.selectCount(actTrdVO));
-		result.put("inOutSumAmt", actTrdMapper.selectInOutSumAmt(actTrdVO));
-		result.put("data", actTrdMapper.selectAll(actTrdVO));
-		
-		return ResponseEntity.status(HttpStatus.OK).body(result);
+		return ResponseEntity.status(HttpStatus.OK).body(actTrdService.list(actTrdVO));
 	}
 	
 	/**

@@ -156,7 +156,7 @@ ALTER TABLE AC_MT ADD PRIMARY KEY (ACT_SEQ);
 CREATE TABLE AC_DT (
 	  TRD_SEQ		DECIMAL(20)		NOT NULL	comment '거래일련번호'
 	, ACT_SEQ		DECIMAL(6)		NOT NULL	comment '계좌일련번호'
-	, REL_TRD_SEQ	DECIMAL(20)		NOT NULL	comment '관련거래일련번호'
+	, REL_TRD_SEQ	DECIMAL(20)		NULL		comment '관련거래일련번호'
 	, TRD_CD		VARCHAR(5)		NOT NULL	comment '거래코드'
 	, AMT			DECIMAL(20)		NULL		comment '금액'
 	, ITM_CD		VARCHAR(10)		NULL		COMMENT '종목코드'

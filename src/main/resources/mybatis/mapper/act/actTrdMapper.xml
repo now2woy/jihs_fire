@@ -14,11 +14,11 @@
 			 , QTY
 			 , NOTE
  			 , CASE WHEN TRD_DT != '0000/00/00 00:00'
-			        THEN DATE_FORMAT(TRD_DT, '%Y/%m/%d %H:%i')
+			        THEN DATE_FORMAT(TRD_DT, '%Y-%m-%d %H:%i')
 			        ELSE ''
 			   END AS TRD_DT
 			 , CASE WHEN ED_DT != '0000/00/00 00:00'
-			        THEN DATE_FORMAT(ED_DT, '%Y/%m/%d %H:%i')
+			        THEN DATE_FORMAT(ED_DT, '%Y-%m-%d')
 			        ELSE ''
 			   END AS ED_DT
 		  FROM AC_DT A
@@ -35,12 +35,16 @@
 		 WHERE ACT_SEQ = #{actSeq}
 	</select>
 	
-<!-- 계좌 입출금 합계 금액 조회 -->
-	<select id="selectInOutSumAmt" resultType="String" parameterType="ji.hs.fire.act.vo.ActTrdVO">
+<!-- 계좌 합계 금액 조회 -->
+	<select id="selectSumAmt" resultType="String" parameterType="ji.hs.fire.act.vo.ActTrdVO">
 		SELECT SUM(AMT) AS IN_OUT_SUM_AMT
 		  FROM AC_DT A
 		 WHERE ACT_SEQ = #{actSeq}
-		   AND TRD_CD IN ('00001', '00002')
+		   AND TRD_CD IN (
+		<foreach collection="trdCds" item="item" separator=",">
+			#{item}
+		</foreach>
+		   )
 	</select>
 	
 <!-- 계좌 정보 입력 -->
@@ -60,11 +64,11 @@
 			 ) VALUES (
 			   #{trdSeq}
 			 , #{actSeq}
-			 , #{relTrdSeq}
+			 , NULLIF(#{relTrdSeq}, '')
 			 , #{trdCd}
 			 , #{amt}
 			 , #{itmCd}
-			 , #{qty}
+			 , NULLIF(#{qty}, '')
 			 , #{note}
 			 , STR_TO_DATE(#{trdDt}, '%Y-%m-%dT%H:%i')
 			 , STR_TO_DATE(#{edDt}, '%Y-%m-%d')
