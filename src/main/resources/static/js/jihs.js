@@ -358,3 +358,10 @@ function bc_nullToZero(str){
 function bc_num_format(num){
 	return bc_nullToZero(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
+
+/**
+ * 팝업창을 닫는다.
+ */
+function pu_close(){
+	$("#popup_layer").css('display', 'none');
+}
