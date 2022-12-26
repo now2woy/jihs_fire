@@ -58,7 +58,6 @@ function add(){
 	$("#TD_TRD_CD_NEW").append(PAGE_CONFIG["TRD_CD_SELECT"].replace("#ID#", "TRD_CD_NEW"));
 }
 
-
 /**
  * 목록 테이블 저장 버튼
  */
@@ -94,6 +93,13 @@ function mod(id){
 	$("#TD_TRD_CD_" + id).empty();
 	$("#TD_TRD_CD_" + id).append(PAGE_CONFIG["TRD_CD_SELECT"].replace("#ID#", "TRD_CD_" + id));
 	$("#TRD_CD_" + id + " option:contains('" + trdNm + "')").attr("selected", "selected");
+}
+
+/**
+ * 목록 버튼
+ */
+function list() {
+	location.href="/act/account.do";
 }
 </script>
 </head>
@@ -211,6 +217,7 @@ function mod(id){
 							</div>
 						<!-- 버튼 영역 시작 -->
 							<div style="float: right;">
+								<button type="button" id="list-btn" class="btn btn-secondary" onclick="list();">목록</button>
 								<button type="button" id="add-btn" class="btn btn-success" onclick="add();">등록</button>
 							</div>
 						<!-- 버튼 영역 종료 -->

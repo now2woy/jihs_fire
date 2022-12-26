@@ -197,6 +197,8 @@ public class KrxService {
 						krxTrdVO.setHgAmt(new BigDecimal(json.get("TDD_HGPRC").replaceAll(",", "")));
 						krxTrdVO.setIncrAmt(new BigDecimal(json.get("CMPPREVDD_PRC").replaceAll(",", "")));
 						krxTrdVO.setTrdQty(new BigDecimal(json.get("ACC_TRDVOL").replaceAll(",", "")));
+						krxTrdVO.setMktTotAmt(new BigDecimal(json.get("MKTCAP").replaceAll(",", "")));
+						krxTrdVO.setIsuStkQty(new BigDecimal(json.get("LIST_SHRS").replaceAll(",", "")));
 						
 						// 데이터 입력
 						krxTrdMapper.insert(krxTrdVO);

@@ -85,11 +85,8 @@ public class KrxApiCtrl {
 	public ResponseEntity<Map<String, String>> trdCollection(@RequestParam(defaultValue = "10") int limit) throws Exception {
 		Map<String, String> result = null;
 		
-		// 02시 실행
-		if(BscUtils.isRunTime("04")){
-			// 한국거래소 종목 거래 정보 수집
-			result = krxService.trdCollection(limit);
-		}
+		// 한국거래소 종목 거래 정보 수집
+		result = krxService.trdCollection(limit);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(result);
 	}

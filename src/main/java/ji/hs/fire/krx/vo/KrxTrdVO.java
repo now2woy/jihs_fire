@@ -43,4 +43,12 @@ public class KrxTrdVO {
 	 * 거래량
 	 */
 	private BigDecimal trdQty;
+	/**
+	 * 시가총액
+	 */
+	private BigDecimal mktTotAmt;
+	/**
+	 * 발행주식수
+	 */
+	private BigDecimal isuStkQty;
 }
