@@ -261,6 +261,10 @@ public class KrxService {
 				KrxItmVO krxItmVO = new KrxItmVO();
 				
 				krxItmVO.setItmCd(json.get("ISU_SRT_CD"));
+				
+				int selectCnt = 0;
+				selectCnt = krxItmMapper.selectCount(krxItmVO);
+				
 				krxItmVO.setItmNm(json.get("ISU_NM"));
 				krxItmVO.setMktCd(resultVO.getCd());
 				krxItmVO.setPubDt(json.get("LIST_DD"));
@@ -270,7 +274,7 @@ public class KrxService {
 				krxItmVO.setSpacYn("N");
 				
 				// 데이터가 있을 경우 수정
-				if(krxItmMapper.selectCount(krxItmVO) == 1) {
+				if(selectCnt == 1) {
 					krxItmMapper.update(krxItmVO);
 					
 				// 데이터가 없을 경우 입력
