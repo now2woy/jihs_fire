@@ -15,6 +15,7 @@ import ji.hs.fire.bsc.util.BscConstants;
 import ji.hs.fire.bsc.util.BscUtils;
 import ji.hs.fire.krx.mpr.KrxItmMapper;
 import ji.hs.fire.krx.svc.KrxService;
+import ji.hs.fire.krx.svc.KrxTrdService;
 import ji.hs.fire.krx.vo.KrxItmVO;
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +36,10 @@ public class KrxApiCtrl {
 	 * 한국거래소 Service
 	 */
 	private final KrxService krxService;
+	/**
+	 * 한국거래소 Service
+	 */
+	private final KrxTrdService krxTrdService;
 	
 	/**
 	 * 한국거래소 종목 목록 조회
@@ -84,9 +89,11 @@ public class KrxApiCtrl {
 	@PostMapping("/batchs/trd")
 	public ResponseEntity<Map<String, String>> trdCollection(@RequestParam(defaultValue = "10") int limit) throws Exception {
 		Map<String, String> result = null;
-		
-		// 한국거래소 종목 거래 정보 수집
-		result = krxService.trdCollection(limit);
+		// 04시 실행
+		if(BscUtils.isRunTime("04")){
+			// 한국거래소 종목 거래 정보 수집
+			result = krxTrdService.trdCollection(limit);
+		}
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(result);
 	}
