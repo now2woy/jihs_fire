@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ji.hs.fire.krx.mpr.KrxTrdMapper">
+<!-- 한국거래소 거래 정보 건수 조회 -->
+	<select id="selectCount" resultType="Integer" parameterType="ji.hs.fire.krx.vo.KrxTrdVO">
+		SELECT COUNT(*) AS CNT
+		  FROM KX_TRD_MT A
+		 WHERE 1 = 1
+	<if test='itmCd != null and itmCd != ""'>
+		   AND ITM_CD = #{itmCd}
+	</if>
+	<if test='dt != null and dt != ""'>
+		   AND DT = #{dt}
+	</if>
+	</select>
+	
+<!-- 한국거래소 거래 정보 조회 -->
+	<select id="selectAll" resultType="ji.hs.fire.krx.vo.KrxTrdVO" parameterType="ji.hs.fire.krx.vo.KrxTrdVO">
+		SELECT ITM_CD
+		     , DT
+		     , ST_AMT
+		     , ED_AMT
+		     , LW_AMT
+		     , HG_AMT
+		     , INCR_AMT
+		     , TRD_QTY
+		     , MKT_TOT_AMT
+		     , ISU_STK_QTY
+		  FROM KX_TRD_MT
+		 WHERE 1 = 1
+	<if test='itmCd != null and itmCd != ""'>
+		   AND ITM_CD = #{itmCd}
+	</if>
+	<if test='dt != null and dt != ""'>
+	<![CDATA[
+		   AND DT <= #{dt}
+	]]>
+	</if>
+		 ORDER BY DT DESC
+	<if test='limit != null and limit != 0'>
+		 LIMIT #{limit}
+	</if>
+	</select>
 	
 <!-- 한국거래소 거래 정보 입력 -->
 	<insert id="insert" parameterType="ji.hs.fire.krx.vo.KrxTrdVO" flushCache="true">

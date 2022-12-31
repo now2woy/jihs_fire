@@ -51,4 +51,8 @@ public class KrxTrdVO {
 	 * 발행주식수
 	 */
 	private BigDecimal isuStkQty;
+	/**
+	 * 검색건수
+	 */
+	private int limit;
 }

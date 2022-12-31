@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -18,6 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class BscUtils {
+	/**
+	 * 기본 반올림 방법
+	 */
+	private static final RoundingMode DEFAULT_ROUNDING_MODE = RoundingMode.HALF_EVEN;
 	/**
 	 * 현재 시간이 배치 실행시간과 같은지 확인하여 리턴
 	 * @param hh
@@ -100,5 +106,110 @@ public class BscUtils {
 		}
 		
 		return isUnzip;
+	}
+	
+	/**
+	 * a + b
+	 * CASE : a가 null일 경우 0으로 대입
+	 * CASE : b가 null일 경우 0으로 대입
+	 * CASE : a와 b가 모두 null일 경우 null 리턴
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	public static BigDecimal add(BigDecimal a, BigDecimal b) {
+		// a와 b 모두 null 일 경우
+		if(a == null && b == null){
+			return null;
+		}
+		
+		// a가 null일 경우
+		if(a == null) {
+			a = BigDecimal.ZERO;
+		}
+		
+		// b가 null일 경우
+		if(b == null){
+			b = BigDecimal.ZERO;
+		}
+		
+		return a.add(b);
+	}
+	
+	/**
+	 * a * b
+	 * CASE : a 가 null일 경우 null
+	 * CASE : b 가 null일 경우 null
+	 * 
+	 * @param a
+	 * @param b
+	 * @param scale
+	 * @return
+	 */
+	public static BigDecimal multiply(BigDecimal a, BigDecimal b, int scale) {
+		return multiply(a, b, scale, DEFAULT_ROUNDING_MODE);
+	}
+	
+	/**
+	 * a * b
+	 * CASE : a 가 null일 경우 null
+	 * CASE : b 가 null일 경우 null
+	 * 
+	 * @param a
+	 * @param b
+	 * @param scale
+	 * @param roundingMode
+	 * @return
+	 */
+	public static BigDecimal multiply(BigDecimal a, BigDecimal b, int scale, RoundingMode roundingMode) {
+		if(a == null || b == null) {
+			return null;
+		}
+		
+		return a.multiply(b).setScale(scale, roundingMode);
+	}
+	
+	/**
+	 * * a / b
+	 * CASE : a가 null일 경우 null
+	 * CASE : a가 0일 경우 null
+	 * CASE : b가 null일 경우 null
+	 * CASE : b가 0일 경우 null
+	 * 
+	 * @param a
+	 * @param b
+	 * @param scale
+	 * @return
+	 */
+	public static BigDecimal divide(BigDecimal a, BigDecimal b, int scale) {
+		return divide(a, b, scale, DEFAULT_ROUNDING_MODE);
+	}
+	
+	/**
+	 * a / b
+	 * CASE : a가 null일 경우 null
+	 * CASE : a가 0일 경우 null
+	 * CASE : b가 null일 경우 null
+	 * CASE : b가 0일 경우 null
+	 * 
+	 * @param a
+	 * @param b
+	 * @param scale
+	 * @param roundingMode
+	 * @return
+	 */
+	public static BigDecimal divide(BigDecimal a, BigDecimal b, int scale, RoundingMode roundingMode) {
+		// null 이거나 0일 경우 나눌 수 없다.
+		if(a == null || a.compareTo(BigDecimal.ZERO) == 0) {
+			return null;
+		}
+		
+		// null 이거나 0일 경우 나눌 수 없다.
+		if(b == null || b.compareTo(BigDecimal.ZERO) == 0) {
+			return null;
+		}
+		
+		return a.divide(b, scale, roundingMode);
 	}
 }

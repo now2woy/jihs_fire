@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Jsoup;
@@ -18,11 +19,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ji.hs.fire.bsc.mpr.BscBatchMapper;
 import ji.hs.fire.bsc.mpr.BscCdMapper;
+import ji.hs.fire.bsc.svc.BscBatchService;
+import ji.hs.fire.bsc.svc.BscNoGenService;
 import ji.hs.fire.bsc.util.BscConstants;
 import ji.hs.fire.bsc.util.BscUtils;
 import ji.hs.fire.bsc.vo.BscBatchVO;
 import ji.hs.fire.bsc.vo.BscCdVO;
+import ji.hs.fire.krx.mpr.KrxItmMapper;
 import ji.hs.fire.krx.mpr.KrxTrdMapper;
+import ji.hs.fire.krx.mpr.KrxTrdMnftMapper;
+import ji.hs.fire.krx.vo.KrxItmVO;
+import ji.hs.fire.krx.vo.KrxTrdMnftVO;
 import ji.hs.fire.krx.vo.KrxTrdVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,20 +52,30 @@ public class KrxTrdService {
 	 */
 	private final BscBatchMapper bscBatchMapper;
 	/**
+	 * 한국거래소 종목 정보 Mapper
+	 */
+	private final KrxItmMapper krxItmMapper;
+	/**
 	 * 한국거래소 종목 거래 정보 Mapper
 	 */
 	private final KrxTrdMapper krxTrdMapper;
+	/**
+	 * 한국거래소 종목 거래 가공 정보 Mapper
+	 */
+	private final KrxTrdMnftMapper krxTrdMnftMapper;
+	/**
+	 * 채번 Service
+	 */
+	private final BscNoGenService bscNoGenService;
 	/**
 	 * 한국거래소 JSON URL
 	 */
 	@Value("${constant.krx.url.json}")
 	private String krxJsonUrl;
-	
 	/**
 	 * 한국거래소 종목 거래 정보 수집 배치 코드
 	 */
 	private static final String BATCH_CD_00002 = "00002";
-	
 	/**
 	 * 한국거래소 종목 거래 정보 가공 배치 코드
 	 */
@@ -184,6 +201,9 @@ public class KrxTrdService {
 		// 배치 대상을 조회한다.
 		List<BscBatchVO> batchList = selectBatchTargetList(BATCH_CD_00003, limit);
 		
+		// 처리해야 할 종목 목록
+		List<KrxItmVO> krxItmList = krxItmMapper.selectAll(new KrxItmVO());
+		
 		// 배치 대상이 있을 경우
 		if(!batchList.isEmpty()) {
 			// 조회된 배치를 처리한다.
@@ -199,10 +219,84 @@ public class KrxTrdService {
 				// 배치 실행 했으니 일단 완료
 				bscBatchVO.setExeYn("Y");
 				
-				// TODO 여기 처리 필요
+				KrxTrdVO parmKrxTrdVO = new KrxTrdVO();
+				parmKrxTrdVO.setDt(bscBatchVO.getParm1st());
 				
-				// 처리 건수를 증가한다.
-				cnt++;
+				// 거래일 이었는지 확인
+				if(krxTrdMapper.selectCount(parmKrxTrdVO) != 0) {
+					// 종목 단위로 정보 조회
+					for(KrxItmVO krxItmVO : krxItmList) {
+						parmKrxTrdVO.setItmCd(krxItmVO.getItmCd());
+						
+						// 종목이 해당일자에 데이터가 있는지 확인
+						if(krxTrdMapper.selectCount(parmKrxTrdVO) != 0) {
+							KrxTrdMnftVO krxTrdMnftVO = new KrxTrdMnftVO();
+							parmKrxTrdVO.setLimit(120);
+							
+							List<KrxTrdVO> krxTrdList = krxTrdMapper.selectAll(parmKrxTrdVO);
+							
+							krxTrdMnftVO.setItmCd(parmKrxTrdVO.getItmCd());
+							krxTrdMnftVO.setDt(parmKrxTrdVO.getDt());
+							
+							// 당일거래수가 0 이상이고, 전체주식수가 0이상 일 경우
+							if(krxTrdList.get(0).getTrdQty().compareTo(BigDecimal.ZERO) > 0 && krxTrdList.get(0).getIsuStkQty().compareTo(BigDecimal.ZERO) > 0) {
+								// 거래회전율 생성 : ROUND((당일거래수 / 전체주식수) * 100, 2)
+								krxTrdMnftVO.setTnovRt(BscUtils.multiply(BscUtils.divide(krxTrdList.get(0).getTrdQty(), krxTrdList.get(0).getIsuStkQty(), 10), new BigDecimal("100"), 2));
+							} else {
+								krxTrdMnftVO.setTnovRt(BigDecimal.ZERO);
+							}
+							
+							// 거래정보가 5건 이상일 경우
+							if(krxTrdList.size() >= 5) {
+								// 5일이동평균금액을 생성한다.
+								krxTrdMnftVO.setDy005AvgAmt(createAvgAmt(krxTrdList, 5));
+								
+								if(krxTrdList.size() >= 20) {
+									// 20일이동평균금액을 생성한다.
+									krxTrdMnftVO.setDy005AvgAmt(createAvgAmt(krxTrdList, 20));
+									
+									if(krxTrdList.size() >= 60) {
+										// 60일이동평균금액을 생성한다.
+										krxTrdMnftVO.setDy005AvgAmt(createAvgAmt(krxTrdList, 60));
+										
+										if(krxTrdList.size() >= 120) {
+											// 120일이동평균금액을 생성한다.
+											krxTrdMnftVO.setDy005AvgAmt(createAvgAmt(krxTrdList, 120));
+										}
+									}
+								}
+							}
+							
+							// 기존에 자료가 없을 경우 입력
+							if(krxTrdMnftMapper.selectCount(krxTrdMnftVO) == 0) {
+								// 입력 성공
+								if(krxTrdMnftMapper.insert(krxTrdMnftVO) == 1) {
+									// 처리 건수를 증가한다.
+									cnt++;
+								}
+								
+							// 기존에 자료가 있을 경우 수정
+							} else {
+								// 수정 성공
+								if(krxTrdMnftMapper.update(krxTrdMnftVO) == 1) {
+									// 처리 건수를 증가한다.
+									cnt++;
+								}
+							}
+						}
+					}
+				}
+				
+				// 배치가 정상 실행되었을 경우 성공여부가 'Y'이다.
+				if("Y".equals(bscBatchVO.getExeYn())) {
+					bscBatchVO.setSucYn("Y");
+				}
+				
+				// 2 : 배치 종료
+				bscBatchVO.setUpdCnt(2);
+				
+				// 베치 결과 UPDATE
+				bscBatchMapper.update(bscBatchVO);
 				
 				log.info("{} 일자 한국거래소 종목 거래 정보 가공 종료", bscBatchVO.getParm1st());
 			}
@@ -238,9 +332,6 @@ public class KrxTrdService {
 			// SEQ DESC
 			parmBatchVO.setOrder(2);
 			
-			// 마지막 SEQ 조회
-			int lastSeq = bscBatchMapper.selectAll(parmBatchVO).get(0).getSeq();
-			
 			parmBatchVO.setBatchCd(batchCd);
 			
 			// 마지막 배치 건 조회
@@ -257,7 +348,7 @@ public class KrxTrdService {
 				// 파라미터1이 어제보다 작거나 같을 경우
 				if(Integer.parseInt(parm1st) <= Integer.parseInt(yesterday)) {
 					BscBatchVO targetBscBatchVO = new BscBatchVO();
-					targetBscBatchVO.setSeq(lastSeq + i);
+					targetBscBatchVO.setSeq(bscNoGenService.generate("BC_BATCH_MT.SEQ"));
 					targetBscBatchVO.setBatchCd(tempBatchVO.getBatchCd());
 					targetBscBatchVO.setParm1st(parm1st);
 					targetBscBatchVO.setExeYn("N");
@@ -271,5 +362,24 @@ public class KrxTrdService {
 		}
 		
 		return batchList;
+	}
+	
+	/**
+	 * scale 만큼 평균을 구한다.
+	 * 
+	 * @param itmTrd
+	 * @param scale
+	 * @return
+	 */
+	private BigDecimal createAvgAmt(List<KrxTrdVO> krxTrdList, int scale) {
+		BigDecimal avgAmt = BigDecimal.ZERO;
+		
+		List<KrxTrdVO> list = krxTrdList.stream().limit(scale).collect(Collectors.toList());
+		
+		for(KrxTrdVO krxTrdVO : list) {
+			avgAmt = BscUtils.add(avgAmt, krxTrdVO.getEdAmt());
+		}
+		
+		return BscUtils.divide(avgAmt, new BigDecimal(scale), 0);
 	}
 }

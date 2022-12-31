@@ -97,4 +97,19 @@ public class KrxApiCtrl {
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(result);
 	}
+	
+	/**
+	 * 한국거래소 종목 거래 정보 가공
+	 * @param limit
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/batchs/trdMnft")
+	public ResponseEntity<Map<String, String>> trdDataManufacture(@RequestParam(defaultValue = "10") int limit) throws Exception {
+		Map<String, String> result = null;
+		// 한국거래소 종목 거래 정보 수집
+		result = krxTrdService.trdDataManufacture(limit);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(result);
+	}
 }

@@ -22,7 +22,7 @@ public class KrxTrdMnftVO {
 	/**
 	 * 거래회전율
 	 */
-	private BigDecimal tncvRt;
+	private BigDecimal tnovRt;
 	/**
 	 * 5일 이동평균금액
 	 */

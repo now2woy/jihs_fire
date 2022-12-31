@@ -33,10 +33,6 @@ public class BscBatchService {
 	 */
 	public int insert(BscBatchVO bscBatchVO) throws Exception {
 		if(bscBatchVO.getSeq() == 0) {
-			BscBatchVO parmBscBatchVO = new BscBatchVO();
-			parmBscBatchVO.setOrder(2);
-			parmBscBatchVO.setLimit(1);
-			
 			bscBatchVO.setSeq(bscNoGenService.generate("BC_BATCH_MT.SEQ"));
 		}
 		

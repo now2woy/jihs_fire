@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ji.hs.fire.krx.mpr.KrxTrdMnftMapper">
+<!-- 한국거래소 거래 가공 정보 건수 조회 -->
+	<select id="selectCount" resultType="Integer" parameterType="ji.hs.fire.krx.vo.KrxTrdMnftVO">
+		SELECT COUNT(*) AS CNT
+		  FROM KX_TRD_DT A
+		 WHERE 1 = 1
+	<if test='itmCd != null and itmCd != ""'>
+		   AND ITM_CD = #{itmCd}
+	</if>
+	<if test='dt != null and dt != ""'>
+		   AND DT = #{dt}
+	</if>
+	</select>
+	
+<!-- 한국거래소 거래 가공 정보 입력 -->
+	<insert id="insert" parameterType="ji.hs.fire.krx.vo.KrxTrdMnftVO" flushCache="true">
+	<![CDATA[
+		INSERT INTO KX_TRD_DT (
+			   ITM_CD
+			 , DT
+			 , TNOV_RT
+			 , DY_005_AVG_AMT
+			 , DY_020_AVG_AMT
+			 , DY_060_AVG_AMT
+			 , DY_120_AVG_AMT
+			 , EPS
+			 , BPS
+			 , CPS
+			 , SPS
+			 , PER
+			 , PBR
+			 , PCR
+			 , PSR
+			 ) VALUES (
+			   #{itmCd}
+			 , #{dt}
+			 , #{tnovRr}
+			 , #{dy005AvgAmt}
+			 , #{dy020AvgAmt}
+			 , #{dy060AvgAmt}
+			 , #{dy120AvgAmt}
+			 , #{eps}
+			 , #{bps}
+			 , #{cps}
+			 , #{sps}
+			 , #{per}
+			 , #{pbr}
+			 , #{pcr}
+			 , #{psr}
+			 )
+	]]>
+	</insert>
+		
+<!-- 한국거래소 거래 가공 정보 수정 -->
+	<update id="update" parameterType="ji.hs.fire.krx.vo.KrxTrdMnftVO" flushCache="true">
+		UPDATE KX_TRD_DT
+		   SET ITM_CD = #{itmCd}
+			 , DT = #{dt}
+	<if test='tnovRr != null and tnovRr != ""'>
+			 , TNOV_RT = #{tnovRr}
+	</if>
+	<if test='dy005AvgAmt != null and dy005AvgAmt != ""'>
+			 , DY_005_AVG_AMT = #{dy005AvgAmt}
+	</if>
+	<if test='dy020AvgAmt != null and dy020AvgAmt != ""'>
+			 , DY_020_AVG_AMT = #{dy020AvgAmt}
+	</if>
+	<if test='dy060AvgAmt != null and dy060AvgAmt != ""'>
+			 , DY_060_AVG_AMT = #{dy060AvgAmt}
+	</if>
+	<if test='dy120AvgAmt != null and dy120AvgAmt != ""'>
+			 , DY_120_AVG_AMT = #{dy120AvgAmt}
+	</if>
+	<if test='eps != null and eps != ""'>
+			 , EPS = #{eps}
+	</if>
+	<if test='bps != null and bps != ""'>
+			 , BPS = #{bps}
+	</if>
+	<if test='cps != null and cps != ""'>
+			 , CPS = #{cps}
+	</if>
+	<if test='sps != null and sps != ""'>
+			 , SPS = #{sps}
+	</if>
+	<if test='per != null and per != ""'>
+			 , PER = #{per}
+	</if>
+	<if test='pbr != null and pbr != ""'>
+			 , PBR = #{pbr}
+	</if>
+	<if test='pcr != null and pcr != ""'>
+			 , PCR = #{pcr}
+	</if>
+	<if test='psr != null and psr != ""'>
+			 , PSR = #{psr}
+	</if>
+	<![CDATA[
+		 WHERE ITM_CD = #{itmCd}
+		   AND DT = #{dt}
+	]]>
+	</update>
+</mapper>
