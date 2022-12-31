@@ -253,15 +253,15 @@ public class KrxTrdService {
 								
 								if(krxTrdList.size() >= 20) {
 									// 20일이동평균금액을 생성한다.
-									krxTrdMnftVO.setDy005AvgAmt(createAvgAmt(krxTrdList, 20));
+									krxTrdMnftVO.setDy020AvgAmt(createAvgAmt(krxTrdList, 20));
 									
 									if(krxTrdList.size() >= 60) {
 										// 60일이동평균금액을 생성한다.
-										krxTrdMnftVO.setDy005AvgAmt(createAvgAmt(krxTrdList, 60));
+										krxTrdMnftVO.setDy060AvgAmt(createAvgAmt(krxTrdList, 60));
 										
 										if(krxTrdList.size() >= 120) {
 											// 120일이동평균금액을 생성한다.
-											krxTrdMnftVO.setDy005AvgAmt(createAvgAmt(krxTrdList, 120));
+											krxTrdMnftVO.setDy120AvgAmt(createAvgAmt(krxTrdList, 120));
 										}
 									}
 								}
