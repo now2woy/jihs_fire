@@ -36,7 +36,7 @@
 			 ) VALUES (
 			   #{itmCd}
 			 , #{dt}
-			 , #{tnovRr}
+			 , #{tnovRt}
 			 , #{dy005AvgAmt}
 			 , #{dy020AvgAmt}
 			 , #{dy060AvgAmt}
@@ -58,8 +58,8 @@
 		UPDATE KX_TRD_DT
 		   SET ITM_CD = #{itmCd}
 			 , DT = #{dt}
-	<if test='tnovRr != null and tnovRr != ""'>
-			 , TNOV_RT = #{tnovRr}
+	<if test='tnovRt != null and tnovRt != ""'>
+			 , TNOV_RT = #{tnovRt}
 	</if>
 	<if test='dy005AvgAmt != null and dy005AvgAmt != ""'>
 			 , DY_005_AVG_AMT = #{dy005AvgAmt}
