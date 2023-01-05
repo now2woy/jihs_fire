@@ -14,8 +14,15 @@
 		     , USE_YN
 		  FROM AC_MT A
 		 WHERE 1 = 1
+	<if test='tlgrmId != null and tlgrmId != ""'>
+		   AND USR_ID = (SELECT USR_ID FROM BC_US_MT WHERE TLGRM_ID = #{tlgrmId})
+	</if>
+	<if test='limit != null and limit != 0'>
 		 LIMIT #{limit}
+	</if>
+	<if test='offset != null and offset != 0'>
 		 OFFSET #{offset}
+	</if>
 	</select>
 	
 <!-- 계좌 정보 건수 조회 -->

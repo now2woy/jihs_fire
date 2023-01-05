@@ -23,6 +23,19 @@
 		 ORDER BY ORD ASC
 	</select>
 	
+<!-- 코드 정보 1건 조회 -->
+	<select id="selectOne" resultType="ji.hs.fire.bsc.vo.BscCdVO" parameterType="ji.hs.fire.bsc.vo.BscCdVO">
+		SELECT CD_COL
+		     , CD
+		     , CD_NM
+		     , ORD
+		     , USE_YN
+		  FROM BC_CD_DT
+		 WHERE CD_COL = #{cdCol}
+		   AND CD = #{cd}
+		   AND USE_YN = 'Y'
+	</select>
+	
 <!-- 코드 정보 건수 조회 -->
 	<select id="selectCount" resultType="Integer" parameterType="ji.hs.fire.bsc.vo.BscCdVO">
 		SELECT COUNT(*) AS CNT

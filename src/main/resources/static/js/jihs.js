@@ -165,7 +165,7 @@ function ls_table_mod(id){
 			if(item["DATA"] == "Y"){
 				$("#TD_" + item["NM"] + id).append("<select id=\"" + item["NM"] + id + "\" class=\"form-control\"" + bc_cd_to_val(item["OPT"]) + "><option value=''>선택</option><option selected=\"selected\" value=\"Y\">Y</option><option value=\"N\">N</option></select>");
 				
-			} else if(item["data"] == "N"){
+			} else if(item["DATA"] == "N"){
 				$("#TD_" + item["NM"] + id).append("<select id=\"" + item["NM"] + id + "\" class=\"form-control\"" + bc_cd_to_val(item["OPT"]) + "><option value=''>선택</option><option value=\"Y\">Y</option><option selected=\"selected\" value=\"N\">N</option></select>");
 			}
 			

@@ -46,6 +46,10 @@ public class ActVO {
 	 */
 	private String useYn;
 	/**
+	 * 텔레그램ID
+	 */
+	private String tlgrmId;
+	/**
 	 * 검색건수
 	 */
 	private int limit;

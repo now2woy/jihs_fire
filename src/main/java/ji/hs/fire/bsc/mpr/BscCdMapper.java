@@ -18,6 +18,13 @@ public interface BscCdMapper {
 	 */
 	public List<BscCdVO> selectAll(BscCdVO bscCdVO) throws Exception;
 	/**
+	 * 코드 정보 1건 조회
+	 * @param bscCdVO
+	 * @return
+	 * @throws Exception
+	 */
+	public BscCdVO selectOne(BscCdVO bscCdVO) throws Exception;
+	/**
 	 * 코드 정보 Count 조회
 	 * @param bscCdVO
 	 * @return
