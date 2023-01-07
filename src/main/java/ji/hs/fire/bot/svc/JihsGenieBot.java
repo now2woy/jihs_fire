@@ -121,11 +121,11 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					actTrdVO.setOffset(0);
 					Map<String, Object> result = actTrdService.list(actTrdVO);
 					
-					String text = "총입금액 : " + result.get("inSumAmt") + "\n"
-								+ "총출금액 : " + result.get("outSumAmt") + "\n"
-								+ "입출금합계 : " + result.get("inOutSumAmt") + "\n"
-								+ "총이자 : " + result.get("itrstSumAmt") + "\n"
-								+ "총배당금 : " + result.get("dvdnSumAmt") + "\n";
+					String text = "총입금액 : " + String.format("%,d", StringUtils.defaultString((String)result.get("inSumAmt"), "0")) + "\n"
+								+ "총출금액 : " +String.format("%,d",  StringUtils.defaultString((String)result.get("outSumAmt"), "0")) + "\n"
+								+ "입출금합계 : " + String.format("%,d", StringUtils.defaultString((String)result.get("inOutSumAmt"), "0")) + "\n"
+								+ "총이자 : " + String.format("%,d", StringUtils.defaultString((String)result.get("itrstSumAmt"), "0")) + "\n"
+								+ "총배당금 : " + String.format("%,d", StringUtils.defaultString((String)result.get("dvdnSumAmt"), "0")) + "\n";
 					
 					// 버튼 메시지를 변환한다.
 					EditMessageText message = new EditMessageText();
