@@ -2,6 +2,7 @@ package ji.hs.fire.bot.svc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import ji.hs.fire.act.mpr.ActMapper;
+import ji.hs.fire.act.svc.ActTrdService;
+import ji.hs.fire.act.vo.ActTrdVO;
 import ji.hs.fire.act.vo.ActVO;
 import ji.hs.fire.bsc.mpr.BscCdMapper;
 import ji.hs.fire.bsc.vo.BscCdVO;
@@ -36,6 +39,10 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 	 * 코드 정보 Mapper
 	 */
 	private final BscCdMapper bscCdMapper;
+	/**
+	 * 계좌 거래 Service
+	 */
+	private final ActTrdService actTrdService;
 	/**
 	 * 
 	 */
@@ -73,10 +80,13 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 			} else if(update.hasCallbackQuery()) {
 				String cd = StringUtils.defaultString(update.getCallbackQuery().getData(), "");
 				
-				// "A"로 시작할 경우
-				if(cd.startsWith("A")) {
+				// "TLGRM_MSG_CD"로 시작할 경우
+				if(cd.startsWith("TLGRM_MSG_CD")) {
+					// 코드컬럼 값 삭제
+					cd = cd.replace("TLGRM_MSG_CD", "");
+					
 					// 계좌목록일 경우
-					if(cd.equals("A_00001")) {
+					if(cd.equals("00001")) {
 						SendMessage message = new SendMessage();
 						message.setChatId(update.getCallbackQuery().getMessage().getChatId());
 						message.setText("계좌를 선택하세요");
@@ -88,7 +98,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					
 					BscCdVO paramBscCdVO = new BscCdVO();
 					paramBscCdVO.setCdCol("TLGRM_MSG_CD");
-					paramBscCdVO.setCd(cd.substring(2));
+					paramBscCdVO.setCd(cd);
 					
 					BscCdVO bscCdVO = bscCdMapper.selectOne(paramBscCdVO);
 					
@@ -96,6 +106,31 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					EditMessageText message = new EditMessageText();
 					message.setChatId(update.getCallbackQuery().getMessage().getChatId());
 					message.setText(bscCdVO.getCdNm() + "을(를) 선택하였습니다.");
+					message.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+					
+					execute(message);
+					
+				// 계좌 선택
+				} else if(cd.startsWith("AC_MT")) {
+					// 코드컬럼 값 삭제
+					cd = cd.replace("AC_MT", "");
+					
+					ActTrdVO actTrdVO = new ActTrdVO();
+					actTrdVO.setActSeq(cd);
+					actTrdVO.setLimit(1);
+					actTrdVO.setOffset(0);
+					Map<String, Object> result = actTrdService.list(actTrdVO);
+					
+					String text = "총입금액 : " + result.get("inSumAmt") + "\n"
+								+ "총출금액 : " + result.get("outSumAmt") + "\n"
+								+ "입출금합계 : " + result.get("inOutSumAmt") + "\n"
+								+ "총이자 : " + result.get("itrstSumAmt") + "\n"
+								+ "총배당금 : " + result.get("dvdnSumAmt") + "\n";
+					
+					// 버튼 메시지를 변환한다.
+					EditMessageText message = new EditMessageText();
+					message.setChatId(update.getCallbackQuery().getMessage().getChatId());
+					message.setText(text);
 					message.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
 					
 					execute(message);
@@ -118,7 +153,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 		paramBscCdVO.setCdCol("TLGRM_MSG_CD");
 		
 		for(BscCdVO bscCdVO : bscCdMapper.selectAll(paramBscCdVO)) {
-			line.add(InlineKeyboardButton.builder().text(bscCdVO.getCdNm()).callbackData("A_" + bscCdVO.getCd()).build());
+			line.add(InlineKeyboardButton.builder().text(bscCdVO.getCdNm()).callbackData(bscCdVO.getCdCol() + bscCdVO.getCd()).build());
 		}
 		
 		menuList.add(line);
@@ -127,7 +162,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 	}
 	
 	/**
-	 * Q_00001 계좌 목록
+	 * "TLGRM_MSG_CD00001" 계좌 목록
 	 * @return
 	 */
 	private List<List<InlineKeyboardButton>> getQ1stMenuList(String tlgrmId) throws Exception {
@@ -138,7 +173,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 		
 		for(ActVO actVO : actMapper.selectAll(paramActVO)) {
 			List<InlineKeyboardButton> line = new ArrayList<>();
-			line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("B_00001_" + actVO.getActSeq()).build());
+			line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("AC_MT" + actVO.getActSeq()).build());
 			
 			menuList.add(line);
 		}
