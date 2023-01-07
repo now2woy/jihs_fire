@@ -124,11 +124,11 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					
 					NumberFormat numberFormat = NumberFormat.getInstance();
 					
-					String text = "총입금액 : " + numberFormat.format(StringUtils.defaultString((String)result.get("inSumAmt"), "0")) + "\n"
-								+ "총출금액 : " + numberFormat.format(StringUtils.defaultString((String)result.get("outSumAmt"), "0")) + "\n"
-								+ "입출금합계 : " + numberFormat.format(StringUtils.defaultString((String)result.get("inOutSumAmt"), "0")) + "\n"
-								+ "총이자 : " + numberFormat.format(StringUtils.defaultString((String)result.get("itrstSumAmt"), "0")) + "\n"
-								+ "총배당금 : " + numberFormat.format(StringUtils.defaultString((String)result.get("dvdnSumAmt"), "0")) + "\n";
+					String text = "총입금액 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("inSumAmt"), "0"))) + "\n"
+								+ "총출금액 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("outSumAmt"), "0"))) + "\n"
+								+ "입출금합계 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("inOutSumAmt"), "0"))) + "\n"
+								+ "총이자 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("itrstSumAmt"), "0"))) + "\n"
+								+ "총배당금 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("dvdnSumAmt"), "0"))) + "\n";
 					
 					// 버튼 메시지를 변환한다.
 					EditMessageText message = new EditMessageText();
