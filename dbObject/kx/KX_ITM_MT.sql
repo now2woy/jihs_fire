@@ -1,0 +1,21 @@
+/**
+ * 한국거래소 주식종목 테이블 생성
+ */
+CREATE TABLE KX_ITM_MT (
+	  ITM_CD			VARCHAR(10)		NOT NULL	COMMENT '종목코드'
+	, ITM_NM			VARCHAR(200)	NOT NULL	COMMENT '종목명'
+	, MKT_CD			VARCHAR(5)		NOT NULL	COMMENT '시장코드'
+	, STD_ITM_CD		VARCHAR(20)		NULL		COMMENT '표준종목코드'
+	, PUB_DT			DATE			NULL		COMMENT '상장일자'
+	, SPAC_YN			VARCHAR(1)		NULL		COMMENT '스팩여부'
+	, ITM_KND_CD		VARCHAR(5)		NULL		COMMENT '주식종류코드'
+	, ITM_CL_CD			VARCHAR(5)		NULL		COMMENT '주식구분코드'
+	, TAX_CL_CD			VARCHAR(5)		NULL		COMMENT '과세유형코드'
+)
+	ENGINE=INNODB
+	COMMENT='한국거래소 주식종목';
+
+/**
+ * 한국거래소 주식종목 테이블 PK 생성
+ */
+ALTER TABLE KX_ITM_MT ADD PRIMARY KEY (ITM_CD);

@@ -1,0 +1,12 @@
+/**
+ * 전자공시시스템API키 테이블 생성
+ */
+CREATE TABLE DT_KEY_MT (
+	  API_KEY	VARCHAR(100)	NOT NULL	COMMENT '키'
+	, ORD		DECIMAL(6)		NOT NULL	COMMENT '순서'
+) ENGINE=INNODB COMMENT='전자공시시스템API키';
+
+/**
+ * 전자공시시스템API키 테이블 PK 생성
+ */
+ALTER TABLE DT_KEY_MT ADD PRIMARY KEY (API_KEY);
