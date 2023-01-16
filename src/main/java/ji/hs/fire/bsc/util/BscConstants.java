@@ -21,4 +21,8 @@ public class BscConstants {
 	 * 로그 키 : BSC
 	 */
 	public static final String LOG_KEY_BSC = "BSC";
+	/**
+	 * 로그 키 : BOT
+	 */
+	public static final String LOG_KEY_BOT = "BOT";
 }

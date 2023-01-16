@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -19,6 +20,7 @@ import ji.hs.fire.act.svc.ActTrdService;
 import ji.hs.fire.act.vo.ActTrdVO;
 import ji.hs.fire.act.vo.ActVO;
 import ji.hs.fire.bsc.mpr.BscCdMapper;
+import ji.hs.fire.bsc.util.BscConstants;
 import ji.hs.fire.bsc.vo.BscCdVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,10 +62,12 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 	}
 	
 	/**
-	 * 
+	 * 봇 메시지를 읽어서 처리 한다.
 	 */
 	@Override
 	public void onUpdateReceived(Update update) {
+		MDC.put(BscConstants.LOG_KEY, BscConstants.LOG_KEY_BOT);
+		MDC.clear();
 		try {
 			// 메시지일 경우
 			if(update.hasMessage()) {
@@ -76,6 +80,8 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					message.setReplyMarkup(new InlineKeyboardMarkup(getAllMenuList()));
 					
 					execute(message);
+				} else if(update.getMessage().getText().indexOf("[NH투자증권]") != -1 && update.getMessage().getText().indexOf("분배금") != -1) {
+					log.info("{}", update.getMessage().getText());
 				}
 				// 콜백쿼리일 경우
 			} else if(update.hasCallbackQuery()) {
