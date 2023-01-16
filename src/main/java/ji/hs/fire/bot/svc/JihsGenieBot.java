@@ -91,7 +91,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 													   , msg.substring(52, msg.indexOf(" ", 52))
 													   , null
 													   , null
-													   , msg.substring(msg.indexOf(" ", 52) + 1, msg.length() - 4)
+													   , msg.substring(msg.indexOf(" ", 52) + 1, msg.lastIndexOf(" "))
 													   , year + "/" + msg.substring(40, 51)
 													   , null
 													   , Integer.toString(update.getMessage().getMessageId()));
