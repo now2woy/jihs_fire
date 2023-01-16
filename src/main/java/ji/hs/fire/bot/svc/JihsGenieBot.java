@@ -86,13 +86,13 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					String msg = update.getMessage().getText();
 					String year = BscUtils.thisDateTime("yyyy");
 					
-					int result = actTrdService.botInsert(msg.substring(25, 36)
+					int result = actTrdService.botInsert(msg.substring(25, 36).replaceAll("\\*", "_")
 													   , "00005"
-													   , msg.substring(52, msg.indexOf(" ", 52))
+													   , msg.substring(52, msg.indexOf(" ", 52)).replaceAll(",", "")
 													   , null
 													   , null
 													   , msg.substring(msg.indexOf(" ", 52) + 1, msg.lastIndexOf(" 분배금"))
-													   , year + "/" + msg.substring(40, 51)
+													   , year + "-" + msg.substring(40, 51).replaceAll("/", "-")
 													   , null
 													   , Integer.toString(update.getMessage().getMessageId()));
 					

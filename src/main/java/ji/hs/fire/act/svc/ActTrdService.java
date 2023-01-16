@@ -125,13 +125,11 @@ public class ActTrdService {
 	public int botInsert(String actNo, String trdCd, String amt, String itmCd, String qty, String note, String trdDt, String edDt, String tlgrmMsgId) throws Exception {
 		ActTrdVO actTrdVO = new ActTrdVO();
 		
-		log.info("{}", actNo.replaceAll("\\*", "_"));
-		
 		// 계좌번호로 계좌일련번호 조회
-		actTrdVO.setActSeq(actMapper.selectAsActSeq(actNo.replaceAll("\\*", "_")));
+		actTrdVO.setActSeq(actMapper.selectAsActSeq(actNo));
 		actTrdVO.setRelTrdSeq("0");
 		actTrdVO.setTrdCd(trdCd);
-		actTrdVO.setAmt(amt.replaceAll(",", ""));
+		actTrdVO.setAmt(amt);
 		actTrdVO.setItmCd(itmCd);
 		actTrdVO.setQty(qty);
 		actTrdVO.setNote(note);
