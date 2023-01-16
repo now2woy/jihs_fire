@@ -25,6 +25,13 @@ public interface ActMapper {
 	 */
 	public int selectCount(ActVO actVO) throws Exception;
 	/**
+	 * 계좌일련번호 조회
+	 * @param value
+	 * @return
+	 * @throws Exception
+	 */
+	public String selectAsActSeq(String value) throws Exception;
+	/**
 	 * 계좌 정보 입력
 	 * @param actVO
 	 * @return

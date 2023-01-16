@@ -59,6 +59,7 @@
 			 , ITM_CD
 			 , QTY
 			 , NOTE
+			 , TLGRM_MSG_ID
 			 , TRD_DT
 			 , ED_DT
 			 ) VALUES (
@@ -70,6 +71,7 @@
 			 , #{itmCd}
 			 , NULLIF(#{qty}, '')
 			 , #{note}
+			 , #{tlgrmMsgId}
 			 , STR_TO_DATE(#{trdDt}, '%Y-%m-%dT%H:%i')
 			 , STR_TO_DATE(#{edDt}, '%Y-%m-%d')
 			 )

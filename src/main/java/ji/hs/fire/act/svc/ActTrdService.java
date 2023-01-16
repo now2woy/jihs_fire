@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import ji.hs.fire.act.mpr.ActMapper;
 import ji.hs.fire.act.mpr.ActTrdMapper;
 import ji.hs.fire.act.vo.ActTrdVO;
 import ji.hs.fire.bsc.svc.BscNoGenService;
@@ -22,6 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class ActTrdService {
+	/**
+	 * 계좌 Mapper
+	 */
+	private final ActMapper actMapper;
 	/**
 	 * 계좌 Mapper
 	 */
@@ -102,5 +107,36 @@ public class ActTrdService {
 		actTrdVO.setTrdSeq(Integer.toString(bscNoGenService.generate("AC_DT.TRD_SEQ")));
 		
 		return actTrdMapper.insert(actTrdVO);
+	}
+	
+	/**
+	 * 봇을 통해 계좌 거래 정보를 입력 한다.
+	 * @param actNo
+	 * @param trdCd
+	 * @param amt
+	 * @param itmCd
+	 * @param qty
+	 * @param note
+	 * @param trdDt
+	 * @param edDt
+	 * @return
+	 * @throws Exception
+	 */
+	public int botInsert(String actNo, String trdCd, String amt, String itmCd, String qty, String note, String trdDt, String edDt, String tlgrmMsgId) throws Exception {
+		ActTrdVO actTrdVO = new ActTrdVO();
+		
+		// 계좌번호로 계좌일련번호 조회
+		actTrdVO.setActSeq(actMapper.selectAsActSeq(actNo.replaceAll("*", "_")));
+		actTrdVO.setRelTrdSeq("0");
+		actTrdVO.setTrdCd(trdCd);
+		actTrdVO.setAmt(amt.replaceAll(",", ""));
+		actTrdVO.setItmCd(itmCd);
+		actTrdVO.setQty(qty);
+		actTrdVO.setNote(note);
+		actTrdVO.setTrdDt(trdDt);
+		actTrdVO.setEdDt(edDt);
+		actTrdVO.setTlgrmMsgId(tlgrmMsgId);
+		
+		return insert(actTrdVO);
 	}
 }

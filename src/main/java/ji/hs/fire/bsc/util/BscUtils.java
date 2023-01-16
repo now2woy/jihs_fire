@@ -38,7 +38,16 @@ public class BscUtils {
 	 * @return
 	 */
 	public static String thisDateTime() {
-		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+		return thisDateTime("yyyy/MM/dd HH:mm:ss");
+	}
+	
+	/**
+	 * 현재 시간을 리턴
+	 * @param format
+	 * @return
+	 */
+	public static String thisDateTime(String format) {
+		return new SimpleDateFormat(format).format(new Date());
 	}
 	
 	/**

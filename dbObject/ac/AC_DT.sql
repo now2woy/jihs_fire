@@ -10,9 +10,9 @@ CREATE TABLE AC_DT (
 	, ITM_CD		VARCHAR(10)		NULL		COMMENT '종목코드'
 	, QTY			DECIMAL(20)		NULL		comment '수량'
 	, NOTE			VARCHAR(4000)	NULL		comment '비고'
+	, TLGRM_MSG_ID	VARCHAR(100)	NULL		comment '텔레그램메시지ID'
 	, TRD_DT		DATETIME		NULL		comment '거래일시'
 	, ED_DT			DATETIME		NULL		comment '만료일시'
-	, TLGRM_MSG_
 ) ENGINE=INNODB COMMENT '계좌 거래내역';
 
 

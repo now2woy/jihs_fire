@@ -21,6 +21,7 @@ import ji.hs.fire.act.vo.ActTrdVO;
 import ji.hs.fire.act.vo.ActVO;
 import ji.hs.fire.bsc.mpr.BscCdMapper;
 import ji.hs.fire.bsc.util.BscConstants;
+import ji.hs.fire.bsc.util.BscUtils;
 import ji.hs.fire.bsc.vo.BscCdVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +68,6 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 	@Override
 	public void onUpdateReceived(Update update) {
 		MDC.put(BscConstants.LOG_KEY, BscConstants.LOG_KEY_BOT);
-		MDC.clear();
 		try {
 			// 메시지일 경우
 			if(update.hasMessage()) {
@@ -80,8 +80,33 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					message.setReplyMarkup(new InlineKeyboardMarkup(getAllMenuList()));
 					
 					execute(message);
+					
+				// 메시지가 NH투자증권 분배금 일 경우
 				} else if(update.getMessage().getText().indexOf("[NH투자증권]") != -1 && update.getMessage().getText().indexOf("분배금") != -1) {
-					log.info("{}", update.getMessage().getText());
+					String msg = update.getMessage().getText();
+					String year = BscUtils.thisDateTime("yyyy");
+					
+					int result = actTrdService.botInsert(msg.substring(24, 35)
+													   , "00005"
+													   , msg.substring(51, msg.indexOf(" ", 51))
+													   , null
+													   , null
+													   , msg.substring(msg.indexOf(" ", 51) + 1, msg.length() - 4)
+													   , year + "/" + msg.substring(39, 50)
+													   , null
+													   , Integer.toString(update.getMessage().getMessageId()));
+					
+					SendMessage message = new SendMessage();
+					message.setChatId(update.getMessage().getChatId());
+					message.setReplyToMessageId(update.getMessage().getMessageId());
+					
+					if(result == 1) {
+						message.setText("입력에 성공하였습니다.");
+					} else {
+						message.setText("입력에 실패하였습니다.");
+					}
+					
+					execute(message);
 				}
 				// 콜백쿼리일 경우
 			} else if(update.hasCallbackQuery()) {
@@ -117,7 +142,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					
 					execute(message);
 					
-				// 계좌 선택
+					// 계좌 선택
 				} else if(cd.startsWith("AC_MT")) {
 					// 코드컬럼 값 삭제
 					cd = cd.replace("AC_MT", "");
@@ -131,10 +156,10 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					NumberFormat numberFormat = NumberFormat.getInstance();
 					
 					String text = "총입금액 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("inSumAmt"), "0"))) + "원\n"
-								+ "총출금액 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("outSumAmt"), "0"))) + "원\n"
-								+ "입출금합계 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("inOutSumAmt"), "0"))) + "원\n"
-								+ "총이자 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("itrstSumAmt"), "0"))) + "원\n"
-								+ "총배당금 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("dvdnSumAmt"), "0"))) + "원\n";
+							+ "총출금액 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("outSumAmt"), "0"))) + "원\n"
+							+ "입출금합계 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("inOutSumAmt"), "0"))) + "원\n"
+							+ "총이자 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("itrstSumAmt"), "0"))) + "원\n"
+							+ "총배당금 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("dvdnSumAmt"), "0"))) + "원\n";
 					
 					// 버튼 메시지를 변환한다.
 					EditMessageText message = new EditMessageText();
@@ -148,6 +173,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 		} catch (Exception e) {
 			log.error("", e);
 		}
+		MDC.clear();
 	}
 	
 	/**

@@ -32,6 +32,13 @@
 		 WHERE 1 = 1
 	</select>
 	
+<!-- 계좌일련번호 조회 -->
+	<select id="selectAsActSeq" resultType="String" parameterType="String">
+		SELECT ACT_SEQ
+		  FROM AC_MT
+		 WHERE ACT_NO LIKE #{value}
+	</select>
+	
 <!-- 계좌 정보 입력 -->
 	<insert id="insert" parameterType="ji.hs.fire.act.vo.ActVO" flushCache="true">
 	<![CDATA[
