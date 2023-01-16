@@ -126,7 +126,7 @@ public class ActTrdService {
 		ActTrdVO actTrdVO = new ActTrdVO();
 		
 		// 계좌번호로 계좌일련번호 조회
-		actTrdVO.setActSeq(actMapper.selectAsActSeq(actNo.replaceAll("*", "_")));
+		actTrdVO.setActSeq(actMapper.selectAsActSeq(actNo.replaceAll("\\*", "_")));
 		actTrdVO.setRelTrdSeq("0");
 		actTrdVO.setTrdCd(trdCd);
 		actTrdVO.setAmt(amt.replaceAll(",", ""));
