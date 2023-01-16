@@ -92,7 +92,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 													   , null
 													   , null
 													   , msg.substring(msg.indexOf(" ", 52) + 1, msg.lastIndexOf(" 분배금"))
-													   , year + "-" + msg.substring(40, 51).replaceAll("/", "-")
+													   , year + "-" + msg.substring(40, 51).replaceAll("/", "-").replace(" ", "T")
 													   , null
 													   , Integer.toString(update.getMessage().getMessageId()));
 					
