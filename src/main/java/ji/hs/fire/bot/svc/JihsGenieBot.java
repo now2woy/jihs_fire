@@ -71,18 +71,20 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 		try {
 			// 메시지일 경우
 			if(update.hasMessage()) {
-				// 메시지가 "?"일 경우
-				if("?".equals(update.getMessage().getText())) {
-					SendMessage message = new SendMessage();
-					message.setChatId(update.getMessage().getChatId());
+				// 메시지를 분석하여 처리할 로직을 결정할 코드를 가져온다.
+				String messageTypeCd = getMessageTypeCd(update.getMessage().getText());
+				
+				SendMessage message = new SendMessage();
+				message.setChatId(update.getMessage().getChatId());
+				message.setReplyToMessageId(update.getMessage().getMessageId());
+				
+				// 모든 메뉴 출력
+				if("00001".equals(messageTypeCd)) {
 					message.setText("메뉴를 선택하세요");
-					message.setReplyToMessageId(update.getMessage().getMessageId());
 					message.setReplyMarkup(new InlineKeyboardMarkup(getAllMenuList()));
 					
-					execute(message);
-					
-				// 메시지가 NH투자증권 분배금 일 경우
-				} else if(update.getMessage().getText().indexOf("[NH투자증권]") != -1 && update.getMessage().getText().indexOf("분배금") != -1) {
+				// NH투자증권 분배금 처리
+				} else if("00002".equals(messageTypeCd)) {
 					String msg = update.getMessage().getText();
 					String year = BscUtils.thisDateTime("yyyy");
 					
@@ -96,19 +98,22 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 													   , null
 													   , Integer.toString(update.getMessage().getMessageId()));
 					
-					SendMessage message = new SendMessage();
-					message.setChatId(update.getMessage().getChatId());
-					message.setReplyToMessageId(update.getMessage().getMessageId());
-					
 					if(result == 1) {
 						message.setText("입력에 성공하였습니다.");
 					} else {
 						message.setText("입력에 실패하였습니다.");
 					}
 					
-					execute(message);
+				// NH투자증권 주문체결 처리
+				} else if("00003".equals(messageTypeCd)) {
+					String msg = update.getMessage().getText();
+					
+					log.info("{}", msg);
 				}
-				// 콜백쿼리일 경우
+				
+				execute(message);
+				
+			// 콜백쿼리일 경우
 			} else if(update.hasCallbackQuery()) {
 				String cd = StringUtils.defaultString(update.getCallbackQuery().getData(), "");
 				
@@ -214,5 +219,29 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 		}
 		
 		return menuList;
+	}
+	
+	/**
+	 * 
+	 * @param message
+	 * @return
+	 */
+	private String getMessageTypeCd(String message) {
+		String messageTypeCd = "99999";
+		
+		// 모든 메뉴 출력
+		if("?".equals(message)) {
+			messageTypeCd = "00001";
+			
+		// NH투자증권 분배금 처리
+		} else if(message.indexOf("[NH투자증권]") != -1 && message.indexOf("분배금") != -1) {
+			messageTypeCd = "00002";
+			
+		// NH투자증권 주문체결 처리
+		} else if(message.indexOf("[NH투자증권]") != -1 && message.indexOf("주문체결 알림") != -1) {
+			messageTypeCd = "00003";
+		}
+		
+		return messageTypeCd;
 	}
 }
