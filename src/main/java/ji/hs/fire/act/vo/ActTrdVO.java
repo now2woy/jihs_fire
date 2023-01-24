@@ -64,6 +64,10 @@ public class ActTrdVO {
 	 */
 	private String edDt;
 	/**
+	 * 계좌번호
+	 */
+	private String actNo;
+	/**
 	 * 거래코드목록
 	 */
 	private List<String> trdCds;

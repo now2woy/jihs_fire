@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import ji.hs.fire.act.mpr.ActMapper;
@@ -127,7 +128,6 @@ public class ActTrdService {
 		
 		// 계좌번호로 계좌일련번호 조회
 		actTrdVO.setActSeq(actMapper.selectAsActSeq(actNo));
-		actTrdVO.setRelTrdSeq("0");
 		actTrdVO.setTrdCd(trdCd);
 		actTrdVO.setAmt(amt);
 		actTrdVO.setItmCd(itmCd);
@@ -139,4 +139,28 @@ public class ActTrdService {
 		
 		return insert(actTrdVO);
 	}
+	
+	/**
+	 * 봇을 통해 계좌 거래 정보를 입력 한다.
+	 * @param actTrdVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int botInsert(ActTrdVO actTrdVO) throws Exception {
+		// 계좌번호가 있을 경우
+		if(StringUtils.isNotEmpty(actTrdVO.getActNo())) {
+			// 계좌번호로 계좌일련번호 생성
+			actTrdVO.setActSeq(actMapper.selectAsActSeq(actTrdVO.getActNo()));
+			
+		// 계좌번호가 없을 경우
+		} else {
+			// 계좌일련번호가 없을 경우
+			if(StringUtils.isEmpty(actTrdVO.getActSeq())) {
+				// TODO 사용자의 기본 계좌번호를 가져온다.
+			}
+		}
+		
+		return insert(actTrdVO);
+	}
+	
 }

@@ -1,5 +1,6 @@
 package ji.hs.fire.bot.svc;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +79,9 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 				message.setChatId(update.getMessage().getChatId());
 				message.setReplyToMessageId(update.getMessage().getMessageId());
 				
+				int result = 0;
+				boolean isSetMeaage = false;
+				
 				// 모든 메뉴 출력
 				if("00001".equals(messageTypeCd)) {
 					message.setText("메뉴를 선택하세요");
@@ -85,30 +89,53 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					
 				// NH투자증권 분배금 처리
 				} else if("00002".equals(messageTypeCd)) {
+					isSetMeaage = true;
 					String msg = update.getMessage().getText();
-					String year = BscUtils.thisDateTime("yyyy");
 					
-					int result = actTrdService.botInsert(msg.substring(25, 36).replaceAll("\\*", "_")
-													   , "00005"
-													   , msg.substring(52, msg.indexOf(" ", 52)).replaceAll(",", "")
-													   , null
-													   , null
-													   , msg.substring(msg.indexOf(" ", 52) + 1, msg.lastIndexOf(" 분배금"))
-													   , year + "-" + msg.substring(40, 51).replaceAll("/", "-").replace(" ", "T")
-													   , null
-													   , Integer.toString(update.getMessage().getMessageId()));
+					ActTrdVO actTrdVO = new ActTrdVO();
+					actTrdVO.setActNo(msg.substring(25, 36).replaceAll("\\*", "_"));
+					actTrdVO.setTrdCd("00005");
+					actTrdVO.setAmt(msg.substring(52, msg.indexOf(" ", 52)).replaceAll(",", ""));
+					actTrdVO.setNote(msg.substring(msg.indexOf(" ", 52) + 1, msg.lastIndexOf(" 분배금")));
+					actTrdVO.setTrdDt(BscUtils.thisDateTime("yyyy") + "-" + msg.substring(40, 51).replaceAll("/", "-").replace(" ", "T"));
+					actTrdVO.setTlgrmMsgId(Integer.toString(update.getMessage().getMessageId()));
 					
+					result = actTrdService.botInsert(actTrdVO);
+					
+				// NH투자증권 주문체결 처리
+				} else if("00003".equals(messageTypeCd)) {
+					isSetMeaage = true;
+					String msg = update.getMessage().getText();
+					
+					ActTrdVO actTrdVO = new ActTrdVO();
+					actTrdVO.setItmCd( msg.substring(msg.indexOf("종목코드") + 7, msg.indexOf("종목코드") + 13));
+					actTrdVO.setQty(msg.substring(msg.indexOf("체결수량") + 7, msg.indexOf("주", msg.indexOf("체결수량"))));
+					actTrdVO.setAmt(BscUtils.multiply(new BigDecimal(actTrdVO.getQty()), new BigDecimal(msg.substring(msg.indexOf("체결단가") + 7, msg.indexOf("원", msg.indexOf("체결단가"))).replaceAll(",", "")), 0).toString());
+					actTrdVO.setTrdDt(BscUtils.thisDateTime("yyyy-MM-dd HH:mm").replace(" ", "T"));
+					actTrdVO.setTlgrmMsgId(Integer.toString(update.getMessage().getMessageId()));
+					
+					if(msg.indexOf("체결종류 : 매수") != -1) {
+						actTrdVO.setTrdCd("00006");
+					} else if(msg.indexOf("체결종류 : 매도") != -1) {
+						actTrdVO.setTrdCd("00007");
+					}
+					
+					// 계좌번호와 계좌일련번호가 없을 경우 계좌를 선택 할 수 있도록 한다.
+					if(StringUtils.isEmpty(actTrdVO.getActNo()) && StringUtils.isEmpty(actTrdVO.getActSeq())) {
+						message.setReplyMarkup(new InlineKeyboardMarkup(getQ00002MenuList(Long.toString(update.getMessage().getChatId()))));
+					}
+					
+					result = actTrdService.botInsert(actTrdVO);
+					
+					// TODO AC_PRDT_DT 테이블 데이터 입력 추가
+				}
+				
+				if(isSetMeaage) {
 					if(result == 1) {
 						message.setText("입력에 성공하였습니다.");
 					} else {
 						message.setText("입력에 실패하였습니다.");
 					}
-					
-				// NH투자증권 주문체결 처리
-				} else if("00003".equals(messageTypeCd)) {
-					String msg = update.getMessage().getText();
-					
-					log.info("{}", msg);
 				}
 				
 				execute(message);
@@ -128,7 +155,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 						message.setChatId(update.getCallbackQuery().getMessage().getChatId());
 						message.setText("계좌를 선택하세요");
 						message.setReplyToMessageId(update.getCallbackQuery().getMessage().getMessageId());
-						message.setReplyMarkup(new InlineKeyboardMarkup(getQ1stMenuList(Long.toString(update.getCallbackQuery().getMessage().getChatId()))));
+						message.setReplyMarkup(new InlineKeyboardMarkup(getQ00001MenuList(Long.toString(update.getCallbackQuery().getMessage().getChatId()))));
 						
 						execute(message);
 					}
@@ -205,7 +232,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 	 * "TLGRM_MSG_CD00001" 계좌 목록
 	 * @return
 	 */
-	private List<List<InlineKeyboardButton>> getQ1stMenuList(String tlgrmId) throws Exception {
+	private List<List<InlineKeyboardButton>> getQ00001MenuList(String tlgrmId) throws Exception {
 		List<List<InlineKeyboardButton>> menuList = new ArrayList<>();
 		
 		ActVO paramActVO = new ActVO();
@@ -214,6 +241,26 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 		for(ActVO actVO : actMapper.selectAll(paramActVO)) {
 			List<InlineKeyboardButton> line = new ArrayList<>();
 			line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("AC_MT" + actVO.getActSeq()).build());
+			
+			menuList.add(line);
+		}
+		
+		return menuList;
+	}
+	
+	/**
+	 * "TLGRM_MSG_CD00002" 계좌 선택(매수, 매도 자료 입력 후 계좌 선택)
+	 * @return
+	 */
+	private List<List<InlineKeyboardButton>> getQ00002MenuList(String tlgrmId) throws Exception {
+		List<List<InlineKeyboardButton>> menuList = new ArrayList<>();
+		
+		ActVO paramActVO = new ActVO();
+		paramActVO.setTlgrmId(tlgrmId);
+		
+		for(ActVO actVO : actMapper.selectAll(paramActVO)) {
+			List<InlineKeyboardButton> line = new ArrayList<>();
+			line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("AC_DT" + actVO.getActSeq()).build());
 			
 			menuList.add(line);
 		}

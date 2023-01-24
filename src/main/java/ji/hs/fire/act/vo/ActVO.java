@@ -22,6 +22,10 @@ public class ActVO {
 	 */
 	private String actCd;
 	/**
+	 * 계좌번호
+	 */
+	private String actNo;
+	/**
 	 * 계좌코드명
 	 */
 	private String actCdNm;
