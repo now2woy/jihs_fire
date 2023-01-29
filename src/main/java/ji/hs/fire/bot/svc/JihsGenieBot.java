@@ -134,7 +134,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					
 					// 계좌번호와 계좌일련번호가 없을 경우 계좌를 선택 할 수 있도록 한다.
 					if(StringUtils.isEmpty(actTrdVO.getActNo()) && StringUtils.isEmpty(actTrdVO.getActSeq())) {
-						message.setReplyMarkup(new InlineKeyboardMarkup(getQ00002MenuList(Long.toString(update.getMessage().getChatId()))));
+						message.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd00005(Long.toString(update.getMessage().getChatId()))));
 					}
 					
 					result = actTrdService.botInsert(actTrdVO);
@@ -254,14 +254,11 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 		return menuList;
 	}
 	
-	
-	
-	
 	/**
 	 * "TLGRM_MSG_CD00002" 계좌 선택(매수, 매도 자료 입력 후 계좌 선택)
 	 * @return
 	 */
-	private List<List<InlineKeyboardButton>> getQ00002MenuList(String tlgrmId) throws Exception {
+	private List<List<InlineKeyboardButton>> getTlgrmCmdCd00005(String tlgrmId) throws Exception {
 		List<List<InlineKeyboardButton>> menuList = new ArrayList<>();
 		
 		ActVO paramActVO = new ActVO();
@@ -269,7 +266,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 		
 		for(ActVO actVO : actMapper.selectAll(paramActVO)) {
 			List<InlineKeyboardButton> line = new ArrayList<>();
-			line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("AC_DT" + actVO.getActSeq()).build());
+			line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("TLGRM_CMD_CD_00006_" + actVO.getActSeq()).build());
 			
 			menuList.add(line);
 		}
