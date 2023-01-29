@@ -25,7 +25,7 @@ PAGE_CONFIG["INS_FUNC"] = "";
 var data = [];
 
 data.push({"NM" : "CD_COL_",	"VAL" : "cdCol",	"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
-data.push({"NM" : "CD_",		"VAL" : "cd",		"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "O_R",	"TDST" : "T_C"});
+data.push({"NM" : "CD_",		"VAL" : "cd",		"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
 data.push({"NM" : "CD_NM_",		"VAL" : "cdNm",		"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : ""});
 data.push({"NM" : "CD_VAL_",	"VAL" : "cdVal",	"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : ""});
 data.push({"NM" : "ORD_",		"VAL" : "ord",		"VAL2" : "",	"FUNC" : "",	"TYPE" : "T",	"OPT" : "",		"TDST" : "T_C"});
