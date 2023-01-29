@@ -22,6 +22,10 @@ public class BscCdVO {
 	 */
 	private String cdNm;
 	/**
+	 * 코드값
+	 */
+	private String cdVal;
+	/**
 	 * 순번
 	 */
 	private int ord;

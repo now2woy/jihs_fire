@@ -6,6 +6,7 @@
 		SELECT CD_COL
 		     , CD
 		     , CD_NM
+		     , CD_VAL
 		     , ORD
 		     , USE_YN
 		  FROM BC_CD_DT
@@ -28,6 +29,7 @@
 		SELECT CD_COL
 		     , CD
 		     , CD_NM
+		     , CD_VAL
 		     , ORD
 		     , USE_YN
 		  FROM BC_CD_DT
@@ -62,12 +64,14 @@
 			   CD_COL
 			 , CD
 			 , CD_NM
+			 , CD_VAL
 			 , ORD
 			 , USE_YN
 			 ) VALUES (
 			   #{cdCol}
 			 , #{cd}
 			 , #{cdNm}
+			 , #{cdVal}
 			 , #{ord}
 			 , #{useYn}
 			 )
@@ -97,6 +101,7 @@
 	<update id="update" parameterType="ji.hs.fire.bsc.vo.BscCdVO" flushCache="true">
 		UPDATE BC_CD_DT
 		   SET CD_NM = #{cdNm}
+		     , CD_VAL = #{cdVal}
 		     , ORD = #{ord}
 		     , USE_YN = #{useYn}
 		 WHERE CD_COL = #{cdCol}
