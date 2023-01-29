@@ -92,7 +92,8 @@ function list() {
 									<colgroup>
 										<col style="width: 15%;" />
 										<col style="width: 15%;" />
-										<col style="width: 40%;" />
+										<col style="width: 20%;" />
+										<col style="width: 20%;" />
 										<col style="width: 10%;" />
 										<col style="width: 10%;" />
 										<col style="width: 10%;" />
@@ -102,6 +103,7 @@ function list() {
 											<th class="column-title" style="text-align: center;">컬럼</th>
 											<th class="column-title" style="text-align: center;">코드</th>
 											<th class="column-title" style="text-align: center;">코드명</th>
+											<th class="column-title" style="text-align: center;">코드값</th>
 											<th class="column-title" style="text-align: center;">순번</th>
 											<th class="column-title" style="text-align: center;">사용여부</th>
 											<th class="column-title" style="text-align: center;">-</th>
