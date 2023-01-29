@@ -82,13 +82,21 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 				int result = 0;
 				boolean isSetMeaage = false;
 				
-				// 모든 메뉴 출력
-				if("00001".equals(messageTypeCd)) {
+				/**
+				 * 코드  : TLGRM_CMD_CD_00001
+				 * 명칭  : 전체 메뉴
+				 * 명령어 : ?
+				 */
+				if("TLGRM_CMD_CD_00001".equals(messageTypeCd)) {
 					message.setText("메뉴를 선택하세요");
-					message.setReplyMarkup(new InlineKeyboardMarkup(getAllMenuList()));
+					message.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd00001()));
 					
-				// NH투자증권 분배금 처리
-				} else if("00002".equals(messageTypeCd)) {
+				/**
+				 * 코드  : TLGRM_CMD_CD_00004
+				 * 명칭  : NH투자증권 분배금 입력
+				 * 명령어 : 문자에 "NH투자증권", "분배금" 문자열 포함
+				 */
+				} else if("TLGRM_CMD_CD_00004".equals(messageTypeCd)) {
 					isSetMeaage = true;
 					String msg = update.getMessage().getText();
 					
@@ -102,8 +110,12 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					
 					result = actTrdService.botInsert(actTrdVO);
 					
-				// NH투자증권 주문체결 처리
-				} else if("00003".equals(messageTypeCd)) {
+				/**
+				 * 코드  : TLGRM_CMD_CD_00005
+				 * 명칭  : NH투자증권 주문체결 입력
+				 * 명령어 : 문자에 "NH투자증권", "주문체결 알림" 문자열 포함
+				 */
+				} else if("TLGRM_CMD_CD_00005".equals(messageTypeCd)) {
 					isSetMeaage = true;
 					String msg = update.getMessage().getText();
 					
@@ -144,40 +156,33 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 			} else if(update.hasCallbackQuery()) {
 				String cd = StringUtils.defaultString(update.getCallbackQuery().getData(), "");
 				
-				// "TLGRM_MSG_CD"로 시작할 경우
-				if(cd.startsWith("TLGRM_MSG_CD")) {
-					// 코드컬럼 값 삭제
-					cd = cd.replace("TLGRM_MSG_CD", "");
+				/**
+				 * 코드 : TLGRM_CMD_CD_00002
+				 * 명칭 : 계좌 목록
+				 */
+				if(cd.startsWith("TLGRM_CMD_CD_00002")) {
+					SendMessage sendMessage = new SendMessage();
+					sendMessage.setChatId(update.getCallbackQuery().getMessage().getChatId());
+					sendMessage.setText("계좌를 선택하세요");
+					sendMessage.setReplyToMessageId(update.getCallbackQuery().getMessage().getMessageId());
+					sendMessage.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd00002(Long.toString(update.getCallbackQuery().getMessage().getChatId()))));
 					
-					// 계좌목록일 경우
-					if(cd.equals("00001")) {
-						SendMessage message = new SendMessage();
-						message.setChatId(update.getCallbackQuery().getMessage().getChatId());
-						message.setText("계좌를 선택하세요");
-						message.setReplyToMessageId(update.getCallbackQuery().getMessage().getMessageId());
-						message.setReplyMarkup(new InlineKeyboardMarkup(getQ00001MenuList(Long.toString(update.getCallbackQuery().getMessage().getChatId()))));
-						
-						execute(message);
-					}
-					
-					BscCdVO paramBscCdVO = new BscCdVO();
-					paramBscCdVO.setCdCol("TLGRM_MSG_CD");
-					paramBscCdVO.setCd(cd);
-					
-					BscCdVO bscCdVO = bscCdMapper.selectOne(paramBscCdVO);
+					execute(sendMessage);
 					
 					// 버튼 메시지를 변환한다.
-					EditMessageText message = new EditMessageText();
-					message.setChatId(update.getCallbackQuery().getMessage().getChatId());
-					message.setText(bscCdVO.getCdNm() + "을(를) 선택하였습니다.");
-					message.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+					EditMessageText editMessageText = new EditMessageText();
+					editMessageText.setChatId(update.getCallbackQuery().getMessage().getChatId());
+					editMessageText.setText("계좌목록을 선택하였습니다.");
+					editMessageText.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
 					
-					execute(message);
+					execute(editMessageText);
 					
-					// 계좌 선택
-				} else if(cd.startsWith("AC_MT")) {
-					// 코드컬럼 값 삭제
-					cd = cd.replace("AC_MT", "");
+				/**
+				 * 코드 : TLGRM_CMD_CD_00003
+				 * 명칭 : 계좌 선택
+				 */
+				} else if(cd.startsWith("TLGRM_CMD_CD_00003")) {
+					cd = cd.replace("TLGRM_CMD_CD_00003_", "");
 					
 					ActTrdVO actTrdVO = new ActTrdVO();
 					actTrdVO.setActSeq(cd);
@@ -194,13 +199,14 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 							+ "총배당금 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("dvdnSumAmt"), "0"))) + "원\n";
 					
 					// 버튼 메시지를 변환한다.
-					EditMessageText message = new EditMessageText();
-					message.setChatId(update.getCallbackQuery().getMessage().getChatId());
-					message.setText(text);
-					message.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+					EditMessageText editMessageText = new EditMessageText();
+					editMessageText.setChatId(update.getCallbackQuery().getMessage().getChatId());
+					editMessageText.setText(text);
+					editMessageText.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
 					
-					execute(message);
+					execute(editMessageText);
 				}
+				
 			}
 		} catch (Exception e) {
 			log.error("", e);
@@ -212,7 +218,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 	 * 전체 메뉴
 	 * @return
 	 */
-	private List<List<InlineKeyboardButton>> getAllMenuList() throws Exception {
+	private List<List<InlineKeyboardButton>> getTlgrmCmdCd00001() throws Exception {
 		List<List<InlineKeyboardButton>> menuList = new ArrayList<>();
 		List<InlineKeyboardButton> line = new ArrayList<>();
 		
@@ -220,7 +226,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 		paramBscCdVO.setCdCol("TLGRM_MSG_CD");
 		
 		for(BscCdVO bscCdVO : bscCdMapper.selectAll(paramBscCdVO)) {
-			line.add(InlineKeyboardButton.builder().text(bscCdVO.getCdNm()).callbackData(bscCdVO.getCdCol() + bscCdVO.getCd()).build());
+			line.add(InlineKeyboardButton.builder().text(bscCdVO.getCdNm()).callbackData(bscCdVO.getCdVal()).build());
 		}
 		
 		menuList.add(line);
@@ -229,10 +235,10 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 	}
 	
 	/**
-	 * "TLGRM_MSG_CD00001" 계좌 목록
-	 * @return
+	 * 계좌 목록 명령어 처리
+	 * @throws Exception
 	 */
-	private List<List<InlineKeyboardButton>> getQ00001MenuList(String tlgrmId) throws Exception {
+	private List<List<InlineKeyboardButton>> getTlgrmCmdCd00002(String tlgrmId) throws Exception {
 		List<List<InlineKeyboardButton>> menuList = new ArrayList<>();
 		
 		ActVO paramActVO = new ActVO();
@@ -240,13 +246,16 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 		
 		for(ActVO actVO : actMapper.selectAll(paramActVO)) {
 			List<InlineKeyboardButton> line = new ArrayList<>();
-			line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("AC_MT" + actVO.getActSeq()).build());
+			line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("TLGRM_CMD_CD_00003_" + actVO.getActSeq()).build());
 			
 			menuList.add(line);
 		}
 		
 		return menuList;
 	}
+	
+	
+	
 	
 	/**
 	 * "TLGRM_MSG_CD00002" 계좌 선택(매수, 매도 자료 입력 후 계좌 선택)
@@ -274,19 +283,19 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 	 * @return
 	 */
 	private String getMessageTypeCd(String message) {
-		String messageTypeCd = "99999";
+		String messageTypeCd = "TLGRM_CMD_CD_99999";
 		
 		// 모든 메뉴 출력
 		if("?".equals(message)) {
-			messageTypeCd = "00001";
+			messageTypeCd = "TLGRM_CMD_CD_00001";
 			
 		// NH투자증권 분배금 처리
 		} else if(message.indexOf("[NH투자증권]") != -1 && message.indexOf("분배금") != -1) {
-			messageTypeCd = "00002";
+			messageTypeCd = "TLGRM_CMD_CD_00004";
 			
 		// NH투자증권 주문체결 처리
 		} else if(message.indexOf("[NH투자증권]") != -1 && message.indexOf("주문체결 알림") != -1) {
-			messageTypeCd = "00003";
+			messageTypeCd = "TLGRM_CMD_CD_00005";
 		}
 		
 		return messageTypeCd;
