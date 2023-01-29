@@ -92,4 +92,14 @@
 			 )
 	]]>
 	</insert>
+	
+<!-- 코드 정보 수정 -->
+	<update id="update" parameterType="ji.hs.fire.bsc.vo.BscCdVO" flushCache="true">
+		UPDATE BC_CD_DT
+		   SET CD_NM = #{cdNm}
+		     , ORD = #{ord}
+		     , USE_YN = #{useYn}
+		 WHERE CD_COL = #{cdCol}
+		   AND CD = #{cd}
+	</update>
 </mapper>

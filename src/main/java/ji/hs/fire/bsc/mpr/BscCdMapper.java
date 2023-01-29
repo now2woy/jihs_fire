@@ -43,4 +43,10 @@ public interface BscCdMapper {
 	 * @throws Exception
 	 */
 	public int insertBatch(BscCdVO bscCdVO) throws Exception;
+	/**
+	 * 코드 정보 수정
+	 * @param bscCdVO
+	 * @throws Exception
+	 */
+	public int update(BscCdVO bscCdVO) throws Exception;
 }
