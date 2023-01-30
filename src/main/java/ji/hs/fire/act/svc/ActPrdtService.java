@@ -43,7 +43,7 @@ public class ActPrdtService {
 			actPrdtVO.setActSeq(actTrdVO.getActSeq());
 			actPrdtVO.setItmCd(actTrdVO.getItmCd());
 			actPrdtVO.setByTrdSeq(actTrdVO.getTrdSeq());
-			actPrdtVO.setByAmt(BscUtils.divide(new BigDecimal(actTrdVO.getAmt()), new BigDecimal(actTrdVO.getQty()), 0));
+			actPrdtVO.setByAmt(actTrdVO.getPrc());
 			actPrdtVO.setByTlgrmMsgId(actTrdVO.getTlgrmMsgId());
 			actPrdtVO.setByDt(actTrdVO.getTrdDt());
 			
