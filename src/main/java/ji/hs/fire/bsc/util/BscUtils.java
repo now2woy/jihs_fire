@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -220,5 +221,25 @@ public class BscUtils {
 		}
 		
 		return a.divide(b, scale, roundingMode);
+	}
+	
+	/**
+	 * 천단위로 , 출력
+	 * @param number
+	 * @return
+	 */
+	public static String numberCommaFormat(String number) {
+		return numberCommaFormat(Double.parseDouble(number));
+	}
+	
+	/**
+	 * 천단위로 , 출력
+	 * @param number
+	 * @return
+	 */
+	public static String numberCommaFormat(double number) {
+		NumberFormat numberFormat = NumberFormat.getInstance();
+		
+		return numberFormat.format(number);
 	}
 }

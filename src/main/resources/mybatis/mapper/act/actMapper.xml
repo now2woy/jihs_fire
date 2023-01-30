@@ -25,6 +25,21 @@
 	</if>
 	</select>
 	
+<!-- 계좌 정보 목록 조회 -->
+	<select id="selectOne" resultType="ji.hs.fire.act.vo.ActVO">
+		SELECT ACT_SEQ
+		     , ACT_NM
+		     , ACT_CD
+		     , (SELECT CD_NM FROM BC_CD_DT X WHERE A.ACT_CD = X.CD AND X.CD_COL = 'ACT_CD') AS ACT_CD_NM
+		     , BK_CD
+		     , (SELECT CD_NM FROM BC_CD_DT X WHERE A.BK_CD = X.CD AND X.CD_COL = 'BK_CD') AS BK_NM
+		     , USR_ID
+		     , (SELECT USR_NM FROM BC_US_MT X WHERE A.USR_ID = X.USR_ID) AS USR_NM
+		     , USE_YN
+		  FROM AC_MT A
+		 WHERE ACT_SEQ = #{actSeq}
+	</select>
+	
 <!-- 계좌 정보 건수 조회 -->
 	<select id="selectCount" resultType="Integer" parameterType="ji.hs.fire.act.vo.ActVO">
 		SELECT COUNT(*) AS CNT
@@ -33,10 +48,21 @@
 	</select>
 	
 <!-- 계좌일련번호 조회 -->
-	<select id="selectAsActSeq" resultType="String" parameterType="String">
+	<select id="selectActSeqByActNo" resultType="String" parameterType="String">
 		SELECT ACT_SEQ
 		  FROM AC_MT
 		 WHERE ACT_NO LIKE #{value}
+	</select>
+	
+<!-- 계좌일련번호 조회 -->
+	<select id="selectActSeqByTlgrmId" resultType="String" parameterType="String">
+		SELECT A.ACT_SEQ
+		  FROM AC_MT A
+		 INNER JOIN BC_US_MT B ON A.USR_ID = B.USR_ID
+		 WHERE B.TLGRM_ID = #{value}
+		   AND A.BSC_ACT_YN = 'Y'
+		 ORDER BY A.ACT_SEQ ASC
+		 LIMIT 1
 	</select>
 	
 <!-- 계좌 정보 입력 -->

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import ji.hs.fire.act.mpr.ActMapper;
 import ji.hs.fire.act.mpr.ActTrdMapper;
 import ji.hs.fire.act.vo.ActTrdVO;
+import ji.hs.fire.act.vo.ActVO;
 import ji.hs.fire.bsc.svc.BscNoGenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,12 @@ public class ActTrdService {
 		Map<String, Object> result = new HashMap<>();
 		result.put("count", actTrdMapper.selectCount(actTrdVO));
 		result.put("data", actTrdMapper.selectAll(actTrdVO));
+		
+		// 계좌 정보 조회
+		ActVO actVO = new ActVO();
+		actVO.setActSeq(actTrdVO.getActSeq());
+		
+		result.put("actData", actMapper.selectOne(actVO));
 		
 		List<String> trdCds = new ArrayList<>();
 		
@@ -127,7 +134,7 @@ public class ActTrdService {
 		ActTrdVO actTrdVO = new ActTrdVO();
 		
 		// 계좌번호로 계좌일련번호 조회
-		actTrdVO.setActSeq(actMapper.selectAsActSeq(actNo));
+		actTrdVO.setActSeq(actMapper.selectActSeqByActNo(actNo));
 		actTrdVO.setTrdCd(trdCd);
 		actTrdVO.setAmt(amt);
 		actTrdVO.setItmCd(itmCd);
@@ -150,13 +157,14 @@ public class ActTrdService {
 		// 계좌번호가 있을 경우
 		if(StringUtils.isNotEmpty(actTrdVO.getActNo())) {
 			// 계좌번호로 계좌일련번호 생성
-			actTrdVO.setActSeq(actMapper.selectAsActSeq(actTrdVO.getActNo()));
+			actTrdVO.setActSeq(actMapper.selectActSeqByActNo(actTrdVO.getActNo()));
 			
 		// 계좌번호가 없을 경우
 		} else {
 			// 계좌일련번호가 없을 경우
 			if(StringUtils.isEmpty(actTrdVO.getActSeq())) {
-				// TODO 사용자의 기본 계좌번호를 가져온다.
+				// 사용자의 기본 계좌번호를 가져온다.
+				actTrdVO.setActSeq(actMapper.selectActSeqByTlgrmId(actTrdVO.getTlgrmId()));
 			}
 		}
 		

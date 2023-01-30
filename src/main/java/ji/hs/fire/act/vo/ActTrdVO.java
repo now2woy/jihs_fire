@@ -52,6 +52,10 @@ public class ActTrdVO {
 	 */
 	private String note;
 	/**
+	 * 텔레그램ID
+	 */
+	private String tlgrmId;
+	/**
 	 * 텔레그램메시지ID
 	 */
 	private String tlgrmMsgId;

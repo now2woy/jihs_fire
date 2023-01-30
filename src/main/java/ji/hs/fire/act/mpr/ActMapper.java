@@ -18,6 +18,13 @@ public interface ActMapper {
 	 */
 	public List<ActVO> selectAll(ActVO actVO) throws Exception;
 	/**
+	 * 계좌 정보 1건 조회
+	 * @param actVO
+	 * @return
+	 * @throws Exception
+	 */
+	public ActVO selectOne(ActVO actVO) throws Exception;
+	/**
 	 * 계좌 정보 건수 조회
 	 * @param actVO
 	 * @return
@@ -30,7 +37,14 @@ public interface ActMapper {
 	 * @return
 	 * @throws Exception
 	 */
-	public String selectAsActSeq(String value) throws Exception;
+	public String selectActSeqByActNo(String value) throws Exception;
+	/**
+	 * 계좌일련번호 조회
+	 * @param value
+	 * @return
+	 * @throws Exception
+	 */
+	public String selectActSeqByTlgrmId(String value) throws Exception;
 	/**
 	 * 계좌 정보 입력
 	 * @param actVO

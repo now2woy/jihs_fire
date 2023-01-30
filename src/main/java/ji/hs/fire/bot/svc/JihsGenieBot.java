@@ -1,7 +1,6 @@
 package ji.hs.fire.bot.svc;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +88,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 				 */
 				if("TLGRM_CMD_CD_00001".equals(messageTypeCd)) {
 					message.setText("메뉴를 선택하세요");
-					message.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd00001()));
+					message.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd("00001", null, null)));
 					
 				/**
 				 * 코드  : TLGRM_CMD_CD_00004
@@ -106,6 +105,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					actTrdVO.setAmt(msg.substring(52, msg.indexOf(" ", 52)).replaceAll(",", ""));
 					actTrdVO.setNote(msg.substring(msg.indexOf(" ", 52) + 1, msg.lastIndexOf(" 분배금")));
 					actTrdVO.setTrdDt(BscUtils.thisDateTime("yyyy") + "-" + msg.substring(40, 51).replaceAll("/", "-").replace(" ", "T"));
+					actTrdVO.setTlgrmId(Long.toString(update.getMessage().getChatId()));
 					actTrdVO.setTlgrmMsgId(Integer.toString(update.getMessage().getMessageId()));
 					
 					result = actTrdService.botInsert(actTrdVO);
@@ -124,6 +124,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					actTrdVO.setQty(msg.substring(msg.indexOf("체결수량") + 7, msg.indexOf("주", msg.indexOf("체결수량"))));
 					actTrdVO.setAmt(BscUtils.multiply(new BigDecimal(actTrdVO.getQty()), new BigDecimal(msg.substring(msg.indexOf("체결단가") + 7, msg.indexOf("원", msg.indexOf("체결단가"))).replaceAll(",", "")), 0).toString());
 					actTrdVO.setTrdDt(BscUtils.thisDateTime("yyyy-MM-dd HH:mm").replace(" ", "T"));
+					actTrdVO.setTlgrmId(Long.toString(update.getMessage().getChatId()));
 					actTrdVO.setTlgrmMsgId(Integer.toString(update.getMessage().getMessageId()));
 					
 					if(msg.indexOf("체결종류 : 매수") != -1) {
@@ -134,7 +135,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					
 					// 계좌번호와 계좌일련번호가 없을 경우 계좌를 선택 할 수 있도록 한다.
 					if(StringUtils.isEmpty(actTrdVO.getActNo()) && StringUtils.isEmpty(actTrdVO.getActSeq())) {
-						message.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd00005(Long.toString(update.getMessage().getChatId()))));
+						message.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd("00005", "00006", Long.toString(update.getMessage().getChatId()))));
 					}
 					
 					result = actTrdService.botInsert(actTrdVO);
@@ -165,7 +166,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					sendMessage.setChatId(update.getCallbackQuery().getMessage().getChatId());
 					sendMessage.setText("계좌를 선택하세요");
 					sendMessage.setReplyToMessageId(update.getCallbackQuery().getMessage().getMessageId());
-					sendMessage.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd00002(Long.toString(update.getCallbackQuery().getMessage().getChatId()))));
+					sendMessage.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd("00002", "00003", Long.toString(update.getCallbackQuery().getMessage().getChatId()))));
 					
 					execute(sendMessage);
 					
@@ -190,18 +191,32 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					actTrdVO.setOffset(0);
 					Map<String, Object> result = actTrdService.list(actTrdVO);
 					
-					NumberFormat numberFormat = NumberFormat.getInstance();
-					
-					String text = "총입금액 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("inSumAmt"), "0"))) + "원\n"
-							+ "총출금액 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("outSumAmt"), "0"))) + "원\n"
-							+ "입출금합계 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("inOutSumAmt"), "0"))) + "원\n"
-							+ "총이자 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("itrstSumAmt"), "0"))) + "원\n"
-							+ "총배당금 : " + numberFormat.format(Double.parseDouble(StringUtils.defaultString((String)result.get("dvdnSumAmt"), "0"))) + "원\n";
+					StringBuilder text = new StringBuilder();
+					text.append("선택한 계좌는 ");
+					text.append(((ActVO)result.get("actData")).getBkNm());
+					text.append(" ");
+					text.append(((ActVO)result.get("actData")).getActCdNm());
+					text.append(" 입니다.\n");
+					text.append("총입금액  : ");
+					text.append(BscUtils.numberCommaFormat(StringUtils.defaultString((String)result.get("inSumAmt"), "0")));
+					text.append("원\n");
+					text.append("총출금액  : ");
+					text.append(BscUtils.numberCommaFormat(StringUtils.defaultString((String)result.get("outSumAmt"), "0")));
+					text.append("원\n");
+					text.append("입출금합계 : ");
+					text.append(BscUtils.numberCommaFormat(StringUtils.defaultString((String)result.get("inOutSumAmt"), "0")));
+					text.append("원\n");
+					text.append("총이자   : ");
+					text.append(BscUtils.numberCommaFormat(StringUtils.defaultString((String)result.get("itrstSumAmt"), "0")));
+					text.append("원\n");
+					text.append("총배당금  : ");
+					text.append(BscUtils.numberCommaFormat(StringUtils.defaultString((String)result.get("dvdnSumAmt"), "0")));
+					text.append("원\n");
 					
 					// 버튼 메시지를 변환한다.
 					EditMessageText editMessageText = new EditMessageText();
 					editMessageText.setChatId(update.getCallbackQuery().getMessage().getChatId());
-					editMessageText.setText(text);
+					editMessageText.setText(text.toString());
 					editMessageText.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
 					
 					execute(editMessageText);
@@ -215,60 +230,36 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 	}
 	
 	/**
-	 * 전체 메뉴
-	 * @return
-	 */
-	private List<List<InlineKeyboardButton>> getTlgrmCmdCd00001() throws Exception {
-		List<List<InlineKeyboardButton>> menuList = new ArrayList<>();
-		List<InlineKeyboardButton> line = new ArrayList<>();
-		
-		BscCdVO paramBscCdVO = new BscCdVO();
-		paramBscCdVO.setCdCol("TLGRM_MSG_CD");
-		
-		for(BscCdVO bscCdVO : bscCdMapper.selectAll(paramBscCdVO)) {
-			line.add(InlineKeyboardButton.builder().text(bscCdVO.getCdNm()).callbackData(bscCdVO.getCdVal()).build());
-		}
-		
-		menuList.add(line);
-		
-		return menuList;
-	}
-	
-	/**
 	 * 계좌 목록 명령어 처리
 	 * @throws Exception
 	 */
-	private List<List<InlineKeyboardButton>> getTlgrmCmdCd00002(String tlgrmId) throws Exception {
+	private List<List<InlineKeyboardButton>> getTlgrmCmdCd(String tlgrmCmdCd, String targetTlgrmCmdCd, String tlgrmId) throws Exception {
 		List<List<InlineKeyboardButton>> menuList = new ArrayList<>();
 		
-		ActVO paramActVO = new ActVO();
-		paramActVO.setTlgrmId(tlgrmId);
-		
-		for(ActVO actVO : actMapper.selectAll(paramActVO)) {
+		// 전체 메뉴 목록
+		if("00001".equals(tlgrmCmdCd)) {
 			List<InlineKeyboardButton> line = new ArrayList<>();
-			line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("TLGRM_CMD_CD_00003_" + actVO.getActSeq()).build());
+			
+			BscCdVO paramBscCdVO = new BscCdVO();
+			paramBscCdVO.setCdCol("TLGRM_MSG_CD");
+			
+			for(BscCdVO bscCdVO : bscCdMapper.selectAll(paramBscCdVO)) {
+				line.add(InlineKeyboardButton.builder().text(bscCdVO.getCdNm()).callbackData(bscCdVO.getCdVal()).build());
+			}
 			
 			menuList.add(line);
-		}
-		
-		return menuList;
-	}
-	
-	/**
-	 * "TLGRM_MSG_CD00002" 계좌 선택(매수, 매도 자료 입력 후 계좌 선택)
-	 * @return
-	 */
-	private List<List<InlineKeyboardButton>> getTlgrmCmdCd00005(String tlgrmId) throws Exception {
-		List<List<InlineKeyboardButton>> menuList = new ArrayList<>();
-		
-		ActVO paramActVO = new ActVO();
-		paramActVO.setTlgrmId(tlgrmId);
-		
-		for(ActVO actVO : actMapper.selectAll(paramActVO)) {
-			List<InlineKeyboardButton> line = new ArrayList<>();
-			line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("TLGRM_CMD_CD_00006_" + actVO.getActSeq()).build());
 			
-			menuList.add(line);
+		// 계좌 선택
+		}else if("00002".equals(tlgrmCmdCd) || "00005".equals(tlgrmCmdCd)) {
+			ActVO paramActVO = new ActVO();
+			paramActVO.setTlgrmId(tlgrmId);
+			
+			for(ActVO actVO : actMapper.selectAll(paramActVO)) {
+				List<InlineKeyboardButton> line = new ArrayList<>();
+				line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("TLGRM_CMD_CD_" + targetTlgrmCmdCd + "_" + actVO.getActSeq()).build());
+				
+				menuList.add(line);
+			}
 		}
 		
 		return menuList;
