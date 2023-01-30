@@ -220,6 +220,13 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					editMessageText.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
 					
 					execute(editMessageText);
+					
+				/**
+				 * 코드 : TLGRM_CMD_CD_00006
+				 * 명칭 : 계좌 선택
+				 */
+				} else if(cd.startsWith("TLGRM_CMD_CD_00006")) {
+					log.info("{}, {}", cd, update.getCallbackQuery().getMessage().getMessageId());
 				}
 				
 			}
