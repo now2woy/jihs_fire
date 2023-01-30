@@ -40,6 +40,7 @@ public class ActPrdtService {
 		for(int i = 1; i <= Integer.parseInt(actTrdVO.getQty()); i++) {
 			ActPrdtVO actPrdtVO = new ActPrdtVO();
 			actPrdtVO.setPrdtTrdSeq(Integer.toString(bscNoGenService.generate("AC_PRDT_DT.PRDT_TRD_SEQ")));
+			actPrdtVO.setActSeq(actTrdVO.getActSeq());
 			actPrdtVO.setItmCd(actTrdVO.getItmCd());
 			actPrdtVO.setByTrdSeq(actTrdVO.getTrdSeq());
 			actPrdtVO.setByAmt(BscUtils.divide(new BigDecimal(actTrdVO.getAmt()), new BigDecimal(actTrdVO.getQty()), 0));
@@ -50,5 +51,19 @@ public class ActPrdtService {
 		}
 		
 		return cnt;
+	}
+	
+	/**
+	 * 봇을 통해 계좌 상품 거래 정보의 계쫘일련번호를 수정 한다.
+	 * @param byTlgrmMsgId
+	 * @param actSeq
+	 * @return
+	 */
+	public int updateActSeqByByTlgrmMsgId(String byTlgrmMsgId, String actSeq) throws Exception {
+		ActPrdtVO actPrdtVO = new ActPrdtVO();
+		actPrdtVO.setActSeq(actSeq);
+		actPrdtVO.setByTlgrmMsgId(byTlgrmMsgId);
+		
+		return actPrdtMapper.updateActSeqByByTlgrmMsgId(actPrdtVO);
 	}
 }

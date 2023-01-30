@@ -16,6 +16,10 @@ public class ActPrdtVO {
 	 */
 	private String prdtTrdSeq;
 	/**
+	 * 계좌일련번호
+	 */
+	private String actSeq;
+	/**
 	 * 종목코드
 	 */
 	private String itmCd;

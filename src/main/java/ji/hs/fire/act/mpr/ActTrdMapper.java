@@ -38,4 +38,11 @@ public interface ActTrdMapper {
 	 * @throws Exception
 	 */
 	public int insert(ActTrdVO actTrdVO) throws Exception;
+	/**
+	 * 계좌 거래 정보 수정
+	 * @param actTrdVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateActSeqByTlgrmMsgId(ActTrdVO actTrdVO) throws Exception;
 }

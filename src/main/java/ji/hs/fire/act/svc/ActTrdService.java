@@ -171,4 +171,18 @@ public class ActTrdService {
 		return insert(actTrdVO);
 	}
 	
+	/**
+	 * 봇을 통해 계좌 거래 정보의 계쫘일련번호를 수정 한다.
+	 * @param tlgrmMsgId
+	 * @param actSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateActSeqByTlgrmMsgId(String tlgrmMsgId, String actSeq) throws Exception {
+		ActTrdVO actTrdVO = new ActTrdVO();
+		actTrdVO.setTlgrmMsgId(tlgrmMsgId);
+		actTrdVO.setActSeq(actSeq);
+		
+		return actTrdMapper.updateActSeqByTlgrmMsgId(actTrdVO);
+	}
 }

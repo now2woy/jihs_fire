@@ -77,4 +77,11 @@
 			 )
 	]]>
 	</insert>
+	
+<!-- 계좌 거래 정보의 계쫘일련번호를 수정 -->
+	<update id="updateActSeqByTlgrmMsgId" parameterType="ji.hs.fire.act.vo.ActTrdVO" flushCache="true">
+		UPDATE AC_DT
+		   SET ACT_SEQ = #{actSeq}
+		 WHERE TLGRM_MSG_ID = #{tlgrmMsgId}
+	</update>
 </mapper>

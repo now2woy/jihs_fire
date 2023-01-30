@@ -15,4 +15,11 @@ public interface ActPrdtMapper {
 	 * @throws Exception
 	 */
 	public int insert(ActPrdtVO actPrdtVO) throws Exception;
+	/**
+	 * 계좌 상품 거래 정보의 계쫘일련번호를 수정
+	 * @param actPrdtVO
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateActSeqByByTlgrmMsgId(ActPrdtVO actPrdtVO) throws Exception;
 }

@@ -3,12 +3,13 @@
  */
 CREATE TABLE AC_PRDT_DT (
 	  PRDT_TRD_SEQ		DECIMAL(30)		NOT NULL	comment '상품거래일련번호'
-	, ITM_CD			VARCHAR(10)		NULL		COMMENT '종목코드'
+	, ACT_SEQ			DECIMAL(6)		NOT NULL	comment '계좌일련번호'
+	, ITM_CD			VARCHAR(10)		NOT NULL	COMMENT '종목코드'
 	, BY_TRD_SEQ		DECIMAL(20)		NOT NULL	comment '매수거래일련번호'
 	, BY_AMT			DECIMAL(20)		NULL		comment '매수금액'
 	, BY_TLGRM_MSG_ID	VARCHAR(100)	NULL		comment '매수텔레그램메시지ID'
 	, BY_DT				DATETIME		NULL		comment '매수일시'
-	, SL_TRD_SEQ		DECIMAL(20)		NOT NULL	comment '매도거래일련번호'
+	, SL_TRD_SEQ		DECIMAL(20)		NULL		comment '매도거래일련번호'
 	, SL_AMT			DECIMAL(20)		NULL		comment '매도금액'
 	, SL_TLGRM_MSG_ID	VARCHAR(100)	NULL		comment '매도텔레그램메시지ID'
 	, SL_DT				DATETIME		NULL		comment '매도일시'

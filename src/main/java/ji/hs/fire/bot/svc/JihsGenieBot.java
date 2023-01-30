@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -70,6 +71,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 	/**
 	 * 봇 메시지를 읽어서 처리 한다.
 	 */
+	@Transactional
 	@Override
 	public void onUpdateReceived(Update update) {
 		MDC.put(BscConstants.LOG_KEY, BscConstants.LOG_KEY_BOT);
@@ -93,7 +95,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 				 */
 				if("TLGRM_CMD_CD_00001".equals(messageTypeCd)) {
 					message.setText("메뉴를 선택하세요");
-					message.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd("00001", null, null)));
+					message.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd("00001", null, null, null)));
 					
 				/**
 				 * 코드  : TLGRM_CMD_CD_00004
@@ -140,13 +142,13 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					
 					// 계좌번호와 계좌일련번호가 없을 경우 계좌를 선택 할 수 있도록 한다.
 					if(StringUtils.isEmpty(actTrdVO.getActNo()) && StringUtils.isEmpty(actTrdVO.getActSeq())) {
-						message.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd("00005", "00006", Long.toString(update.getMessage().getChatId()))));
+						message.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd("00005", "00006", Long.toString(update.getMessage().getChatId()), Integer.toString(update.getMessage().getMessageId()))));
 					}
 					
 					result = actTrdService.botInsert(actTrdVO);
 					
 					// AC_PRDT_DT 테이블 데이터 입력 추가
-					int result2 = actPrdtService.botInsert(actTrdVO);
+					actPrdtService.botInsert(actTrdVO);
 				}
 				
 				if(isSetMeaage) {
@@ -172,7 +174,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					sendMessage.setChatId(update.getCallbackQuery().getMessage().getChatId());
 					sendMessage.setText("계좌를 선택하세요");
 					sendMessage.setReplyToMessageId(update.getCallbackQuery().getMessage().getMessageId());
-					sendMessage.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd("00002", "00003", Long.toString(update.getCallbackQuery().getMessage().getChatId()))));
+					sendMessage.setReplyMarkup(new InlineKeyboardMarkup(getTlgrmCmdCd("00002", "00003", Long.toString(update.getCallbackQuery().getMessage().getChatId()), null)));
 					
 					execute(sendMessage);
 					
@@ -232,7 +234,24 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 				 * 명칭 : 계좌 선택
 				 */
 				} else if(cd.startsWith("TLGRM_CMD_CD_00006")) {
-					log.info("{}, {}", cd, update.getCallbackQuery().getMessage().getMessageId());
+					String tlgrmMsgCd = cd.replace("TLGRM_CMD_CD_00006_", "").split("_")[0];
+					String actSeq = cd.replace("TLGRM_CMD_CD_00006_", "").split("_")[1];
+					
+					// 계좌 거래내역 수정
+					actTrdService.updateActSeqByTlgrmMsgId(tlgrmMsgCd, actSeq);
+					
+					// 계좌상품거래내역 수정
+					actPrdtService.updateActSeqByByTlgrmMsgId(tlgrmMsgCd, actSeq);
+					
+					log.info("cd : {}, tlgrmMsgCd : {}, actSeq : {}", cd, tlgrmMsgCd, actSeq);
+					
+					// 버튼 메시지를 변환한다.
+					EditMessageText editMessageText = new EditMessageText();
+					editMessageText.setChatId(update.getCallbackQuery().getMessage().getChatId());
+					editMessageText.setText("입력에 성공하였습니다.");
+					editMessageText.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+					
+					execute(editMessageText);
 				}
 				
 			}
@@ -246,7 +265,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 	 * 계좌 목록 명령어 처리
 	 * @throws Exception
 	 */
-	private List<List<InlineKeyboardButton>> getTlgrmCmdCd(String tlgrmCmdCd, String targetTlgrmCmdCd, String tlgrmId) throws Exception {
+	private List<List<InlineKeyboardButton>> getTlgrmCmdCd(String tlgrmCmdCd, String targetTlgrmCmdCd, String tlgrmId, String tlgrmMsgId) throws Exception {
 		List<List<InlineKeyboardButton>> menuList = new ArrayList<>();
 		
 		// 전체 메뉴 목록
@@ -269,7 +288,15 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 			
 			for(ActVO actVO : actMapper.selectAll(paramActVO)) {
 				List<InlineKeyboardButton> line = new ArrayList<>();
-				line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("TLGRM_CMD_CD_" + targetTlgrmCmdCd + "_" + actVO.getActSeq()).build());
+				
+				// 00005의 경우 기존 입력된 tlgrmMsgId를 이용하여 업데이트 해야 되서 달고 가야 됨
+				if(StringUtils.isNotEmpty(tlgrmMsgId)) {
+					line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("TLGRM_CMD_CD_" + targetTlgrmCmdCd + "_" + tlgrmMsgId + "_" + actVO.getActSeq()).build());
+					
+				// 00002는 없음
+				}else {
+					line.add(InlineKeyboardButton.builder().text(actVO.getBkNm() + " " + actVO.getActCdNm()).callbackData("TLGRM_CMD_CD_" + targetTlgrmCmdCd + "_" + actVO.getActSeq()).build());
+				}
 				
 				menuList.add(line);
 			}
