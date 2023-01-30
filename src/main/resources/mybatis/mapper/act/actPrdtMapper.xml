@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ji.hs.fire.act.mpr.ActPrdtMapper">
+<!-- 계좌 정보 입력 -->
+	<insert id="insert" parameterType="ji.hs.fire.act.vo.ActPrdtVO" flushCache="true">
+	<![CDATA[
+		INSERT INTO AC_PRDT_DT (
+			   PRDT_TRD_SEQ
+			 , ITM_CD
+			 , BY_TRD_SEQ
+			 , BY_AMT
+			 , BY_TLGRM_MSG_ID
+			 , BY_DT
+			 , SL_TRD_SEQ
+			 , SL_AMT
+			 , SL_TLGRM_MSG_ID
+			 , SL_DT
+			 ) VALUES (
+			   #{prdtTrdSeq}
+			 , #{itmCd}
+			 , #{byTrdSeq}
+			 , #{byAmt}
+			 , #{byTlgrmMsgId}
+			 , STR_TO_DATE(#{byDt}, '%Y-%m-%dT%H:%i')
+			 , #{slTrdSeq}
+			 , #{slAmt}
+			 , #{slTlgrmMsgId}
+			 , STR_TO_DATE(#{slDt}, '%Y-%m-%dT%H:%i')
+			 )
+	]]>
+	</insert>
+</mapper>

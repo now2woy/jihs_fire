@@ -16,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import ji.hs.fire.act.mpr.ActMapper;
+import ji.hs.fire.act.svc.ActPrdtService;
 import ji.hs.fire.act.svc.ActTrdService;
 import ji.hs.fire.act.vo.ActTrdVO;
 import ji.hs.fire.act.vo.ActVO;
@@ -47,6 +48,10 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 	 * 계좌 거래 Service
 	 */
 	private final ActTrdService actTrdService;
+	/**
+	 * 계좌 상품 거래 정보 Service
+	 */
+	private final ActPrdtService actPrdtService;
 	/**
 	 * 
 	 */
@@ -140,7 +145,8 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					
 					result = actTrdService.botInsert(actTrdVO);
 					
-					// TODO AC_PRDT_DT 테이블 데이터 입력 추가
+					// AC_PRDT_DT 테이블 데이터 입력 추가
+					int result2 = actPrdtService.botInsert(actTrdVO);
 				}
 				
 				if(isSetMeaage) {
@@ -192,24 +198,24 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					Map<String, Object> result = actTrdService.list(actTrdVO);
 					
 					StringBuilder text = new StringBuilder();
-					text.append("선택한 계좌는 ");
+					text.append("선택한 계좌는 \"");
 					text.append(((ActVO)result.get("actData")).getBkNm());
 					text.append(" ");
 					text.append(((ActVO)result.get("actData")).getActCdNm());
-					text.append(" 입니다.\n");
-					text.append("총입금액  : ");
+					text.append("\" 입니다.\n");
+					text.append("총 입금액  : ");
 					text.append(BscUtils.numberCommaFormat(StringUtils.defaultString((String)result.get("inSumAmt"), "0")));
 					text.append("원\n");
-					text.append("총출금액  : ");
+					text.append("총 출금액  : ");
 					text.append(BscUtils.numberCommaFormat(StringUtils.defaultString((String)result.get("outSumAmt"), "0")));
 					text.append("원\n");
 					text.append("입출금합계 : ");
 					text.append(BscUtils.numberCommaFormat(StringUtils.defaultString((String)result.get("inOutSumAmt"), "0")));
 					text.append("원\n");
-					text.append("총이자   : ");
+					text.append("총 이자   : ");
 					text.append(BscUtils.numberCommaFormat(StringUtils.defaultString((String)result.get("itrstSumAmt"), "0")));
 					text.append("원\n");
-					text.append("총배당금  : ");
+					text.append("총 배당금  : ");
 					text.append(BscUtils.numberCommaFormat(StringUtils.defaultString((String)result.get("dvdnSumAmt"), "0")));
 					text.append("원\n");
 					
