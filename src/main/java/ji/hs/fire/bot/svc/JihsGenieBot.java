@@ -243,8 +243,6 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					// 계좌상품거래내역 수정
 					actPrdtService.updateActSeqByByTlgrmMsgId(tlgrmMsgCd, actSeq);
 					
-					log.info("cd : {}, tlgrmMsgCd : {}, actSeq : {}", cd, tlgrmMsgCd, actSeq);
-					
 					// 버튼 메시지를 변환한다.
 					EditMessageText editMessageText = new EditMessageText();
 					editMessageText.setChatId(update.getCallbackQuery().getMessage().getChatId());

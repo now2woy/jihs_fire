@@ -36,6 +36,6 @@
 	<update id="updateActSeqByByTlgrmMsgId" parameterType="ji.hs.fire.act.vo.ActPrdtVO" flushCache="true">
 		UPDATE AC_PRDT_DT
 		   SET ACT_SEQ = #{actSeq}
-		 WHERE TLGRM_MSG_ID = #{byTlgrmMsgId}
+		 WHERE BY_TLGRM_MSG_ID = #{byTlgrmMsgId}
 	</update>
 </mapper>
