@@ -1,5 +1,6 @@
 package ji.hs.fire.act.vo;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.Data;
@@ -71,6 +72,10 @@ public class ActTrdVO {
 	 * 계좌번호
 	 */
 	private String actNo;
+	/**
+	 * 단가
+	 */
+	private BigDecimal prc;
 	/**
 	 * 거래코드목록
 	 */

@@ -129,13 +129,15 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					ActTrdVO actTrdVO = new ActTrdVO();
 					actTrdVO.setItmCd( msg.substring(msg.indexOf("종목코드") + 7, msg.indexOf("종목코드") + 13));
 					actTrdVO.setQty(msg.substring(msg.indexOf("체결수량") + 7, msg.indexOf("주", msg.indexOf("체결수량"))));
-					actTrdVO.setAmt(BscUtils.multiply(new BigDecimal(actTrdVO.getQty()), new BigDecimal(msg.substring(msg.indexOf("체결단가") + 7, msg.indexOf("원", msg.indexOf("체결단가"))).replaceAll(",", "")), 0).toString());
+					actTrdVO.setPrc(new BigDecimal(msg.substring(msg.indexOf("체결단가") + 7, msg.indexOf("원", msg.indexOf("체결단가"))).replaceAll(",", "")));
+					actTrdVO.setAmt(BscUtils.multiply(new BigDecimal(actTrdVO.getQty()), actTrdVO.getPrc(), 0).toString());
 					actTrdVO.setTrdDt(BscUtils.thisDateTime("yyyy-MM-dd HH:mm").replace(" ", "T"));
 					actTrdVO.setTlgrmId(Long.toString(update.getMessage().getChatId()));
 					actTrdVO.setTlgrmMsgId(Integer.toString(update.getMessage().getMessageId()));
 					
 					if(msg.indexOf("체결종류 : 매수") != -1) {
 						actTrdVO.setTrdCd("00006");
+						actTrdVO.setAmt(BscUtils.multiply(BigDecimal.valueOf(-1), new BigDecimal(actTrdVO.getAmt()), 0).toString());
 					} else if(msg.indexOf("체결종류 : 매도") != -1) {
 						actTrdVO.setTrdCd("00007");
 					}
