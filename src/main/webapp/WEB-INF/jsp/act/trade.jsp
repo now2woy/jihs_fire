@@ -101,6 +101,14 @@ function mod(id){
 function list() {
 	location.href="/act/account.do";
 }
+
+function pu_open(){
+	$("#popup_title").text("Excel 업로드");
+	$("#popup_body").append("<div><input type=\"file\" /></div>");
+	$("#popup_body").append("<div style=\"float: right;\"><button type=\"button\" id=\"upload-btn\" class=\"btn btn-success\" onclick=\"pu_open();\">업로드</button></div>");
+	
+	$("#popup_layer").css('display', 'block');
+}
 </script>
 </head>
 
@@ -218,6 +226,7 @@ function list() {
 						<!-- 버튼 영역 시작 -->
 							<div style="float: right;">
 								<button type="button" id="list-btn" class="btn btn-secondary" onclick="list();">목록</button>
+								<button type="button" id="excel-btn" class="btn btn-secondary" onclick="pu_open();">Excel 업로드</button>
 								<button type="button" id="add-btn" class="btn btn-success" onclick="add();">등록</button>
 							</div>
 						<!-- 버튼 영역 종료 -->

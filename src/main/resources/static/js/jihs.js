@@ -364,4 +364,6 @@ function bc_num_format(num){
  */
 function pu_close(){
 	$("#popup_layer").css('display', 'none');
+	$("#popup_title").empty();
+	$("#popup_body").empty();
 }

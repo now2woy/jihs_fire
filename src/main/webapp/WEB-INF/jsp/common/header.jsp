@@ -20,11 +20,11 @@
 	</div>
 	<div id="popup_layer" class="dim-layer">
 		<div class="dimBg"></div>
-		<div id="popup">
+		<div id="popup" style="position: absolute; width: 500px; left: 50%; top: 50%; margin-left: -250px; margin-top: -150px;">
 			<div class="x_panel">
 				<div class="x_title">
 					<h2 id="popup_title"></h2>
-					<ul class="nav navbar-right panel_toolbox" style="min-width: 40px;">
+					<ul class="nav navbar-right panel_toolbox" style="min-width: 20px; margin: 0px;">
 						<li><a href="#" onclick="pu_close();"><i class="fa fa-close"></i></a></li>
 					</ul>
 					<div class="clearfix"></div>
