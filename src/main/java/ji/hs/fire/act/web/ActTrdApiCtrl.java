@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import ji.hs.fire.act.svc.ActTrdService;
 import ji.hs.fire.act.vo.ActTrdVO;
@@ -31,7 +32,7 @@ public class ActTrdApiCtrl {
 	private final ActTrdService actTrdService;
 	
 	/**
-	 * 계좌 정보 목록 조회
+	 * 계좌 거래 정보 목록 조회
 	 * @param limit
 	 * @param offset
 	 * @return
@@ -50,7 +51,7 @@ public class ActTrdApiCtrl {
 	}
 	
 	/**
-	 * 계좌 정보 입력
+	 * 계좌 거래 정보 입력
 	 * @param actVO
 	 * @return
 	 * @throws Exception
@@ -60,5 +61,20 @@ public class ActTrdApiCtrl {
 		actTrdService.insert(actTrdVO);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(actTrdVO);
+	}
+	
+	/**
+	 * 계좌 거래 정보 액셀 입력
+	 * @param actVO
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/excelUpload")
+	public ResponseEntity<ActTrdVO> excelUpload(@RequestParam(required = true) MultipartFile file
+											  , @RequestParam(required = true) String actSeq) throws Exception {
+		
+		actTrdService.excelUpload(file, actSeq);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(null);
 	}
 }

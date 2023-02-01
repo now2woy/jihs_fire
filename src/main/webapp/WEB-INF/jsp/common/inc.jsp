@@ -20,7 +20,7 @@
 
 
 <!-- jQuery -->
-<script src="/js/jquery/jquery.min.js"></script>
+<script src="/js/jquery/jquery-3.6.3.js"></script>
 <!-- Bootstrap -->
 <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
 <!-- FastClick -->

@@ -1,12 +1,19 @@
 package ji.hs.fire.act.svc;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import ji.hs.fire.act.mpr.ActMapper;
 import ji.hs.fire.act.mpr.ActTrdMapper;
@@ -37,6 +44,12 @@ public class ActTrdService {
 	 * 채번 Service
 	 */
 	private final BscNoGenService bscNoGenService;
+	
+	/**
+	 * DART 종목코드는 압축파일로 다운로드 되어 파일 저장 경로가 필요
+	 */
+	@Value("${constant.path.upload}")
+	private String uploadPath;
 	
 	/**
 	 * 계좌 거래 정보 목록
@@ -119,36 +132,6 @@ public class ActTrdService {
 	
 	/**
 	 * 봇을 통해 계좌 거래 정보를 입력 한다.
-	 * @param actNo
-	 * @param trdCd
-	 * @param amt
-	 * @param itmCd
-	 * @param qty
-	 * @param note
-	 * @param trdDt
-	 * @param edDt
-	 * @return
-	 * @throws Exception
-	 */
-	public int botInsert(String actNo, String trdCd, String amt, String itmCd, String qty, String note, String trdDt, String edDt, String tlgrmMsgId) throws Exception {
-		ActTrdVO actTrdVO = new ActTrdVO();
-		
-		// 계좌번호로 계좌일련번호 조회
-		actTrdVO.setActSeq(actMapper.selectActSeqByActNo(actNo));
-		actTrdVO.setTrdCd(trdCd);
-		actTrdVO.setAmt(amt);
-		actTrdVO.setItmCd(itmCd);
-		actTrdVO.setQty(qty);
-		actTrdVO.setNote(note);
-		actTrdVO.setTrdDt(trdDt);
-		actTrdVO.setEdDt(edDt);
-		actTrdVO.setTlgrmMsgId(tlgrmMsgId);
-		
-		return insert(actTrdVO);
-	}
-	
-	/**
-	 * 봇을 통해 계좌 거래 정보를 입력 한다.
 	 * @param actTrdVO
 	 * @return
 	 * @throws Exception
@@ -184,5 +167,18 @@ public class ActTrdService {
 		actTrdVO.setActSeq(actSeq);
 		
 		return actTrdMapper.updateActSeqByTlgrmMsgId(actTrdVO);
+	}
+	
+	/**
+	 * 
+	 * @param file
+	 * @param actSeq
+	 * @throws Exception
+	 */
+	public void excelUpload(MultipartFile file, String actSeq) throws Exception {
+		
+		String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+		
+		Files.copy(file.getInputStream(), Paths.get(uploadPath + File.separator + UUID.randomUUID().toString() + ext), StandardCopyOption.REPLACE_EXISTING);
 	}
 }

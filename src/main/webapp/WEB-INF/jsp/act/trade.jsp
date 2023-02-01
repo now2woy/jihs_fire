@@ -102,12 +102,39 @@ function list() {
 	location.href="/act/account.do";
 }
 
+/**
+ * 액셀 업로드 팝업창 열기
+ */
 function pu_open(){
+	var params = new URL(location.href).searchParams;
+	
 	$("#popup_title").text("Excel 업로드");
-	$("#popup_body").append("<div><input type=\"file\" /></div>");
-	$("#popup_body").append("<div style=\"float: right;\"><button type=\"button\" id=\"upload-btn\" class=\"btn btn-success\" onclick=\"pu_open();\">업로드</button></div>");
+	$("#popup_body").append("<div><form id=\"excelUpload\" name=\"excelUpload\" method=\"POST\" action=\"/api/act/trades/excelUpload\" enctype=\"multipart/form-data\"><input type=\"hidden\" name=\"actSeq\" value=\"" + params.get("actSeq") + "\" /><input type=\"file\" name=\"file\" /></form></div>");
+	$("#popup_body").append("<div style=\"float: right;\"><button type=\"button\" id=\"upload-btn\" class=\"btn btn-success\" onclick=\"excel_upload();\">업로드</button></div>");
 	
 	$("#popup_layer").css('display', 'block');
+}
+
+/**
+ * 업로드 버튼
+ */
+function excel_upload(){
+	var form = $('#excelUpload')[0];
+	var formData = new FormData(form);
+	
+	$.ajax({
+		  url: "/api/act/trades/excelUpload"
+		, data: formData
+		, cache: false
+		, contentType: false
+		, processData: false
+		, method: 'POST'
+		, type: 'POST'
+		, success: function(data){
+			alert("Excel 업로드에 성공하였습니다.");
+			location.reload();
+		}
+	});
 }
 </script>
 </head>
