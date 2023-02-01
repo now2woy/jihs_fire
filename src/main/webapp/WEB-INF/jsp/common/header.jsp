@@ -18,7 +18,7 @@
 			</ul>
 		</nav>
 	</div>
-	<div id="popup_layer" class="dim-layer">
+	<div id="popup_layer" class="dim-layer" style="display: none;">
 		<div class="dimBg"></div>
 		<div id="popup" style="position: absolute; width: 500px; left: 50%; top: 50%; margin-left: -250px; margin-top: -150px;">
 			<div class="x_panel">
