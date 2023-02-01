@@ -9,6 +9,9 @@
 	<if test='mktCd != null and mktCd != ""'>
 		   AND MKT_CD = #{mktCd}
 	</if>
+	<if test='itmCd != null and itmCd != ""'>
+		   AND ITM_CD = #{itmCd}
+	</if>
 	<if test='itmNm != null and itmNm != ""'>
 		   AND ITM_NM LIKE CONCAT('%', #{itmNm}, '%')
 	</if>
