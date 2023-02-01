@@ -170,15 +170,17 @@ public class ActTrdService {
 	}
 	
 	/**
-	 * 
+	 * 액셀 업로드 후 DB 입력
 	 * @param file
 	 * @param actSeq
 	 * @throws Exception
 	 */
 	public void excelUpload(MultipartFile file, String actSeq) throws Exception {
-		
+		String name = UUID.randomUUID().toString();
 		String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 		
-		Files.copy(file.getInputStream(), Paths.get(uploadPath + File.separator + UUID.randomUUID().toString() + ext), StandardCopyOption.REPLACE_EXISTING);
+		Files.copy(file.getInputStream(), Paths.get(uploadPath + File.separator + name + ext), StandardCopyOption.REPLACE_EXISTING);
+		
+		
 	}
 }
