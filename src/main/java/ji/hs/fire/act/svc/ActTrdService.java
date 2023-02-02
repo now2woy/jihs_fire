@@ -222,12 +222,16 @@ public class ActTrdService {
 					if(tds1st.size() != 0) {
 						ActTrdVO actTrdVO = new ActTrdVO();
 						actTrdVO.setActSeq(actSeq);
-						actTrdVO.setNote(note);
 						actTrdVO.setFileSeq(Integer.toString(bscFileVO.getFileSeq()));
 						actTrdVO.setTrdDt(tds1st.get(0).text().replaceAll("\\.", "-").replaceAll(" ", "T").replaceAll("\\(", "").substring(0, 16));
 						actTrdVO.setAmt(new BigDecimal(tds1st.get(5).text().replaceAll(",", "")));
 						actTrdVO.setFee(new BigDecimal(tds1st.get(8).text().replaceAll(",", "")));
 						actTrdVO.setTax(new BigDecimal(tds2nd.get(4).text().replaceAll(",", "")));
+						actTrdVO.setNote(tds1st.get(2).text());
+						// 전체 메모가 있을 경우 추가 입력
+						if(StringUtils.isNotEmpty(note)) {
+							actTrdVO.setNote(actTrdVO.getNote() + ", " + note);
+						}
 						
 						// 대분류 입금
 						if("입금".equals(tds1st.get(1).text())) {
