@@ -58,26 +58,30 @@
 			 , AMT
 			 , ITM_CD
 			 , QTY
+			 , PRC
 			 , FEE
 			 , TAX
 			 , NOTE
 			 , TLGRM_MSG_ID
 			 , TRD_DT
 			 , ED_DT
+			 , FILE_SEQ
 			 ) VALUES (
 			   #{trdSeq}
 			 , #{actSeq}
-			 , NULLIF(#{relTrdSeq}, '')
+			 , #{relTrdSeq}
 			 , #{trdCd}
 			 , #{amt}
 			 , #{itmCd}
-			 , NULLIF(#{qty}, '0')
+			 , #{qty}
+			 , #{prc}
 			 , NULLIF(#{fee}, '0')
 			 , NULLIF(#{tax}, '0')
 			 , #{note}
 			 , #{tlgrmMsgId}
 			 , STR_TO_DATE(#{trdDt}, '%Y-%m-%dT%H:%i')
 			 , STR_TO_DATE(#{edDt}, '%Y-%m-%d')
+			 , #{fileSeq}
 			 )
 	]]>
 	</insert>

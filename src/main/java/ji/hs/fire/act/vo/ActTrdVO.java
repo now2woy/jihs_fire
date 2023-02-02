@@ -69,6 +69,10 @@ public class ActTrdVO {
 	 */
 	private String tlgrmMsgId;
 	/**
+	 * 파일일련번호
+	 */
+	private String fileSeq;
+	/**
 	 * 거래일시
 	 */
 	private String trdDt;

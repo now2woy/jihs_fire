@@ -24,8 +24,10 @@ import ji.hs.fire.act.mpr.ActMapper;
 import ji.hs.fire.act.mpr.ActTrdMapper;
 import ji.hs.fire.act.vo.ActTrdVO;
 import ji.hs.fire.act.vo.ActVO;
+import ji.hs.fire.bsc.mpr.BscFileMapper;
 import ji.hs.fire.bsc.svc.BscNoGenService;
 import ji.hs.fire.bsc.util.BscUtils;
+import ji.hs.fire.bsc.vo.BscFileVO;
 import ji.hs.fire.krx.svc.KrxItmSynService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +49,10 @@ public class ActTrdService {
 	 * 계좌 Mapper
 	 */
 	private final ActTrdMapper actTrdMapper;
+	/**
+	 * 파일 Mapper
+	 */
+	private final BscFileMapper bscFileMapper;
 	/**
 	 * 계좌 상품 거래 정보 Service
 	 */
@@ -198,6 +204,13 @@ public class ActTrdService {
 			
 			Files.copy(file.getInputStream(), Paths.get(uploadPath + File.separator + name + ext), StandardCopyOption.REPLACE_EXISTING);
 			
+			BscFileVO bscFileVO = new BscFileVO();
+			bscFileVO.setFileSeq(bscNoGenService.generate("BC_FILE_MT.FILE_SEQ"));
+			bscFileVO.setFileNm(name + ext);
+			bscFileVO.setOrgFileNm(file.getOriginalFilename());
+			
+			bscFileMapper.insert(bscFileVO);
+			
 			Document doc = Jsoup.parse(new File(uploadPath + File.separator + name + ext), "euc-kr", "");
 			Elements trs = doc.getElementsByTag("tr");
 			
@@ -210,6 +223,7 @@ public class ActTrdService {
 						ActTrdVO actTrdVO = new ActTrdVO();
 						actTrdVO.setActSeq(actSeq);
 						actTrdVO.setNote(note);
+						actTrdVO.setFileSeq(Integer.toString(bscFileVO.getFileSeq()));
 						actTrdVO.setTrdDt(tds1st.get(0).text().replaceAll("\\.", "-").replaceAll(" ", "T").replaceAll("\\(", "").substring(0, 16));
 						actTrdVO.setAmt(new BigDecimal(tds1st.get(5).text().replaceAll(",", "")));
 						actTrdVO.setFee(new BigDecimal(tds1st.get(8).text().replaceAll(",", "")));
@@ -238,11 +252,15 @@ public class ActTrdService {
 							
 						// 대분류 매수, 입고
 						} else if("매수".equals(tds1st.get(1).text()) || "입고".equals(tds1st.get(1).text())) {
-							actTrdVO.setTrdCd("00006");
-							actTrdVO.setQty(new BigDecimal(tds1st.get(4).text().replaceAll(",", "")));
-							actTrdVO.setPrc(new BigDecimal(tds2nd.get(0).text().replaceAll(",", "")));
-							// 매수의 경우 마이너스로 표기 해야 하므로 -1을 곱한다.
-							actTrdVO.setAmt(BscUtils.multiply(actTrdVO.getAmt(), new BigDecimal("-1"), 0));
+							// 유상채권입고의 경우 생략
+							if(!"유상채권입고".equals(tds1st.get(2).text())) {
+								actTrdVO.setTrdCd("00006");
+								actTrdVO.setQty(new BigDecimal(tds1st.get(4).text().replaceAll(",", "")));
+								actTrdVO.setPrc(new BigDecimal(tds2nd.get(0).text().replaceAll(",", "")));
+								// 매수의 경우 마이너스로 표기 해야 하므로 -1을 곱한다.
+								actTrdVO.setAmt(BscUtils.multiply(actTrdVO.getAmt(), new BigDecimal("-1"), 0));
+							}
+							
 							
 						// 대분류 매도
 						} else if("매도".equals(tds1st.get(1).text())) {
@@ -261,28 +279,31 @@ public class ActTrdService {
 						
 						// 종목 정보가 있을 경우
 						if(StringUtils.isNotEmpty(tds1st.get(3).text())) {
-							actTrdVO.setItmCd(krxItmSynService.selectItmCdByItmNm(tds1st.get(3).text().split(" ")[0]));
+							actTrdVO.setItmCd(krxItmSynService.selectItmCdByItmNm(tds1st.get(3).text().substring(0, tds1st.get(3).text().length() - 7)));
 							
 							// 종목코드가 없을 경우 동의어를 입력한다.
 							if(StringUtils.isEmpty(actTrdVO.getItmCd())) {
 								// 종목코드는 파일에서 가져온 자료 사용
-								actTrdVO.setItmCd(tds1st.get(3).text().split(" ")[1]);
-								krxItmSynService.insert(tds1st.get(3).text().split(" ")[0], tds1st.get(3).text().split(" ")[1]);
+								actTrdVO.setItmCd(tds1st.get(3).text().substring(tds1st.get(3).text().length() - 6));
+								krxItmSynService.insert(tds1st.get(3).text().substring(tds1st.get(3).text().length() - 6), tds1st.get(3).text().substring(0, tds1st.get(3).text().length() - 7));
 							}
 						}
 						
-						// 입력
-						insert(actTrdVO);
-						
-						// 주식이 계좌에 들어왔을 경우
-						if("00006".equals(actTrdVO.getTrdCd())) {
-							// 계좌 상품 거래 정보 입력
-							actPrdtService.insert(actTrdVO);
+						// 거래코드가 없을 경우 입력하지 않는다.
+						if(StringUtils.isNotEmpty(actTrdVO.getTrdCd())) {
+							// 입력
+							insert(actTrdVO);
 							
-						// 주식이 계좌에서 빠졌을 경우
-						} else if("00007".equals(actTrdVO.getTrdCd())) {
-							// 계좌 상품 거래 정보 수정
-							actPrdtService.update(actTrdVO);
+							// 주식이 계좌에 들어왔을 경우
+							if("00006".equals(actTrdVO.getTrdCd())) {
+								// 계좌 상품 거래 정보 입력
+								actPrdtService.insert(actTrdVO);
+								
+								// 주식이 계좌에서 빠졌을 경우
+							} else if("00007".equals(actTrdVO.getTrdCd())) {
+								// 계좌 상품 거래 정보 수정
+								actPrdtService.update(actTrdVO);
+							}
 						}
 					}
 				}

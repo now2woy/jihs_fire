@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ji.hs.fire.bsc.mpr.BscFileMapper">
+<!-- 파일 정보 입력 -->
+	<insert id="insert" parameterType="ji.hs.fire.bsc.vo.BscFileVO" flushCache="true">
+	<![CDATA[
+		INSERT INTO BC_FILE_MT (
+			   FILE_SEQ
+			 , FILE_NM
+			 , ORG_FILE_NM
+			 ) VALUES (
+			   #{fileSeq}
+			 , #{fileNm}
+			 , #{orgFileNm}
+			 )
+	]]>
+	</insert>
+</mapper>
