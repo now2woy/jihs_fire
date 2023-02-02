@@ -34,6 +34,13 @@
 	]]>
 	</select>
 	
+<!-- 종목코드를 종목명으로 조회 -->
+	<select id="selectItmCdByItmNm" resultType="String" parameterType="String">
+		SELECT ITM_CD
+		  FROM KX_ITM_MT
+		 WHERE ITM_NM = #{value}
+	</select>
+	
 <!-- ITM_CD 조건 한국거래소 종목 마스터 단건 조회 -->
 	<select id="selectAll" resultType="ji.hs.fire.krx.vo.KrxItmVO" parameterType="ji.hs.fire.krx.vo.KrxItmVO">
 		SELECT ITM_CD

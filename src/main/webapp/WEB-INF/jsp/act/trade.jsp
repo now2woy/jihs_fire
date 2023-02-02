@@ -108,8 +108,15 @@ function list() {
 function pu_open(){
 	var params = new URL(location.href).searchParams;
 	
+	var form = "<div style=\"margin: 10px;\"><form id=\"excelUpload\" name=\"excelUpload\" method=\"POST\" action=\"/api/act/trades/excelUpload\" enctype=\"multipart/form-data\">";
+	form = form + "<input type=\"hidden\" name=\"actSeq\" value=\"" + params.get("actSeq") + "\" />";
+	form = form + "<input type=\"file\" name=\"file\" /><br/><br/>";
+	form = form + "<input type=\"text\" name=\"note\" class=\"form-control\" value=\"\">";
+	form = form + "</form></div>";
+	
+	
 	$("#popup_title").text("Excel 업로드");
-	$("#popup_body").append("<div><form id=\"excelUpload\" name=\"excelUpload\" method=\"POST\" action=\"/api/act/trades/excelUpload\" enctype=\"multipart/form-data\"><input type=\"hidden\" name=\"actSeq\" value=\"" + params.get("actSeq") + "\" /><input type=\"file\" name=\"file\" /></form></div>");
+	$("#popup_body").append(form);
 	$("#popup_body").append("<div style=\"float: right;\"><button type=\"button\" id=\"upload-btn\" class=\"btn btn-success\" onclick=\"excel_upload();\">업로드</button></div>");
 	
 	$("#popup_layer").css('display', 'block');

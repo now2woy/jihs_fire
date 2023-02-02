@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ji.hs.fire.krx.mpr.KrxItmSynMapper">
+<!-- 한국거래소 주식종목 동의어 정보 Count 조회 -->
+	<select id="selectCount" resultType="Integer" parameterType="ji.hs.fire.krx.vo.KrxItmSynVO">
+		SELECT COUNT(*) AS CNT
+		  FROM KX_ITM_SYN_DT A
+		 WHERE ITM_CD = #{itmCd}
+		   AND ITM_NM = #{itmNm}
+	</select>
+	
+<!-- 종목코드를 종목명으로 조회 -->
+	<select id="selectItmCdByItmNm" resultType="String" parameterType="String">
+		SELECT ITM_CD
+		  FROM KX_ITM_MT
+		 WHERE ITM_NM = #{value}
+		 UNION ALL
+		SELECT ITM_CD
+		  FROM KX_ITM_SYN_DT
+		 WHERE ITM_NM = #{value}
+		 LIMIT 1
+	</select>
+	
+<!-- 한국거래소 주식종목 동의어 정보 입력 -->
+	<insert id="insert" parameterType="ji.hs.fire.krx.vo.KrxItmSynVO" flushCache="true">
+	<![CDATA[
+		INSERT INTO KX_ITM_SYN_DT (
+			   SYN_SEQ
+			 , ITM_CD
+			 , ITM_NM
+			 ) VALUES (
+			   #{synSeq}
+			 , #{itmCd}
+			 , #{itmNm}
+			 )
+	]]>
+	</insert>
+</mapper>

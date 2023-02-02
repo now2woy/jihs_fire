@@ -1,6 +1,7 @@
 package ji.hs.fire.act.svc;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -11,8 +12,12 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ji.hs.fire.act.mpr.ActMapper;
@@ -20,6 +25,8 @@ import ji.hs.fire.act.mpr.ActTrdMapper;
 import ji.hs.fire.act.vo.ActTrdVO;
 import ji.hs.fire.act.vo.ActVO;
 import ji.hs.fire.bsc.svc.BscNoGenService;
+import ji.hs.fire.bsc.util.BscUtils;
+import ji.hs.fire.krx.svc.KrxItmSynService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,12 +48,20 @@ public class ActTrdService {
 	 */
 	private final ActTrdMapper actTrdMapper;
 	/**
+	 * 계좌 상품 거래 정보 Service
+	 */
+	private final ActPrdtService actPrdtService;
+	/**
 	 * 채번 Service
 	 */
 	private final BscNoGenService bscNoGenService;
+	/**
+	 * 한국거래소 주식종목 동의어 Service
+	 */
+	private final KrxItmSynService krxItmSynService;
 	
 	/**
-	 * DART 종목코드는 압축파일로 다운로드 되어 파일 저장 경로가 필요
+	 * 파일 업로드 경로
 	 */
 	@Value("${constant.path.upload}")
 	private String uploadPath;
@@ -175,12 +190,105 @@ public class ActTrdService {
 	 * @param actSeq
 	 * @throws Exception
 	 */
-	public void excelUpload(MultipartFile file, String actSeq) throws Exception {
-		String name = UUID.randomUUID().toString();
-		String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-		
-		Files.copy(file.getInputStream(), Paths.get(uploadPath + File.separator + name + ext), StandardCopyOption.REPLACE_EXISTING);
-		
-		
+	@Transactional
+	public void excelUpload(MultipartFile file, String actSeq, String note) throws Exception {
+		try {
+			String name = UUID.randomUUID().toString();
+			String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+			
+			Files.copy(file.getInputStream(), Paths.get(uploadPath + File.separator + name + ext), StandardCopyOption.REPLACE_EXISTING);
+			
+			Document doc = Jsoup.parse(new File(uploadPath + File.separator + name + ext), "euc-kr", "");
+			Elements trs = doc.getElementsByTag("tr");
+			
+			if(trs.size() != 3) {
+				for(int i = 0; i < trs.size(); i = i + 2) {
+					Elements tds1st = trs.get(i).getElementsByTag("td");
+					Elements tds2nd = trs.get(i + 1).getElementsByTag("td");
+					
+					if(tds1st.size() != 0) {
+						ActTrdVO actTrdVO = new ActTrdVO();
+						actTrdVO.setActSeq(actSeq);
+						actTrdVO.setNote(note);
+						actTrdVO.setTrdDt(tds1st.get(0).text().replaceAll("\\.", "-").replaceAll(" ", "T").replaceAll("\\(", "").substring(0, 16));
+						actTrdVO.setAmt(new BigDecimal(tds1st.get(5).text().replaceAll(",", "")));
+						actTrdVO.setFee(new BigDecimal(tds1st.get(8).text().replaceAll(",", "")));
+						actTrdVO.setTax(new BigDecimal(tds2nd.get(4).text().replaceAll(",", "")));
+						
+						// 대분류 입금
+						if("입금".equals(tds1st.get(1).text())) {
+							// 소분류 배당금
+							if("배당금".equals(tds1st.get(2).text())) {
+								actTrdVO.setTrdCd("00004");
+								
+							// 소분류 예탁금이용료
+							} else if("예탁금이용료".equals(tds1st.get(2).text())) {
+								actTrdVO.setTrdCd("00003");
+								
+							// 그 외의 경우 입금
+							} else {
+								actTrdVO.setTrdCd("00001");
+							}
+							
+						// 대분류 출금
+						} else if("출금".equals(tds1st.get(1).text())) {
+							actTrdVO.setTrdCd("00002");
+							// 출금의 경우 마이너스로 표기 해야 하므로 -1을 곱한다.
+							actTrdVO.setAmt(BscUtils.multiply(actTrdVO.getAmt(), new BigDecimal("-1"), 0));
+							
+						// 대분류 매수, 입고
+						} else if("매수".equals(tds1st.get(1).text()) || "입고".equals(tds1st.get(1).text())) {
+							actTrdVO.setTrdCd("00006");
+							actTrdVO.setQty(new BigDecimal(tds1st.get(4).text().replaceAll(",", "")));
+							actTrdVO.setPrc(new BigDecimal(tds2nd.get(0).text().replaceAll(",", "")));
+							// 매수의 경우 마이너스로 표기 해야 하므로 -1을 곱한다.
+							actTrdVO.setAmt(BscUtils.multiply(actTrdVO.getAmt(), new BigDecimal("-1"), 0));
+							
+						// 대분류 매도
+						} else if("매도".equals(tds1st.get(1).text())) {
+							actTrdVO.setTrdCd("00007");
+							actTrdVO.setQty(new BigDecimal(tds1st.get(4).text().replaceAll(",", "")));
+							actTrdVO.setPrc(new BigDecimal(tds2nd.get(0).text().replaceAll(",", "")));
+							
+						} else if("환전".equals(tds1st.get(1).text())) {
+							actTrdVO.setTrdCd("00008");
+							
+							// 외화매수, 외화매수의 경우 마이너스로 표기 해야 하므로 -1을 곱한다.
+							if("외화매수".equals(tds1st.get(2).text())) {
+								actTrdVO.setAmt(BscUtils.multiply(actTrdVO.getAmt(), new BigDecimal("-1"), 0));
+							}
+						}
+						
+						// 종목 정보가 있을 경우
+						if(StringUtils.isNotEmpty(tds1st.get(3).text())) {
+							actTrdVO.setItmCd(krxItmSynService.selectItmCdByItmNm(tds1st.get(3).text().split(" ")[0]));
+							
+							// 종목코드가 없을 경우 동의어를 입력한다.
+							if(StringUtils.isEmpty(actTrdVO.getItmCd())) {
+								// 종목코드는 파일에서 가져온 자료 사용
+								actTrdVO.setItmCd(tds1st.get(3).text().split(" ")[1]);
+								krxItmSynService.insert(tds1st.get(3).text().split(" ")[0], tds1st.get(3).text().split(" ")[1]);
+							}
+						}
+						
+						// 입력
+						insert(actTrdVO);
+						
+						// 주식이 계좌에 들어왔을 경우
+						if("00006".equals(actTrdVO.getTrdCd())) {
+							// 계좌 상품 거래 정보 입력
+							actPrdtService.insert(actTrdVO);
+							
+						// 주식이 계좌에서 빠졌을 경우
+						} else if("00007".equals(actTrdVO.getTrdCd())) {
+							// 계좌 상품 거래 정보 수정
+							actPrdtService.update(actTrdVO);
+						}
+					}
+				}
+			}
+		} catch(Exception e) {
+			log.error("", e);
+		}
 	}
 }

@@ -35,7 +35,7 @@ public class ActTrdVO {
 	/**
 	 * 금액
 	 */
-	private String amt;
+	private BigDecimal amt;
 	/**
 	 * 종목코드
 	 */
@@ -47,7 +47,15 @@ public class ActTrdVO {
 	/**
 	 * 수량
 	 */
-	private String qty;
+	private BigDecimal qty;
+	/**
+	 * 수수료
+	 */
+	private BigDecimal fee;
+	/**
+	 * 세금
+	 */
+	private BigDecimal tax;
 	/**
 	 * 비고
 	 */

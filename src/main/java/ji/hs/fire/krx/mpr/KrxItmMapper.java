@@ -27,6 +27,14 @@ public interface KrxItmMapper {
 	public KrxItmVO selectOne(KrxItmVO krxItmVO) throws Exception;
 	
 	/**
+	 * 종목코드를 종목명으로 조회
+	 * @param krxItmVO
+	 * @return
+	 * @throws Exception
+	 */
+	public String selectItmCdByItmNm(String value) throws Exception;
+	
+	/**
 	 * ITM_CD 조건 한국거래소 종목 정보 목록 조회
 	 * @param krxItmVO
 	 * @return

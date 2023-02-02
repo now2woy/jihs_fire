@@ -55,4 +55,8 @@ public class ActPrdtVO {
 	 * 매도일시
 	 */
 	private String slDt;
+	/**
+	 * 검색건수
+	 */
+	private int limit;
 }

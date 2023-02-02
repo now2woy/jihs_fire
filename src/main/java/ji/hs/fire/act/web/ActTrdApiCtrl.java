@@ -71,9 +71,10 @@ public class ActTrdApiCtrl {
 	 */
 	@PostMapping("/excelUpload")
 	public ResponseEntity<ActTrdVO> excelUpload(@RequestParam(required = true) MultipartFile file
-											  , @RequestParam(required = true) String actSeq) throws Exception {
+											  , @RequestParam(required = true) String actSeq
+											  , @RequestParam(defaultValue = "") String note) throws Exception {
 		
-		actTrdService.excelUpload(file, actSeq);
+		actTrdService.excelUpload(file, actSeq, note);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(null);
 	}

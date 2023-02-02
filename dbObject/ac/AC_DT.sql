@@ -9,6 +9,8 @@ CREATE TABLE AC_DT (
 	, AMT			DECIMAL(20)		NULL		comment '금액'
 	, ITM_CD		VARCHAR(10)		NULL		COMMENT '종목코드'
 	, QTY			DECIMAL(20)		NULL		comment '수량'
+	, FEE			DECIMAL(20)		NULL		comment '수수료'
+	, TAX			DECIMAL(20)		NULL		comment '세금'
 	, NOTE			VARCHAR(4000)	NULL		comment '비고'
 	, TLGRM_MSG_ID	VARCHAR(100)	NULL		comment '텔레그램메시지ID'
 	, TRD_DT		DATETIME		NULL		comment '거래일시'

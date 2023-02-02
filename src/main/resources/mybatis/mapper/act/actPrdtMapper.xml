@@ -2,6 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ji.hs.fire.act.mpr.ActPrdtMapper">
 <!-- 계좌 상품 거래 정보 입력 -->
+	<select id="selectAll" parameterType="ji.hs.fire.act.vo.ActPrdtVO" resultType="ji.hs.fire.act.vo.ActPrdtVO">
+		SELECT PRDT_TRD_SEQ
+			 , ACT_SEQ
+			 , ITM_CD
+			 , BY_TRD_SEQ
+			 , BY_AMT
+			 , BY_TLGRM_MSG_ID
+			 , BY_DT
+			 , SL_TRD_SEQ
+			 , SL_AMT
+			 , SL_TLGRM_MSG_ID
+			 , SL_DT
+		  FROM AC_PRDT_DT
+		 WHERE 1 = 1
+		   AND ITM_CD = #{itmCd}
+		   AND SL_TRD_SEQ IS NULL
+		 ORDER BY BY_DT ASC, PRDT_TRD_SEQ ASC
+		 LIMIT #{limit}
+	</select>
+	
+<!-- 계좌 상품 거래 정보 입력 -->
 	<insert id="insert" parameterType="ji.hs.fire.act.vo.ActPrdtVO" flushCache="true">
 	<![CDATA[
 		INSERT INTO AC_PRDT_DT (
@@ -31,6 +52,16 @@
 			 )
 	]]>
 	</insert>
+	
+<!-- 계좌 상품 거래 정보 수정 -->
+	<update id="update" parameterType="ji.hs.fire.act.vo.ActPrdtVO" flushCache="true">
+		UPDATE AC_PRDT_DT
+		   SET SL_TRD_SEQ = #{slTrdSeq}
+		     , SL_AMT = #{slAmt}
+		     , SL_TLGRM_MSG_ID = #{slTlgrmMsgId}
+		     , SL_DT = STR_TO_DATE(#{slDt}, '%Y-%m-%dT%H:%i')
+		 WHERE PRDT_TRD_SEQ = #{prdtTrdSeq}
+	</update>
 
 <!-- 계좌 상품 거래 정보의 계쫘일련번호를 수정 -->
 	<update id="updateActSeqByByTlgrmMsgId" parameterType="ji.hs.fire.act.vo.ActPrdtVO" flushCache="true">

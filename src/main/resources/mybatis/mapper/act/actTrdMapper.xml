@@ -58,6 +58,8 @@
 			 , AMT
 			 , ITM_CD
 			 , QTY
+			 , FEE
+			 , TAX
 			 , NOTE
 			 , TLGRM_MSG_ID
 			 , TRD_DT
@@ -69,7 +71,9 @@
 			 , #{trdCd}
 			 , #{amt}
 			 , #{itmCd}
-			 , NULLIF(#{qty}, '')
+			 , NULLIF(#{qty}, '0')
+			 , NULLIF(#{fee}, '0')
+			 , NULLIF(#{tax}, '0')
 			 , #{note}
 			 , #{tlgrmMsgId}
 			 , STR_TO_DATE(#{trdDt}, '%Y-%m-%dT%H:%i')

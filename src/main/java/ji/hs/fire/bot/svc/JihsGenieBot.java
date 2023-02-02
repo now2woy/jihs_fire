@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Slf4j
-@Component
+//@Component
 @RequiredArgsConstructor
 public class JihsGenieBot extends TelegramLongPollingBot {
 	/**
@@ -109,7 +109,7 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					ActTrdVO actTrdVO = new ActTrdVO();
 					actTrdVO.setActNo(msg.substring(25, 36).replaceAll("\\*", "_"));
 					actTrdVO.setTrdCd("00005");
-					actTrdVO.setAmt(msg.substring(52, msg.indexOf(" ", 52)).replaceAll(",", ""));
+					actTrdVO.setAmt(new BigDecimal(msg.substring(52, msg.indexOf(" ", 52)).replaceAll(",", "")));
 					actTrdVO.setNote(msg.substring(msg.indexOf(" ", 52) + 1, msg.lastIndexOf(" 분배금")));
 					actTrdVO.setTrdDt(BscUtils.thisDateTime("yyyy") + "-" + msg.substring(40, 51).replaceAll("/", "-").replace(" ", "T"));
 					actTrdVO.setTlgrmId(Long.toString(update.getMessage().getChatId()));
@@ -128,16 +128,16 @@ public class JihsGenieBot extends TelegramLongPollingBot {
 					
 					ActTrdVO actTrdVO = new ActTrdVO();
 					actTrdVO.setItmCd( msg.substring(msg.indexOf("종목코드") + 7, msg.indexOf("종목코드") + 13));
-					actTrdVO.setQty(msg.substring(msg.indexOf("체결수량") + 7, msg.indexOf("주", msg.indexOf("체결수량"))));
+					actTrdVO.setQty(new BigDecimal(msg.substring(msg.indexOf("체결수량") + 7, msg.indexOf("주", msg.indexOf("체결수량"))).replaceAll(",", "")));
 					actTrdVO.setPrc(new BigDecimal(msg.substring(msg.indexOf("체결단가") + 7, msg.indexOf("원", msg.indexOf("체결단가"))).replaceAll(",", "")));
-					actTrdVO.setAmt(BscUtils.multiply(new BigDecimal(actTrdVO.getQty()), actTrdVO.getPrc(), 0).toString());
+					actTrdVO.setAmt(BscUtils.multiply(actTrdVO.getQty(), actTrdVO.getPrc(), 0));
 					actTrdVO.setTrdDt(BscUtils.thisDateTime("yyyy-MM-dd HH:mm").replace(" ", "T"));
 					actTrdVO.setTlgrmId(Long.toString(update.getMessage().getChatId()));
 					actTrdVO.setTlgrmMsgId(Integer.toString(update.getMessage().getMessageId()));
 					
 					if(msg.indexOf("체결종류 : 매수") != -1) {
 						actTrdVO.setTrdCd("00006");
-						actTrdVO.setAmt(BscUtils.multiply(BigDecimal.valueOf(-1), new BigDecimal(actTrdVO.getAmt()), 0).toString());
+						actTrdVO.setAmt(BscUtils.multiply(BigDecimal.valueOf(-1), actTrdVO.getAmt(), 0));
 					} else if(msg.indexOf("체결종류 : 매도") != -1) {
 						actTrdVO.setTrdCd("00007");
 					}
