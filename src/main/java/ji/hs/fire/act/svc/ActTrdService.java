@@ -243,7 +243,7 @@ public class ActTrdService {
 							} else if("예탁금이용료".equals(tds1st.get(2).text())) {
 								actTrdVO.setTrdCd("00003");
 								
-							} else if("ETF분배금입금".equals(tds1st.get(2).text())) {
+							} else if("ETF분배금입금".equals(tds1st.get(2).text()) || "분배금입금".equals(tds1st.get(2).text())) {
 								actTrdVO.setTrdCd("00005");
 								
 							// 그 외의 경우 입금
