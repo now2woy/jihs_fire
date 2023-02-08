@@ -1,0 +1,26 @@
+/* 코드 마스터 테이블 생성 */
+CREATE TABLE BC_CD_MT (
+	  CD_COL	VARCHAR(100)	NOT NULL	COMMENT '코드컬럼'
+	, CD_COL_NM	VARCHAR(200)	NOT NULL	COMMENT '코드컬럼명'
+	, USE_YN	VARCHAR(1)		NOT NULL	COMMENT '사용여부'
+) ENGINE=INNODB COMMENT='코드 분류 정보';
+
+/* PK 생성 */
+ALTER TABLE BC_CD_MT ADD PRIMARY KEY (CD_COL);
+
+/* 기본 데이터 생성 쿼리 */
+INSERT INTO BC_CD_MT VALUES('ACT_CD',		'계좌코드',			'Y');
+INSERT INTO BC_CD_MT VALUES('BATCH_CD',		'배치코드',			'Y');
+INSERT INTO BC_CD_MT VALUES('BK_CD',		'은행코드',			'Y');
+INSERT INTO BC_CD_MT VALUES('ITM_CL_CD',	'주식구분코드',			'Y');
+INSERT INTO BC_CD_MT VALUES('ITM_KND_CD',	'주식종류코드',			'Y');
+INSERT INTO BC_CD_MT VALUES('MKT_CD',		'시장코드',			'Y');
+INSERT INTO BC_CD_MT VALUES('REPRT_CD',		'분기코드',			'Y');
+INSERT INTO BC_CD_MT VALUES('SJ_CD',		'구분코드',			'Y');
+INSERT INTO BC_CD_MT VALUES('TAX_CL_CD',	'과세유형코드',			'Y');
+INSERT INTO BC_CD_MT VALUES('TLGRM_CMD_CD',	'텔레그램커맨드코드',		'Y');
+INSERT INTO BC_CD_MT VALUES('TLGRM_MSG_CD',	'텔레그램메시지코드',		'Y');
+INSERT INTO BC_CD_MT VALUES('TRD_CD',		'거래코드',			'Y');
+
+/* 커밋 */
+commit;
