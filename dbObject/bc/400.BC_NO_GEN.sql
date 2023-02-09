@@ -1,0 +1,7 @@
+/* 채번 정보 테이블 생성 */
+CREATE TABLE BC_NO_GEN (
+	  GEN_KEY	VARCHAR(100)	NOT NULL	comment '채번키'
+	, NUM		DECIMAL(20)		NOT NULL	comment '번호'
+) ENGINE=INNODB COMMENT '채번 정보';
+
+ALTER TABLE BC_NO_GEN ADD PRIMARY KEY (GEN_KEY);
