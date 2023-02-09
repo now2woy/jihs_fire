@@ -1,5 +1,7 @@
 package ji.hs.fire.bsc.mpr;
 
+import ji.hs.fire.bsc.vo.BscNoGenVO;
+
 /**
  * 채번 Mapper
  * @author now2w
@@ -12,7 +14,7 @@ public interface BscNoGenMapper {
 	 * @return
 	 * @throws Exception
 	 */
-	public int selectOne(String genKey) throws Exception;
+	public BscNoGenVO selectOne(String genKey) throws Exception;
 	/**
 	 * 채번 입력
 	 * @param genKey
