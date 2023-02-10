@@ -91,9 +91,9 @@ public class KrxApiCtrl {
 		Map<String, String> result = null;
 		// 04시 실행
 		if(BscUtils.isRunTime("04")){
-			// 한국거래소 종목 거래 정보 수집
-			result = krxTrdService.trdCollection(limit);
 		}
+		// 한국거래소 종목 거래 정보 수집
+		result = krxTrdService.trdCollection(limit);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(result);
 	}
