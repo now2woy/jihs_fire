@@ -228,6 +228,21 @@ public class DartFnlttService {
 		MDC.clear();
 	}
 	
+	
+	/**
+	 * Dart 재무제표 가공
+	 * @param limit
+	 * @throws Exception
+	 */
+	@Async
+	@Transactional
+	public void dartFnlttDataManufacture(int limit) throws Exception {
+		MDC.put(BscConstants.LOG_KEY, BscConstants.LOG_KEY_DART);
+		
+		
+		MDC.clear();
+	}
+	
 	/**
 	 * URL로부터 데이터를 가져온다.
 	 * @param itmCd

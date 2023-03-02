@@ -12,10 +12,12 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ji.hs.fire.bsc.util.BscConstants;
 import ji.hs.fire.bsc.util.BscUtils;
 import ji.hs.fire.dart.mpr.DartItmMapper;
 import ji.hs.fire.dart.mpr.DartKeyMapper;
@@ -53,6 +55,8 @@ public class DartItmService {
 	 * @throws Exception
 	 */
 	public boolean dartCoprCdDownload() throws Exception {
+		MDC.put(BscConstants.LOG_KEY, BscConstants.LOG_KEY_DART);
+		
 		log.info("전자공시시스템 종목 코드 파일 다운로드 시작");
 		
 		boolean result = true;
@@ -77,6 +81,8 @@ public class DartItmService {
 		}
 		
 		log.info("전자공시시스템 종목 코드 파일 다운로드 종료");
+		
+		MDC.clear();
 		
 		return result;
 	}

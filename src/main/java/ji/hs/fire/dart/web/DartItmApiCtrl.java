@@ -3,9 +3,11 @@ package ji.hs.fire.dart.web;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ji.hs.fire.bsc.util.BscUtils;
 import ji.hs.fire.dart.svc.DartItmService;
 import ji.hs.fire.dart.vo.DartKeyVO;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +30,17 @@ public class DartItmApiCtrl {
 	 * @return
 	 * @throws Exception
 	 */
-	@GetMapping("")
+	@PostMapping("/batch")
 	public ResponseEntity<DartKeyVO> insert() throws Exception {
 		
-		//  전자공시시스템 종목 코드 파일 다운로드
-		if(dartItmService.dartCoprCdDownload()) {
-			log.info("전자공시시스템 종목 코드 파일 다운로드 성공");
-			
-			// 다운로드한 파일을 처리 한다.
-			dartItmService.dartCoprCdCollection();
+		if(BscUtils.isRunTime("01")){
+			//  전자공시시스템 종목 코드 파일 다운로드
+			if(dartItmService.dartCoprCdDownload()) {
+				log.info("전자공시시스템 종목 코드 파일 다운로드 성공");
+				
+				// 다운로드한 파일을 처리 한다.
+				dartItmService.dartCoprCdCollection();
+			}
 		}
 		
 		// 성공 리턴
