@@ -239,6 +239,51 @@ public class DartFnlttService {
 	public void dartFnlttDataManufacture(int limit) throws Exception {
 		MDC.put(BscConstants.LOG_KEY, BscConstants.LOG_KEY_DART);
 		
+		BscBatchVO parmBatchVO = new BscBatchVO();
+		parmBatchVO.setBatchCd("00004");
+		parmBatchVO.setExeYn("N");
+		parmBatchVO.setLimit(limit);
+		
+		// 배치 실행 대사 조회
+		for(BscBatchVO bscBatchVO : bscBatchMapper.selectAll(parmBatchVO)) {
+			log.info("{}년도 {}분기 재무제표 가공 시작", bscBatchVO.getParm1st(), bscBatchVO.getParm2nd());
+			
+			// 1 : 배치 시작
+			bscBatchVO.setUpdCnt(1);
+			
+			// 배치 실행 시간 입력
+			bscBatchMapper.update(bscBatchVO);
+			
+			// 배치 실행 했으니 일단 완료
+			bscBatchVO.setExeYn("Y");
+			
+			DartItmVO parmDartItmVO = new DartItmVO();
+			parmDartItmVO.setYr(bscBatchVO.getParm1st());
+			parmDartItmVO.setQtCd(bscBatchVO.getParm2nd());
+			
+			// 수집 대상 종목 조회
+			for(DartItmVO dartItmVO : dartItmMapper.selectAll(parmDartItmVO)) {
+				// TODO findByItmCdAndYrAndQtOrderBySeqAsc 조회
+				
+				// TODO 반복
+				
+				// TODO 
+			}
+			
+			// 배치가 정상 실행되었을 경우 성공여부가 'Y'이다.
+			if("Y".equals(bscBatchVO.getExeYn())) {
+				bscBatchVO.setSucYn("Y");
+			}
+			
+			// 2 : 배치 종료
+			bscBatchVO.setUpdCnt(2);
+			
+			// 베치 결과 UPDATE
+			bscBatchMapper.update(bscBatchVO);
+			
+			log.info("{}년도 {}분기 재무제표 가공 종료", bscBatchVO.getParm1st(), bscBatchVO.getParm2nd());
+		}
+		
 		
 		MDC.clear();
 	}
