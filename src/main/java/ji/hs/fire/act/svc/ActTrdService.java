@@ -211,6 +211,16 @@ public class ActTrdService {
 			
 			bscFileMapper.insert(bscFileVO);
 			
+			// 계좌가 농협일 경우
+			nhExcelProcess(actSeq, note, name, ext, bscFileVO.getFileSeq());
+			
+		} catch(Exception e) {
+			log.error("", e);
+		}
+	}
+	
+	private void nhExcelProcess(String actSeq, String note, String name, String ext, int fileSeq) {
+		try {
 			Document doc = Jsoup.parse(new File(uploadPath + File.separator + name + ext), "euc-kr", "");
 			Elements trs = doc.getElementsByTag("tr");
 			
@@ -222,7 +232,7 @@ public class ActTrdService {
 					if(tds1st.size() != 0) {
 						ActTrdVO actTrdVO = new ActTrdVO();
 						actTrdVO.setActSeq(actSeq);
-						actTrdVO.setFileSeq(Integer.toString(bscFileVO.getFileSeq()));
+						actTrdVO.setFileSeq(Integer.toString(fileSeq));
 						actTrdVO.setTrdDt(tds1st.get(0).text().replaceAll("\\.", "-").replaceAll(" ", "T").replaceAll("\\(", "").substring(0, 16));
 						actTrdVO.setAmt(new BigDecimal(tds1st.get(5).text().replaceAll(",", "")));
 						actTrdVO.setFee(new BigDecimal(tds1st.get(8).text().replaceAll(",", "")));
