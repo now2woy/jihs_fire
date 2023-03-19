@@ -260,7 +260,14 @@ public class ActTrdService {
 						// 대분류 매수, 입고
 						} else if("매수".equals(tds1st.get(1).text()) || "입고".equals(tds1st.get(1).text())) {
 							// 유상채권입고의 경우 생략
-							if(!"유상채권입고".equals(tds1st.get(2).text())) {
+							if("유상채권입고".equals(tds1st.get(2).text())) {
+								log.info("유상채권입고로 입력 생략");
+								
+							// 조건부매수의 경우 입력 생략
+							} else if("조건부매수".equals(tds1st.get(2).text())) {
+								log.info("조건부매수로 입력 생략");
+								
+							} else {
 								actTrdVO.setTrdCd("00006");
 								actTrdVO.setQty(new BigDecimal(tds1st.get(4).text().replaceAll(",", "")));
 								actTrdVO.setPrc(new BigDecimal(tds2nd.get(0).text().replaceAll(",", "")));
@@ -268,12 +275,18 @@ public class ActTrdService {
 								actTrdVO.setAmt(BscUtils.multiply(actTrdVO.getAmt(), new BigDecimal("-1"), 0));
 							}
 							
-							
 						// 대분류 매도
 						} else if("매도".equals(tds1st.get(1).text())) {
-							actTrdVO.setTrdCd("00007");
-							actTrdVO.setQty(new BigDecimal(tds1st.get(4).text().replaceAll(",", "")));
-							actTrdVO.setPrc(new BigDecimal(tds2nd.get(0).text().replaceAll(",", "")));
+							// 환매도는 이자의 한종류
+							if("환매도".equals(tds1st.get(2).text())) {
+								actTrdVO.setTrdCd("00003");
+								actTrdVO.setAmt(new BigDecimal(tds2nd.get(3).text().replaceAll(",", "")));
+								
+							} else {
+								actTrdVO.setTrdCd("00007");
+								actTrdVO.setQty(new BigDecimal(tds1st.get(4).text().replaceAll(",", "")));
+								actTrdVO.setPrc(new BigDecimal(tds2nd.get(0).text().replaceAll(",", "")));
+							}
 							
 						} else if("환전".equals(tds1st.get(1).text())) {
 							actTrdVO.setTrdCd("00008");
@@ -284,15 +297,18 @@ public class ActTrdService {
 							}
 						}
 						
-						// 종목 정보가 있을 경우
-						if(StringUtils.isNotEmpty(tds1st.get(3).text())) {
-							actTrdVO.setItmCd(krxItmSynService.selectItmCdByItmNm(tds1st.get(3).text().substring(0, tds1st.get(3).text().length() - 7)));
-							
-							// 종목코드가 없을 경우 동의어를 입력한다.
-							if(StringUtils.isEmpty(actTrdVO.getItmCd())) {
-								// 종목코드는 파일에서 가져온 자료 사용
-								actTrdVO.setItmCd(tds1st.get(3).text().substring(tds1st.get(3).text().length() - 6));
-								krxItmSynService.insert(tds1st.get(3).text().substring(tds1st.get(3).text().length() - 6), tds1st.get(3).text().substring(0, tds1st.get(3).text().length() - 7));
+						// 거래구분이 이자일 경우 종목코드가 없다.
+						if(!"00003".equals(actTrdVO.getTrdCd())){
+							// 종목 정보가 있을 경우
+							if(StringUtils.isNotEmpty(tds1st.get(3).text())) {
+								actTrdVO.setItmCd(krxItmSynService.selectItmCdByItmNm(tds1st.get(3).text().substring(0, tds1st.get(3).text().length() - 7)));
+								
+								// 종목코드가 없을 경우 동의어를 입력한다.
+								if(StringUtils.isEmpty(actTrdVO.getItmCd())) {
+									// 종목코드는 파일에서 가져온 자료 사용
+									actTrdVO.setItmCd(tds1st.get(3).text().substring(tds1st.get(3).text().length() - 6));
+									krxItmSynService.insert(tds1st.get(3).text().substring(tds1st.get(3).text().length() - 6), tds1st.get(3).text().substring(0, tds1st.get(3).text().length() - 7));
+								}
 							}
 						}
 						

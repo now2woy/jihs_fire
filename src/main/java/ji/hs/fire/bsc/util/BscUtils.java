@@ -14,6 +14,7 @@ import java.util.Map;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -241,5 +242,20 @@ public class BscUtils {
 		NumberFormat numberFormat = NumberFormat.getInstance();
 		
 		return numberFormat.format(number);
+	}
+	
+	/**
+	 * String을 BigDecimal로 변환하여 리턴한다.
+	 * CASE : String이 빈값일 경우 null
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static BigDecimal stringToBigDecimal(String str) {
+		if(StringUtils.isNotEmpty(str)) {
+			return new BigDecimal(str);
+		} else {
+			return null;
+		}
 	}
 }
