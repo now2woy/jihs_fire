@@ -12,6 +12,8 @@
 			 , ITM_CD
 			 , (SELECT ITM_NM FROM KX_ITM_MT X WHERE A.ITM_CD = X.ITM_CD) AS ITM_NM
 			 , QTY
+			 , FEE
+			 , TAX
 			 , NOTE
  			 , CASE WHEN TRD_DT != '0000/00/00 00:00'
 			        THEN DATE_FORMAT(TRD_DT, '%Y-%m-%d %H:%i')
