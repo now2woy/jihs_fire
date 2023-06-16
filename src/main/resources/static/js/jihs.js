@@ -363,7 +363,87 @@ function bc_num_format(num){
  * 팝업창을 닫는다.
  */
 function pu_close(){
+	PAGE_CONFIG["POPUP_YN"] = false;
 	$("#popup_layer").css('display', 'none');
 	$("#popup_title").empty();
 	$("#popup_body").empty();
+	
+	// 재로딩이 true일 경우
+	if(PAGE_CONFIG["RELOAD_YN"] == true){
+		location.reload();
+	}
+}
+
+/**
+ * 팝업창을 닫는다.
+ */
+function pu_2nd_close(){
+	PAGE_CONFIG["POPUP_YN"] = false;
+	$("#popup_2nd_layer").css('display', 'none');
+	$("#popup_2nd_title").empty();
+	$("#popup_2nd_body").empty();
+	
+	// 재로딩이 true일 경우
+	if(PAGE_CONFIG["RELOAD_YN"] == true){
+		location.reload();
+	}
+}
+
+/**
+ * 
+ */
+function JIHS_CREATE_TAG(html, tag, id, type, classNm, style, click, text, selfClsCd){
+	let sTag = "<" + tag;
+	let eTag = "</" + tag + ">";
+	
+	// 태그가 TEXT일 경우 시작 태그에 text 값만 넣는다.
+	if(tag == "TEXT"){
+		sTag = text;
+		
+	// 태그가 END일 경우 종료 태그값을 시작 태그값에 반영한다.
+	} else if(tag == "END"){
+		sTag = html["E_TAG"];
+		html["E_TAG"] = "";
+		
+	} else {
+		// ID가 있을 경우
+		if(id != ""){
+			sTag = sTag + " id=\"" + id + "\"";
+		}
+		
+		// type가 있을 경우
+		if(type != ""){
+			sTag = sTag + " type=\"" + type + "\"";
+		}
+		
+		// 클래스가 있을 경우
+		if(classNm != ""){
+			sTag = sTag + " class=\"" + classNm + "\"";
+		}
+		
+		// 스타일이 있을 경우
+		if(style != ""){
+			sTag = sTag + " style=\"" + style + "\"";
+		}
+		
+		// 온클릭함수가 있을 경우
+		if(click != ""){
+			sTag = sTag + " onclick=\"" + click + "\"";
+		}
+		
+		// 셀프클로즈일때
+		if(selfClsCd == 1){
+			sTag = sTag + "/>";
+		// 바로 닫을 때
+		} else if(selfClsCd == 2){
+			sTag = sTag + "></" + tag + ">";
+			
+		// 나중에 닫을때
+		} else {
+			sTag = sTag + ">";
+			html["E_TAG"] = eTag + html["E_TAG"];
+		}
+	}
+	
+	html["S_TAG"] = html["S_TAG"] + sTag;
 }
