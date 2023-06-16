@@ -389,19 +389,63 @@ function pu_2nd_close(){
 	}
 }
 
+
 /**
+ * 특정 URL의 값을 가져와 SELECT 박스를 만들어서 리턴
+ *
+ * @param id		: String : 태그 ID
+ * @param name		: String : 태그 NAME
+ * @param slctCd	: String : 조회 URL의 코드값
+ */
+function JIHS_ITEM_SELECT(id, name, slctCd){
+	
+	let url = "/api/comm/slcts?slctCd=" + slctCd;
+	let html = [];
+	
+	html["S_TAG"] = "";
+	html["E_TAG"] = "";
+	
+	JIHS_CREATE_TAG(html, "select", id, name, "", "", "form-control", "", "", "", 3);
+	JIHS_CREATE_TAG(html, "option", "", "", "_", "", "", "", "", "선택", 2);
+	
+	$.ajax({
+		url: url
+		, data : null
+		, method: "GET"
+		, dataType: "json"
+		, async : false
+	})
+	.done(function(json) {
+		if(json.data.length != 0){
+			$.each(json.data, function(key, value){
+				JIHS_CREATE_TAG(html, "option", "", "", value["cd"], "", "", "", "", value["nm"], 2);
+			});
+		}
+	});
+	
+	return html["S_TAG"] + html["E_TAG"];
+}
+
+/**
+ * @param html		: Object : 결과값을 담는 객체
+ * @param tag		: String : 태그명
+ * @param id		: 태그의 ID
+ * @param name		: 태그의 NAME
+ * @param val		: 태그의 value 빈값인 value를 생성해야 할 경우 "_" 넣는다.
+ * @param type		: 태그의 타입
+ * @param classNm	: 태그의 class
+ * @param style		: 태그의 스타일
+ * @param click		: 태그의 온클릭
+ * @param text		: 태그 하위가 문구 일 경우 문구
+ * @param selfClsCd	: 닫는 방식
  * 
  */
-function JIHS_CREATE_TAG(html, tag, id, type, classNm, style, click, text, selfClsCd){
+function JIHS_CREATE_TAG(html, tag, id, name, val, type, classNm, style, click, text, selfClsCd){
 	let sTag = "<" + tag;
 	let eTag = "</" + tag + ">";
 	
-	// 태그가 TEXT일 경우 시작 태그에 text 값만 넣는다.
-	if(tag == "TEXT"){
-		sTag = text;
-		
 	// 태그가 END일 경우 종료 태그값을 시작 태그값에 반영한다.
-	} else if(tag == "END"){
+	if(tag == "END"){
 		sTag = html["E_TAG"];
 		html["E_TAG"] = "";
 		
@@ -409,6 +453,21 @@ function JIHS_CREATE_TAG(html, tag, id, type, classNm, style, click, text, selfC
 		// ID가 있을 경우
 		if(id != ""){
 			sTag = sTag + " id=\"" + id + "\"";
+		}
+		
+		// NAME이 있을 경우
+		if(name != ""){
+			sTag = sTag + " name=\"" + name + "\"";
+		}
+		
+		// VALUE가 있을 경우
+		if(val != ""){
+			// 밸류값이 "_" 일 경우 빈값 으로 생성
+			if(val == "_"){
+				sTag = sTag + " value=\"\"";
+			} else {
+				sTag = sTag + " value=\"" + val + "\"";
+			}
 		}
 		
 		// type가 있을 경우
@@ -431,17 +490,27 @@ function JIHS_CREATE_TAG(html, tag, id, type, classNm, style, click, text, selfC
 			sTag = sTag + " onclick=\"" + click + "\"";
 		}
 		
-		// 셀프클로즈일때
+		// 셀프클로즈일 경우
 		if(selfClsCd == 1){
 			sTag = sTag + "/>";
-		// 바로 닫을 때
-		} else if(selfClsCd == 2){
-			sTag = sTag + "></" + tag + ">";
 			
-		// 나중에 닫을때
+		// 셀프클로즈가 아닐 경우
 		} else {
 			sTag = sTag + ">";
-			html["E_TAG"] = eTag + html["E_TAG"];
+			
+			// 텍스트가 있을 경우
+			if(text != ""){
+				sTag = sTag + text;
+			}
+			
+			// 바로 닫을 때
+			if(selfClsCd == 2){
+				sTag = sTag + "</" + tag + ">";
+				
+			// 나중에 닫을때
+			} else {
+				html["E_TAG"] = eTag + html["E_TAG"];
+			}
 		}
 	}
 	
