@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ji.hs.fire.act.mpr.ActMapper;
+import ji.hs.fire.act.svc.ActBlcAggService;
 import ji.hs.fire.act.svc.ActService;
 import ji.hs.fire.act.vo.ActVO;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +32,14 @@ public class ActApiCtrl {
 	 */
 	private final ActMapper actMapper;
 	/**
-	 * 계좌 Mapper
+	 * 계좌 정보 Service
 	 */
 	private final ActService actService;
+	
+	/**
+	 * 계좌 잔고 집계 정보 Service
+	 */
+	private final ActBlcAggService actBlcAggService;
 	
 	/**
 	 * 계좌 정보 목록 조회
@@ -68,5 +74,17 @@ public class ActApiCtrl {
 		actService.insert(actVO);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(actVO);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@GetMapping("/aggregate")
+	public ResponseEntity<Map<String, Object>> aggregate() throws Exception {
+		Map<String, Object> result = actBlcAggService.blcAggregate("1");
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 }
