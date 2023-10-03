@@ -6,7 +6,7 @@
 		/* 최종 잔고금액과 하루치 거래정보를 계산한 결과 */
 		SELECT A.ACT_SEQ
 			 , DATE_FORMAT(B.TRD_DT, '%Y%m%d') AS AGG_DT
-			 , A.BLC_AMT + ((SUM(B.AMT) - SUM(NVL(B.FEE, 0))) - SUM(NVL(B.TAX, 0))) AS B
+			 , A.BLC_AMT + ((SUM(B.AMT) - SUM(NVL(B.FEE, 0))) - SUM(NVL(B.TAX, 0))) AS BLC_AMT
 		  FROM (SELECT *
 				  FROM AC_BL_AG X
 				 WHERE X.ACT_SEQ = #{actSeq}
@@ -34,7 +34,7 @@
 			 ) VALUES (
 			   #{actSeq}
 			 , STR_TO_DATE(#{aggDt}, '%Y%m%d')
-			 , #{aggAmt}
+			 , #{blcAmt}
 			 )
 	]]>
 	</insert>
