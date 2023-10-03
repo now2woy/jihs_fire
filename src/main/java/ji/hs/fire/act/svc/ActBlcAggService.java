@@ -41,20 +41,26 @@ public class ActBlcAggService {
 			ActBlcAggVO param = new ActBlcAggVO();
 			param.setActSeq(actSeq);
 			
-			ActBlcAggVO vo = actBlcAggMapper.selectOne(param);
-			
-			// 조회된 결과가 있을 경우
-			if(vo != null) {
-				// 집계 테이블에 자료 저장
-				cnt = actBlcAggMapper.insert(vo);
-				
-			// 조회된 결과가 없을 경우
-			} else {
-				log.info("[계좌 잔고 집계] 계좌일련번호 {}의 최종 집계 이후 거래 내역이 없습니다.", actSeq);
-			}
-			
 			// 오류가 없을 경우 성공
 			isSuccess = true;
+			
+			while(isSuccess) {
+				ActBlcAggVO vo = actBlcAggMapper.selectOne(param);
+				
+				// 조회된 결과가 있을 경우
+				if(vo != null) {
+					// 집계 테이블에 자료 저장
+					cnt += actBlcAggMapper.insert(vo);
+					
+					log.info("[계좌 잔고 집계] 계좌일련번호 {}의 {}일 자료 집계, 누적건수 {}", vo.getAggDt(), cnt);
+					
+					// 조회된 결과가 없을 경우
+				} else {
+					isSuccess = false;
+					log.info("[계좌 잔고 집계] 계좌일련번호 {}의 최종 집계 이후 거래 내역이 없습니다.", actSeq);
+				}
+			}
+			
 		}catch(Exception e) {
 			log.error("[계좌 잔고 집계] ", e);
 		}
