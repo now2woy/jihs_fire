@@ -52,7 +52,7 @@ public class ActBlcAggService {
 					// 집계 테이블에 자료 저장
 					cnt += actBlcAggMapper.insert(vo);
 					
-					log.info("[계좌 잔고 집계] 계좌일련번호 {}의 {}일 자료 집계, 누적건수 {}", vo.getAggDt(), cnt);
+					log.info("[계좌 잔고 집계] 계좌일련번호 {}의 {}일 자료 집계, 누적건수 {}", actSeq, vo.getAggDt(), cnt);
 					
 					// 조회된 결과가 없을 경우
 				} else {
