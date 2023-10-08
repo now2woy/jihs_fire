@@ -276,6 +276,13 @@ public class ActTrdService {
 							} else if("ETF분배금입금".equals(tds1st.get(2).text()) || "분배금입금".equals(tds1st.get(2).text())) {
 								actTrdVO.setTrdCd("00005");
 								
+							// 소분류 초과청약환불금
+							} else if("초과청약환불금".equals(tds1st.get(2).text())) {
+								// 매도한것으로 처리
+								actTrdVO.setTrdCd("00007");
+								actTrdVO.setQty(BigDecimal.ZERO);
+								actTrdVO.setPrc(BigDecimal.ZERO);
+								
 							// 그 외의 경우 입금
 							} else {
 								actTrdVO.setTrdCd("00001");
@@ -283,24 +290,30 @@ public class ActTrdService {
 							
 						// 대분류 출금
 						} else if("출금".equals(tds1st.get(1).text())) {
-							actTrdVO.setTrdCd("00002");
-							// 출금의 경우 마이너스로 표기 해야 하므로 -1을 곱한다.
-							actTrdVO.setAmt(BscUtils.multiply(actTrdVO.getAmt(), new BigDecimal("-1"), 0));
+							if("유상청약출금".equals(tds1st.get(2).text())) {
+								actTrdVO.setTrdCd("00006");
+								// 청약 신청한 것이기 때문에 주식은 입고 될때 기록 되도록 수량을 0으로 입력
+								actTrdVO.setQty(BigDecimal.ZERO);
+								actTrdVO.setPrc(new BigDecimal(tds2nd.get(0).text().replaceAll(",", "")));
+								// 매수의 경우 마이너스로 표기 해야 하므로 -1을 곱한다.
+								actTrdVO.setAmt(BscUtils.multiply(actTrdVO.getAmt(), new BigDecimal("-1"), 0));
+								
+							} else {
+								actTrdVO.setTrdCd("00002");
+								// 출금의 경우 마이너스로 표기 해야 하므로 -1을 곱한다.
+								actTrdVO.setAmt(BscUtils.multiply(actTrdVO.getAmt(), new BigDecimal("-1"), 0));
+							}
+							
 							
 						// 대분류 매수, 입고
 						} else if("매수".equals(tds1st.get(1).text()) || "입고".equals(tds1st.get(1).text())) {
-							// "유상채권입고"의 경우 생략
-							if("유상채권입고".equals(tds1st.get(2).text())) {
-								log.info("유상채권입고로 입력 생략");
-								
-							// "조건부매수"의 경우 입력 생략
-							} else if("조건부매수".equals(tds1st.get(2).text())) {
-								log.info("조건부매수로 입력 생략");
-								
-							// "발행어음일괄매수"의 경우 입력 생략
-							} else if("발행어음일괄매수".equals(tds1st.get(2).text())) {
-								log.info("발행어음일괄매수로 입력 생략");
-								
+							// 특정 케이스 입력 생략
+							if("유상채권입고".equals(tds1st.get(2).text())
+							|| "조건부매수".equals(tds1st.get(2).text())
+							|| "발행어음일괄매수".equals(tds1st.get(2).text())
+							|| "신주인수권증서발행".equals(tds1st.get(2).text())) {
+								log.info("{}, {}로 입력 생략", tds1st.get(1).text(), tds1st.get(2).text());
+							
 							} else {
 								actTrdVO.setTrdCd("00006");
 								actTrdVO.setQty(new BigDecimal(tds1st.get(4).text().replaceAll(",", "")));
@@ -311,7 +324,6 @@ public class ActTrdService {
 							
 						// 대분류 매도
 						} else if("매도".equals(tds1st.get(1).text())) {
-							
 							// "환매도", "발행어음매도", "발행어음일괄매도"는 이자의 한종류
 							if("환매도".equals(tds1st.get(2).text())
 							|| "발행어음매도".equals(tds1st.get(2).text())
@@ -336,6 +348,7 @@ public class ActTrdService {
 							
 						// 대분류 출고
 						} else if("출고".equals(tds1st.get(1).text())) {
+							
 							actTrdVO.setTrdCd("00009");
 							
 						}
