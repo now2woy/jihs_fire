@@ -289,13 +289,17 @@ public class ActTrdService {
 							
 						// 대분류 매수, 입고
 						} else if("매수".equals(tds1st.get(1).text()) || "입고".equals(tds1st.get(1).text())) {
-							// 유상채권입고의 경우 생략
+							// "유상채권입고"의 경우 생략
 							if("유상채권입고".equals(tds1st.get(2).text())) {
 								log.info("유상채권입고로 입력 생략");
 								
-							// 조건부매수의 경우 입력 생략
+							// "조건부매수"의 경우 입력 생략
 							} else if("조건부매수".equals(tds1st.get(2).text())) {
 								log.info("조건부매수로 입력 생략");
+								
+							// "발행어음일괄매수"의 경우 입력 생략
+							} else if("발행어음일괄매수".equals(tds1st.get(2).text())) {
+								log.info("발행어음일괄매수로 입력 생략");
 								
 							} else {
 								actTrdVO.setTrdCd("00006");
@@ -307,8 +311,14 @@ public class ActTrdService {
 							
 						// 대분류 매도
 						} else if("매도".equals(tds1st.get(1).text())) {
-							// 환매도는 이자의 한종류
+							
+							// "환매도"는 이자의 한종류
 							if("환매도".equals(tds1st.get(2).text())) {
+								actTrdVO.setTrdCd("00003");
+								actTrdVO.setAmt(new BigDecimal(tds2nd.get(3).text().replaceAll(",", "")));
+								
+							// "발행어음매도"는 이자의 한종류
+							} else if("발행어음매도".equals(tds1st.get(2).text())) {
 								actTrdVO.setTrdCd("00003");
 								actTrdVO.setAmt(new BigDecimal(tds2nd.get(3).text().replaceAll(",", "")));
 								
@@ -345,17 +355,20 @@ public class ActTrdService {
 						// 거래코드가 없을 경우 입력하지 않는다.
 						if(StringUtils.isNotEmpty(actTrdVO.getTrdCd())) {
 							// 입력
-							insert(actTrdVO);
+							int insertCnt = insert(actTrdVO);
 							
-							// 주식이 계좌에 들어왔을 경우
-							if("00006".equals(actTrdVO.getTrdCd())) {
-								// 계좌 상품 거래 정보 입력
-								actPrdtService.insert(actTrdVO);
-								
-								// 주식이 계좌에서 빠졌을 경우
-							} else if("00007".equals(actTrdVO.getTrdCd())) {
-								// 계좌 상품 거래 정보 수정
-								actPrdtService.update(actTrdVO);
+							// 입력된 건이 있을 경우 실행
+							if(insertCnt == 1) {
+								// 주식이 계좌에 들어왔을 경우
+								if("00006".equals(actTrdVO.getTrdCd())) {
+									// 계좌 상품 거래 정보 입력
+									actPrdtService.insert(actTrdVO);
+									
+									// 주식이 계좌에서 빠졌을 경우
+								} else if("00007".equals(actTrdVO.getTrdCd())) {
+									// 계좌 상품 거래 정보 수정
+									actPrdtService.update(actTrdVO);
+								}
 							}
 						}
 					}
