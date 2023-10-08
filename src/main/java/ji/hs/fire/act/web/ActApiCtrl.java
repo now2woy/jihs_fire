@@ -82,8 +82,8 @@ public class ActApiCtrl {
 	 * @throws Exception
 	 */
 	@GetMapping("/aggregate")
-	public ResponseEntity<Map<String, Object>> aggregate() throws Exception {
-		Map<String, Object> result = actBlcAggService.blcAggregate("1");
+	public ResponseEntity<Map<String, Object>> aggregate(@RequestParam() String actSeq) throws Exception {
+		Map<String, Object> result = actBlcAggService.blcAggregate(actSeq);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
