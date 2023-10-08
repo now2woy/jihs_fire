@@ -312,13 +312,10 @@ public class ActTrdService {
 						// 대분류 매도
 						} else if("매도".equals(tds1st.get(1).text())) {
 							
-							// "환매도"는 이자의 한종류
-							if("환매도".equals(tds1st.get(2).text())) {
-								actTrdVO.setTrdCd("00003");
-								actTrdVO.setAmt(new BigDecimal(tds2nd.get(3).text().replaceAll(",", "")));
-								
-							// "발행어음매도"는 이자의 한종류
-							} else if("발행어음매도".equals(tds1st.get(2).text())) {
+							// "환매도", "발행어음매도", "발행어음일괄매도"는 이자의 한종류
+							if("환매도".equals(tds1st.get(2).text())
+							|| "발행어음매도".equals(tds1st.get(2).text())
+							|| "발행어음일괄매도".equals(tds1st.get(2).text())) {
 								actTrdVO.setTrdCd("00003");
 								actTrdVO.setAmt(new BigDecimal(tds2nd.get(3).text().replaceAll(",", "")));
 								
