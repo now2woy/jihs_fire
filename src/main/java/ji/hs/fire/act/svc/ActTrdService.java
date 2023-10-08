@@ -80,7 +80,7 @@ public class ActTrdService {
 	 */
 	public Map<String, Object> list(ActTrdVO actTrdVO) throws Exception {
 		Map<String, Object> result = new HashMap<>();
-		result.put("count", actTrdMapper.selectCount(actTrdVO));
+		result.put("count", actTrdMapper.countByActSeq(actTrdVO));
 		result.put("data", actTrdMapper.selectAll(actTrdVO));
 		
 		// 계좌 정보 조회
@@ -146,9 +146,21 @@ public class ActTrdService {
 	 * @throws Exception
 	 */
 	public int insert(ActTrdVO actTrdVO) throws Exception {
-		actTrdVO.setTrdSeq(Integer.toString(bscNoGenService.generate("AC_DT.TRD_SEQ")));
+		int result = 0;
 		
-		return actTrdMapper.insert(actTrdVO);
+		// 중복된 데이터가 없을 경우
+		if(actTrdMapper.countByActSeqAndTrdCdAndTrdDtAndAmt(actTrdVO) == 0){
+			// 채번
+			actTrdVO.setTrdSeq(Integer.toString(bscNoGenService.generate("AC_DT.TRD_SEQ")));
+			
+			// 입력 정보 로그 출력
+			log.info("거래정보 입력 ACT_SEQ : {}, TRD_SEQ : {}, TRD_CD : {}, TRD_DT : {}, AMT : {}", actTrdVO.getActSeq(), actTrdVO.getTrdSeq(), actTrdVO.getTrdCd(), actTrdVO.getTrdDt(), actTrdVO.getAmt());
+			
+			// 데이터 입력
+			result = actTrdMapper.insert(actTrdVO);
+		}
+		
+		return result;
 	}
 	
 	/**
@@ -176,7 +188,7 @@ public class ActTrdService {
 	}
 	
 	/**
-	 * 봇을 통해 계좌 거래 정보의 계쫘일련번호를 수정 한다.
+	 * 봇을 통해 계좌 거래 정보의 계좌 일련번호를 수정 한다.
 	 * @param tlgrmMsgId
 	 * @param actSeq
 	 * @return
@@ -211,7 +223,7 @@ public class ActTrdService {
 			
 			bscFileMapper.insert(bscFileVO);
 			
-			// 계좌가 농협일 경우
+			// TODO 계좌가 농협일 경우
 			nhExcelProcess(actSeq, note, name, ext, bscFileVO.getFileSeq());
 			
 		} catch(Exception e) {
@@ -219,6 +231,14 @@ public class ActTrdService {
 		}
 	}
 	
+	/**
+	 * 계좌가 농협일 경우
+	 * @param actSeq
+	 * @param note
+	 * @param name
+	 * @param ext
+	 * @param fileSeq
+	 */
 	private void nhExcelProcess(String actSeq, String note, String name, String ext, int fileSeq) {
 		try {
 			Document doc = Jsoup.parse(new File(uploadPath + File.separator + name + ext), "euc-kr", "");

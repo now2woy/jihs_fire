@@ -1,97 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ji.hs.fire.act.mpr.ActTrdMapper">
-<!-- 계좌 정보 목록 조회 -->
-	<select id="selectAll" resultType="ji.hs.fire.act.vo.ActTrdVO">
-		SELECT TRD_SEQ
-			 , ACT_SEQ
-			 , REL_TRD_SEQ
-			 , TRD_CD
-			 , (SELECT CD_NM FROM BC_CD_DT X WHERE A.TRD_CD = X.CD AND X.CD_COL = 'TRD_CD') AS TRD_NM
-			 , AMT
-			 , ITM_CD
-			 , (SELECT ITM_NM FROM KX_ITM_MT X WHERE A.ITM_CD = X.ITM_CD) AS ITM_NM
-			 , QTY
-			 , FEE
-			 , TAX
-			 , NOTE
- 			 , CASE WHEN TRD_DT != '0000/00/00 00:00'
-			        THEN DATE_FORMAT(TRD_DT, '%Y-%m-%d %H:%i')
-			        ELSE ''
-			   END AS TRD_DT
-			 , CASE WHEN ED_DT != '0000/00/00 00:00'
-			        THEN DATE_FORMAT(ED_DT, '%Y-%m-%d')
-			        ELSE ''
-			   END AS ED_DT
-		  FROM AC_DT A
-		 WHERE ACT_SEQ = #{actSeq}
-		 ORDER BY TRD_DT DESC, TRD_SEQ DESC
-		 LIMIT #{limit}
-		OFFSET #{offset}
-	</select>
+<!-- *[COUNT START] -->
+	<!-- **[COUNT] 계좌 정보 건수 조회 -->
+		<select id="countByActSeq" resultType="Integer" parameterType="ji.hs.fire.act.vo.ActTrdVO">
+			SELECT COUNT(*) AS CNT
+			  FROM AC_DT A
+			 WHERE ACT_SEQ = #{actSeq}
+		</select>
+		
+	<!-- **[COUNT] 계좌 거래정보 입력 전 중복 데이터 확인을 위한 건수 조회 -->
+		<select id="countByActSeqAndTrdCdAndTrdDtAndAmt" resultType="Integer" parameterType="ji.hs.fire.act.vo.ActTrdVO">
+			SELECT COUNT(*) AS CNT
+			  FROM AC_DT
+			 WHERE ACT_SEQ = #{actSeq}
+			   AND TRD_CD = #{trdCd}
+			   AND TRD_DT = DATE_FORMAT(#{trdDt}, '%Y-%m-%d %H:%i')
+			   AND AMT = #{amt}
+		</select>
+<!-- *[COUNT END] -->
+
+<!-- *[SELECT] START -->
+	<!-- **[SELECT] 계좌 정보 목록 조회 -->
+		<select id="selectAll" resultType="ji.hs.fire.act.vo.ActTrdVO">
+			SELECT TRD_SEQ
+				 , ACT_SEQ
+				 , REL_TRD_SEQ
+				 , TRD_CD
+				 , (SELECT CD_NM FROM BC_CD_DT X WHERE A.TRD_CD = X.CD AND X.CD_COL = 'TRD_CD') AS TRD_NM
+				 , AMT
+				 , ITM_CD
+				 , (SELECT ITM_NM FROM KX_ITM_MT X WHERE A.ITM_CD = X.ITM_CD) AS ITM_NM
+				 , QTY
+				 , FEE
+				 , TAX
+				 , NOTE
+	 			 , CASE WHEN TRD_DT != '0000/00/00 00:00'
+				        THEN DATE_FORMAT(TRD_DT, '%Y-%m-%d %H:%i')
+				        ELSE ''
+				   END AS TRD_DT
+				 , CASE WHEN ED_DT != '0000/00/00 00:00'
+				        THEN DATE_FORMAT(ED_DT, '%Y-%m-%d')
+				        ELSE ''
+				   END AS ED_DT
+			  FROM AC_DT A
+			 WHERE ACT_SEQ = #{actSeq}
+			 ORDER BY TRD_DT DESC, TRD_SEQ DESC
+			 LIMIT #{limit}
+			OFFSET #{offset}
+		</select>
+		
+	<!-- **[SELECT] 계좌 합계 금액 조회 -->
+		<select id="selectSumAmt" resultType="String" parameterType="ji.hs.fire.act.vo.ActTrdVO">
+			SELECT SUM(AMT) AS IN_OUT_SUM_AMT
+			  FROM AC_DT A
+			 WHERE ACT_SEQ = #{actSeq}
+			   AND TRD_CD IN (
+			<foreach collection="trdCds" item="item" separator=",">
+				#{item}
+			</foreach>
+			   )
+		</select>
+<!-- *[SELECT] END -->
+
+<!-- *[INSERT] START -->
+	<!-- **[INSERT] 계좌 정보 입력 -->
+		<insert id="insert" parameterType="ji.hs.fire.act.vo.ActTrdVO" flushCache="true">
+		<![CDATA[
+			INSERT INTO AC_DT (
+				   TRD_SEQ
+				 , ACT_SEQ
+				 , REL_TRD_SEQ
+				 , TRD_CD
+				 , AMT
+				 , ITM_CD
+				 , QTY
+				 , PRC
+				 , FEE
+				 , TAX
+				 , NOTE
+				 , TLGRM_MSG_ID
+				 , TRD_DT
+				 , ED_DT
+				 , FILE_SEQ
+				 ) VALUES (
+				   #{trdSeq}
+				 , #{actSeq}
+				 , #{relTrdSeq}
+				 , #{trdCd}
+				 , #{amt}
+				 , #{itmCd}
+				 , #{qty}
+				 , #{prc}
+				 , NULLIF(#{fee}, '0')
+				 , NULLIF(#{tax}, '0')
+				 , #{note}
+				 , #{tlgrmMsgId}
+				 , STR_TO_DATE(#{trdDt}, '%Y-%m-%dT%H:%i')
+				 , STR_TO_DATE(#{edDt}, '%Y-%m-%d')
+				 , #{fileSeq}
+				 )
+		]]>
+		</insert>
+<!-- *[INSERT] END -->
 	
-<!-- 계좌 정보 건수 조회 -->
-	<select id="selectCount" resultType="Integer" parameterType="ji.hs.fire.act.vo.ActTrdVO">
-		SELECT COUNT(*) AS CNT
-		  FROM AC_DT A
-		 WHERE ACT_SEQ = #{actSeq}
-	</select>
-	
-<!-- 계좌 합계 금액 조회 -->
-	<select id="selectSumAmt" resultType="String" parameterType="ji.hs.fire.act.vo.ActTrdVO">
-		SELECT SUM(AMT) AS IN_OUT_SUM_AMT
-		  FROM AC_DT A
-		 WHERE ACT_SEQ = #{actSeq}
-		   AND TRD_CD IN (
-		<foreach collection="trdCds" item="item" separator=",">
-			#{item}
-		</foreach>
-		   )
-	</select>
-	
-<!-- 계좌 정보 입력 -->
-	<insert id="insert" parameterType="ji.hs.fire.act.vo.ActTrdVO" flushCache="true">
-	<![CDATA[
-		INSERT INTO AC_DT (
-			   TRD_SEQ
-			 , ACT_SEQ
-			 , REL_TRD_SEQ
-			 , TRD_CD
-			 , AMT
-			 , ITM_CD
-			 , QTY
-			 , PRC
-			 , FEE
-			 , TAX
-			 , NOTE
-			 , TLGRM_MSG_ID
-			 , TRD_DT
-			 , ED_DT
-			 , FILE_SEQ
-			 ) VALUES (
-			   #{trdSeq}
-			 , #{actSeq}
-			 , #{relTrdSeq}
-			 , #{trdCd}
-			 , #{amt}
-			 , #{itmCd}
-			 , #{qty}
-			 , #{prc}
-			 , NULLIF(#{fee}, '0')
-			 , NULLIF(#{tax}, '0')
-			 , #{note}
-			 , #{tlgrmMsgId}
-			 , STR_TO_DATE(#{trdDt}, '%Y-%m-%dT%H:%i')
-			 , STR_TO_DATE(#{edDt}, '%Y-%m-%d')
-			 , #{fileSeq}
-			 )
-	]]>
-	</insert>
-	
-<!-- 계좌 거래 정보의 계쫘일련번호를 수정 -->
-	<update id="updateActSeqByTlgrmMsgId" parameterType="ji.hs.fire.act.vo.ActTrdVO" flushCache="true">
-		UPDATE AC_DT
-		   SET ACT_SEQ = #{actSeq}
-		 WHERE TLGRM_MSG_ID = #{tlgrmMsgId}
-	</update>
+<!-- *[UPDATE] START -->
+	<!-- **[UPDATE] 계좌 거래 정보의 계쫘일련번호를 수정 -->
+		<update id="updateActSeqByTlgrmMsgId" parameterType="ji.hs.fire.act.vo.ActTrdVO" flushCache="true">
+			UPDATE AC_DT
+			   SET ACT_SEQ = #{actSeq}
+			 WHERE TLGRM_MSG_ID = #{tlgrmMsgId}
+		</update>
+<!-- *[UPDATE] END -->
 </mapper>
