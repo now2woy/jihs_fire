@@ -44,11 +44,11 @@
 			 , #{byTrdSeq}
 			 , #{byAmt}
 			 , #{byTlgrmMsgId}
-			 , STR_TO_DATE(#{byDt}, '%Y-%m-%dT%H:%i')
+			 , STR_TO_DATE(#{byDt}, '%Y-%m-%dT%H:%i:%s')
 			 , #{slTrdSeq}
 			 , #{slAmt}
 			 , #{slTlgrmMsgId}
-			 , STR_TO_DATE(#{slDt}, '%Y-%m-%dT%H:%i')
+			 , STR_TO_DATE(#{slDt}, '%Y-%m-%dT%H:%i:%s')
 			 )
 	]]>
 	</insert>
@@ -59,7 +59,7 @@
 		   SET SL_TRD_SEQ = #{slTrdSeq}
 		     , SL_AMT = #{slAmt}
 		     , SL_TLGRM_MSG_ID = #{slTlgrmMsgId}
-		     , SL_DT = STR_TO_DATE(#{slDt}, '%Y-%m-%dT%H:%i')
+		     , SL_DT = STR_TO_DATE(#{slDt}, '%Y-%m-%dT%H:%i:%s')
 		 WHERE PRDT_TRD_SEQ = #{prdtTrdSeq}
 	</update>
 

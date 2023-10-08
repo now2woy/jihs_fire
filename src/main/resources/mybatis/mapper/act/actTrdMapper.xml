@@ -15,7 +15,7 @@
 			  FROM AC_DT
 			 WHERE ACT_SEQ = #{actSeq}
 			   AND TRD_CD = #{trdCd}
-			   AND TRD_DT = DATE_FORMAT(#{trdDt}, '%Y-%m-%d %H:%i')
+			   AND TRD_DT = DATE_FORMAT(#{trdDt}, '%Y-%m-%d %H:%i:%s')
 			   AND AMT = #{amt}
 		</select>
 <!-- *[COUNT END] -->
@@ -36,7 +36,7 @@
 				 , TAX
 				 , NOTE
 	 			 , CASE WHEN TRD_DT != '0000/00/00 00:00'
-				        THEN DATE_FORMAT(TRD_DT, '%Y-%m-%d %H:%i')
+				        THEN DATE_FORMAT(TRD_DT, '%Y-%m-%d %H:%i:%s')
 				        ELSE ''
 				   END AS TRD_DT
 				 , CASE WHEN ED_DT != '0000/00/00 00:00'
@@ -96,7 +96,7 @@
 				 , NULLIF(#{tax}, '0')
 				 , #{note}
 				 , #{tlgrmMsgId}
-				 , STR_TO_DATE(#{trdDt}, '%Y-%m-%dT%H:%i')
+				 , STR_TO_DATE(#{trdDt}, '%Y-%m-%dT%H:%i:%s')
 				 , STR_TO_DATE(#{edDt}, '%Y-%m-%d')
 				 , #{fileSeq}
 				 )

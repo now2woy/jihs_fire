@@ -253,7 +253,7 @@ public class ActTrdService {
 						ActTrdVO actTrdVO = new ActTrdVO();
 						actTrdVO.setActSeq(actSeq);
 						actTrdVO.setFileSeq(Integer.toString(fileSeq));
-						actTrdVO.setTrdDt(tds1st.get(0).text().replaceAll("\\.", "-").replaceAll(" ", "T").replaceAll("\\(", "").substring(0, 16));
+						actTrdVO.setTrdDt(tds1st.get(0).text().replaceAll("\\.", "-").replaceAll(" ", "T").replaceAll("\\(", "").replaceAll("\\)", ""));
 						actTrdVO.setAmt(new BigDecimal(tds1st.get(5).text().replaceAll(",", "")));
 						actTrdVO.setFee(new BigDecimal(tds1st.get(8).text().replaceAll(",", "")));
 						actTrdVO.setTax(new BigDecimal(tds2nd.get(4).text().replaceAll(",", "")));
