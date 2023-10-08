@@ -325,6 +325,7 @@ public class ActTrdService {
 								actTrdVO.setPrc(new BigDecimal(tds2nd.get(0).text().replaceAll(",", "")));
 							}
 							
+						// 대분류 환전
 						} else if("환전".equals(tds1st.get(1).text())) {
 							actTrdVO.setTrdCd("00008");
 							
@@ -332,6 +333,11 @@ public class ActTrdService {
 							if("외화매수".equals(tds1st.get(2).text())) {
 								actTrdVO.setAmt(BscUtils.multiply(actTrdVO.getAmt(), new BigDecimal("-1"), 0));
 							}
+							
+						// 대분류 출고
+						} else if("출고".equals(tds1st.get(1).text())) {
+							actTrdVO.setTrdCd("00009");
+							
 						}
 						
 						// 거래구분이 이자일 경우 종목코드가 없다.
